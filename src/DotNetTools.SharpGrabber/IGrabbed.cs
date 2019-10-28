@@ -9,5 +9,13 @@ namespace DotNetTools.SharpGrabber
     /// </summary>
     public interface IGrabbed
     {
+        /// <summary>
+        /// Link to the resource found.
+        /// </summary>
+        /// <remarks>
+        /// Most grabbers return <see cref="IGrabbed"/> objects that refer to exactly one download link.
+        /// If a grabber does not refer to any URI or refers to multiple URIs, this property should be null.
+        /// </remarks>
+        Uri Uri { get; }
     }
 }

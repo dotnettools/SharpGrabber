@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber
 {
     /// <summary>
     /// Where implemented, can grab useful resources from certain types of URI.
     /// Many <see cref="IGrabber"/> objects may be registered on a <see cref="MultiGrabber"/> allowing usage
-    /// of all grabbers bya single call.
+    /// of all grabbers by a single call.
     /// </summary>
     public interface IGrabber
     {
@@ -17,6 +18,9 @@ namespace DotNetTools.SharpGrabber
         /// </summary>
         string[] GetSupportedSchemes();
 
-
+        /// <summary>
+        /// Asynchronously looks up the specified URI and grabs useful resources.
+        /// </summary>
+        Task<IEnumerable<IGrabbed>> Grab(Uri uri);
     }
 }
