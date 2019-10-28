@@ -2,4 +2,5 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/SharpGrabber/.vs/SharpGrabber/v16
+/.vs/SharpGrabber/v16
+/src/DotNetTools.SharpGrabber/obj
