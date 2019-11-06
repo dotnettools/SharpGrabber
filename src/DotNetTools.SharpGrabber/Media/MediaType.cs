@@ -17,6 +17,11 @@ namespace DotNetTools.SharpGrabber.Media
         /// <summary>
         /// Audio type
         /// </summary>
-        Audio
+        Audio,
+
+        /// <summary>
+        /// Image type
+        /// </summary>
+        Image
     }
 }

@@ -11,6 +11,16 @@ namespace DotNetTools.SharpGrabber.Media
     {
         #region Properties
         public Uri Uri { get; }
+
+        public MediaFormat Format { get; }
+        #endregion
+
+        #region Constructors
+        public GrabbedMedia(Uri uri, MediaFormat format)
+        {
+            Uri = uri;
+            Format = format;
+        }
         #endregion
     }
 }
