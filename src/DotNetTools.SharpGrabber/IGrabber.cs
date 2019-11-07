@@ -17,6 +17,11 @@ namespace DotNetTools.SharpGrabber
     public interface IGrabber
     {
         /// <summary>
+        /// Name of the grabber e.g. YouTube
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Reports status and grab progress
         /// </summary>
         WorkStatus Status { get; }

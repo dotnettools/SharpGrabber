@@ -8,13 +8,15 @@ namespace DotNetTools.SharpGrabber
     internal abstract class BaseGrabbed : IGrabbed
     {
         #region Properties
-        public Uri Uri { get; }
+        public Uri OriginalUri { get; }
+
+        public Uri ResourceUri { get; }
         #endregion
 
         #region Constructor
         public BaseGrabbed(Uri uri)
         {
-            Uri = uri;
+            ResourceUri = uri;
         }
         #endregion
     }

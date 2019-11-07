@@ -10,6 +10,8 @@ namespace DotNetTools.SharpGrabber
     /// </summary>
     public abstract class BaseGrabber : IGrabber
     {
+        public abstract string Name { get; }
+
         public GrabOptions DefaultGrabOptions { get; } = new GrabOptions();
 
         public WorkStatus Status { get; } = new WorkStatus();
