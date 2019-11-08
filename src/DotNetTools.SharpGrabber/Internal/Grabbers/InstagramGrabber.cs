@@ -1,4 +1,5 @@
 ﻿using DotNetTools.SharpGrabber.Exceptions;
+using DotNetTools.SharpGrabber.Media;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 throw new GrabException($"A server error occurred while retrieving Instagram content. Server returned {response.StatusCode} {response.ReasonPhrase}.");
         }
 
+        /// <summary>
+        /// Parses content of the page and retrieves meta tags with useful information.
+        /// </summary>
         protected virtual IDictionary<string, string> ParsePage(Stream responseStream)
         {
             var dictionary = new Dictionary<string, string>();
@@ -76,21 +80,51 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             return dictionary;
         }
 
-        protected virtual IGrabbed[] GrabUsingMetadata(IDictionary<string, string> metaData)
+        protected virtual GrabResult GrabUsingMetadata(IDictionary<string, string> metaData)
         {
             var grabList = new List<IGrabbed>();
 
-            return grabList.ToArray();
+            // extract metadata
+            var title = metaData.GetOrDefault("og:title");
+            var image = metaData.GetOrDefault("og:image");
+            var description = metaData.GetOrDefault("og:description");
+            var originalUri = new Uri(metaData.GetOrDefault("og:url"));
+            var type = metaData.GetOrDefault("og:type");
+            var video = metaData.GetOrDefault("og:video");
+            var video_secure_url = metaData.GetOrDefault("og:video:secure_url");
+            var video_type = metaData.GetOrDefault("og:video:type");
+            var video_width = int.Parse(metaData.GetOrDefault("og:video:width", "0"));
+            var video_height = int.Parse(metaData.GetOrDefault("og:video:height", "0"));
+
+            // grab image
+            if (!string.IsNullOrEmpty(image))
+                grabList.Add(new GrabbedImage(GrabbedImageType.Primary, null, new Uri(image)));
+
+            // grab video
+            if (!string.IsNullOrEmpty(video))
+            {
+                var format = new MediaFormat(video_type, MimeHelper.ExtractMimeExtension(video_type));
+                var vid = new GrabbedMedia(new Uri(video), null, format, MediaType.Video);
+                grabList.Add(vid);
+            }
+
+            // make result
+            var result = new GrabResult(originalUri, grabList)
+            {
+                Title = title,
+                Description = description,
+            };
+            return result;
         }
         #endregion
 
         #region Methods
-        public async override Task<IEnumerable<IGrabbed>> Grab(Uri uri, GrabOptions options)
+        public async override Task<GrabResult> Grab(Uri uri, GrabOptions options)
         {
             // init
             var id = GrabId(uri);
             if (id == null)
-                return Array.Empty<IGrabbed>();
+                return null;
 
             // update to standard Instagram link
             uri = MakeStandardInstagramUri(id);

@@ -10,6 +10,9 @@ namespace DotNetTools.SharpGrabber.Media
     public class GrabbedMedia : IGrabbed
     {
         #region Properties
+        /// <summary>
+        /// Original URI - A value of NULL indicates inheritance from <see cref="GrabResult"/>.
+        /// </summary>
         public Uri OriginalUri { get; }
 
         public Uri ResourceUri { get; }
@@ -22,12 +25,12 @@ namespace DotNetTools.SharpGrabber.Media
         public MediaType Type { get; }
 
         /// <summary>
-        /// Full title obtained from source
+        /// Full title obtained from source. A value of NULL indicates inheritance from <see cref="GrabResult"/>.
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// Length of the media - might be unavailable for some resources
+        /// Length of the media - might be unavailable for some resources.
         /// </summary>
         public TimeSpan? Length { get; set; }
         #endregion

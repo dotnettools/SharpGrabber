@@ -20,12 +20,12 @@ namespace DotNetTools.SharpGrabber
 
         public string[] GetSupportedSchemes() => SupportedSchemes;
 
-        public Task<IEnumerable<IGrabbed>> Grab(Uri uri)
+        public Task<GrabResult> Grab(Uri uri)
         {
             Status.Update(null, "Initializing...", WorkStatusType.Initiating);
             return Grab(uri, DefaultGrabOptions);
         }
 
-        public abstract Task<IEnumerable<IGrabbed>> Grab(Uri uri, GrabOptions options);
+        public abstract Task<GrabResult> Grab(Uri uri, GrabOptions options);
     }
 }

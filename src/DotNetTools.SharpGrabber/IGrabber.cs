@@ -38,13 +38,15 @@ namespace DotNetTools.SharpGrabber
         string[] GetSupportedSchemes();
 
         /// <summary>
-        /// Asynchronously looks up the specified URI and grabs useful resources.
+        /// Asynchronously looks up the specified URI and grabs useful resources. In case of unsuccessful grab, NULL should
+        /// be returned.
         /// </summary>
-        Task<IEnumerable<IGrabbed>> Grab(Uri uri);
+        Task<GrabResult> Grab(Uri uri);
 
         /// <summary>
         /// Asynchronously looks up the specified URI and grabs useful resources regarding the specified <paramref name="options"/>.
+        /// In case of unsuccessful grab, NULL should be returned.
         /// </summary>
-        Task<IEnumerable<IGrabbed>> Grab(Uri uri, GrabOptions options);
+        Task<GrabResult> Grab(Uri uri, GrabOptions options);
     }
 }

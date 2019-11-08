@@ -8,3 +8,5 @@
 /DotNetTools.SharpGrabber.Tests/bin/Debug/netcoreapp3.0
 /DotNetTools.SharpGrabber.Tests/obj
 /src/DotNetTools.SharpGrabber/bin/Debug/netstandard2.0
+/DotNetTools.SharpGrabber.Win/bin/Debug
+/DotNetTools.SharpGrabber.Win/obj/Debug
