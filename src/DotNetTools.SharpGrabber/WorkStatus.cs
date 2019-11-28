@@ -59,7 +59,9 @@ namespace DotNetTools.SharpGrabber
         #endregion
 
         #region Constructors
-        public WorkStatus() { }
+        public WorkStatus()
+        {
+        }
 
         public WorkStatus(double? progress, string description, WorkStatusType type = WorkStatusType.Other)
         {
@@ -75,6 +77,15 @@ namespace DotNetTools.SharpGrabber
         {
             Progress = progress;
             Description = description;
+            Type = type;
+        }
+
+        /// <summary>
+        /// Updates properties of the status with a single call.
+        /// </summary>
+        public void Update(double? progress, WorkStatusType type)
+        {
+            Progress = progress;
             Type = type;
         }
         #endregion

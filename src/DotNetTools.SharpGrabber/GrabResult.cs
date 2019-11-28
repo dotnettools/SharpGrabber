@@ -27,6 +27,16 @@ namespace DotNetTools.SharpGrabber
         /// Description of the content
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Optional date and time when this content was created
+        /// </summary>
+        public DateTime? CreationDate { get; set; }
+
+        /// <summary>
+        /// Optional statistics grabbed from the page
+        /// </summary>
+        public GrabStatisticInfo Statistics { get; set; }
         #endregion
 
         #region Constructors

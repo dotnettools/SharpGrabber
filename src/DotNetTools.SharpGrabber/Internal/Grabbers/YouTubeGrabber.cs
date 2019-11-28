@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using DotNetTools.SharpGrabber.Exceptions;
-using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
+using DotNetTools.SharpGrabber.Exceptions;
 
 namespace DotNetTools.SharpGrabber.Internal.Grabbers
 {
@@ -84,7 +84,22 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             return JObject.Parse(match.Groups[1].Value);
         }
 
-        protected virtual async Task<GrabResult> Grab(HttpContent content)
+        protected virtual int[] ExtractCreationDateTime(JToken ytPrimary)
+        {
+            var ytDateText = ytPrimary.SelectToken("$.dateText.simpleText") ??
+                             throw new GrabParseException("Failed to extract dateText.simpleText.");
+            var ytDateMatch = new Regex(@"^\s*([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)\s*$")
+                .Match(ytDateText.Value<string>());
+            if (!ytDateMatch.Success)
+                throw new GrabParseException("Failed to parse date format of dateText.simpleText.");
+            return new[]
+            {
+                int.Parse(ytDateMatch.Groups[1].Value), int.Parse(ytDateMatch.Groups[2].Value),
+                int.Parse(ytDateMatch.Groups[3].Value)
+            };
+        }
+
+        protected virtual async Task Grab(GrabResult result, HttpContent content)
         {
             // get html content
             var html = await content.ReadAsStringAsync();
@@ -92,10 +107,23 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             // extract javaScript info from the page
             var ytInitialData = GetYTInitialData(html);
             var ytResults = ytInitialData.SelectToken("$.contents.twoColumnWatchNextResults") ??
-                            throw new GrabParseException("Failed to find twoColumnWatchNextResults.");
+                            throw new GrabParseException("Failed to extract twoColumnWatchNextResults.");
+            var ytPrimary = ytResults.SelectToken("$.results.results.contents[*].videoPrimaryInfoRenderer") ??
+                            throw new GrabParseException("Failed to extract videoPrimaryInfoRenderer.");
+            var ytSecondary = ytResults.SelectToken("$.results.results.contents[*].videoSecondaryInfoRenderer") ??
+                              throw new GrabParseException("Failed to extract videoSecondaryInfoRenderer.");
 
+            var ytDateValues = ExtractCreationDateTime(ytPrimary);
 
-            return null;
+            // extract useful info from the JSON data
+            var ytText = ytPrimary.SelectToken("$.title.runs[*].text");
+            var ytDescription = ytSecondary.SelectTokens("$.description.runs[*].text") ??
+                                throw new GrabParseException("Failed to extract description.");
+
+            // update grab result
+            result.Title = ytText.Value<string>();
+            result.Description = string.Join(Environment.NewLine, ytDescription.Select(run => run.Value<string>()));
+            result.CreationDate = new DateTime(ytDateValues[2], ytDateValues[1], ytDateValues[0]);
         }
         #endregion
 
@@ -113,7 +141,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             uri = MakeStandardYouTubeUri(id);
 
             // download target page
-            Status.Update(null, "Downloading page...", WorkStatusType.DownloadingPage);
+            Status.Update(null, WorkStatusType.DownloadingPage);
             var client = HttpHelper.CreateClient(uri);
 
             using (var response = await client.GetAsync(uri))
@@ -122,7 +150,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 CheckResponse(response);
 
                 // grab from content
-                return await Grab(response.Content);
+                var result = new GrabResult(uri);
+                await Grab(result, response.Content);
+                return result;
             }
         }
         #endregion

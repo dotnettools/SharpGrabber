@@ -133,7 +133,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             uri = MakeStandardInstagramUri(id);
 
             // download target page
-            Status.Update(null, "Downloading page...", WorkStatusType.DownloadingPage);
+            Status.Update(null, WorkStatusType.DownloadingPage);
             var client = HttpHelper.CreateClient(uri);
             var response = await client.GetAsync(uri);
 
