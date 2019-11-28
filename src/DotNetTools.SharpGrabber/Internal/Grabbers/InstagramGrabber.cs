@@ -18,7 +18,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
     public class InstagramGrabber : BaseGrabber
     {
         #region Fields
-        private readonly Regex _idPattern = new Regex(@"^https?://(www\.)?instagram\.com/[A-Za-z0-9]/([A-Za-z0-9]+)(/.*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private readonly Regex _idPattern =
+            new Regex(@"^https?://(www\.)?instagram\.com/[A-Za-z0-9]/([A-Za-z0-9]+)(/.*)?$",
+                RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         #endregion
 
         #region Properties
@@ -32,10 +34,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         #endregion
 
         #region Internal Methods
-        protected virtual Uri MakeStandardInstagramUri(string id)
-        {
-            return new Uri(string.Format(StandardUrlTemplate, id));
-        }
+        protected virtual Uri MakeStandardInstagramUri(string id) => new Uri(string.Format(StandardUrlTemplate, id));
 
         protected virtual string GrabId(Uri uri)
         {
@@ -52,7 +51,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         protected virtual void CheckResponse(HttpResponseMessage response)
         {
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new GrabException($"A server error occurred while retrieving Instagram content. Server returned {response.StatusCode} {response.ReasonPhrase}.");
+                throw new GrabException(
+                    $"A server error occurred while retrieving Instagram content. Server returned {response.StatusCode} {response.ReasonPhrase}.");
         }
 
         /// <summary>
@@ -68,7 +68,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             doc.Load(responseStream);
 
             // update result
-            var nodes = doc.DocumentNode.SelectNodes("//meta[starts-with(@property, 'og:') and @property and @content]");
+            var nodes = doc.DocumentNode.SelectNodes(
+                "//meta[starts-with(@property, 'og:') and @property and @content]");
             if (nodes == null)
                 throw new GrabException("Failed to obtain metadata from the Instagram page.");
 
@@ -121,14 +122,14 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         #region Methods
         public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GrabId(uri));
 
-        public async override Task<GrabResult> Grab(Uri uri, GrabOptions options)
+        public override async Task<GrabResult> Grab(Uri uri, GrabOptions options)
         {
             // init
             var id = GrabId(uri);
             if (id == null)
                 return null;
 
-            // update to standard Instagram link
+            // generate standard Instagram link
             uri = MakeStandardInstagramUri(id);
 
             // download target page

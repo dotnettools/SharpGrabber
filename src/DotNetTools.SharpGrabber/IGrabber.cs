@@ -30,13 +30,7 @@ namespace DotNetTools.SharpGrabber
         /// Default grab options for this grabber - if none is specified while invoking <see cref="IGrabber.Grab"/>.
         /// </summary>
         GrabOptions DefaultGrabOptions { get; }
-
-        /// <summary>
-        /// Gets an array of case-insensitive strings representing the supported schemes, such as "http".
-        /// In case this grabber is not to be associated with certain protocols, NULL may be returned.
-        /// </summary>
-        string[] GetSupportedSchemes();
-
+        
         /// <summary>
         /// Briefly checks if this grabber supports the specified URI.
         /// </summary>

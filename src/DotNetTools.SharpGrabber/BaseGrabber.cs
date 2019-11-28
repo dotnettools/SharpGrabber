@@ -15,11 +15,7 @@ namespace DotNetTools.SharpGrabber
         public GrabOptions DefaultGrabOptions { get; } = new GrabOptions();
 
         public WorkStatus Status { get; } = new WorkStatus();
-
-        protected virtual string[] SupportedSchemes { get; }
-
-        public string[] GetSupportedSchemes() => SupportedSchemes;
-
+        
         public abstract bool Supports(Uri uri);
 
         public Task<GrabResult> Grab(Uri uri)
