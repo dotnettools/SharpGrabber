@@ -1,13 +1,10 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetTools.SharpGrabber", "src\DotNetTools.SharpGrabber\DotNetTools.SharpGrabber.csproj", "{F2CB23B0-E878-4CDE-9F29-C3B8E915125B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetTools.SharpGrabber.Tests", "DotNetTools.SharpGrabber.Tests\DotNetTools.SharpGrabber.Tests.csproj", "{B597E685-3509-435E-B11A-BC5A151051CE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetTools.SharpGrabber.Win", "DotNetTools.SharpGrabber.Win\DotNetTools.SharpGrabber.Win.csproj", "{18124B11-9146-49B5-83D4-7265BB1D7D7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetTools.SharpGrabber.Tests", "tests\DotNetTools.SharpGrabber.Tests\DotNetTools.SharpGrabber.Tests.csproj", "{B597E685-3509-435E-B11A-BC5A151051CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +20,6 @@ Global
 		{B597E685-3509-435E-B11A-BC5A151051CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B597E685-3509-435E-B11A-BC5A151051CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B597E685-3509-435E-B11A-BC5A151051CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{18124B11-9146-49B5-83D4-7265BB1D7D7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{18124B11-9146-49B5-83D4-7265BB1D7D7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{18124B11-9146-49B5-83D4-7265BB1D7D7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{18124B11-9146-49B5-83D4-7265BB1D7D7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

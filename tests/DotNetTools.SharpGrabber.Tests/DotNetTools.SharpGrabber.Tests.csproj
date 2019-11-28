@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\DotNetTools.SharpGrabber\DotNetTools.SharpGrabber.csproj" />
+    <ProjectReference Include="..\..\src\DotNetTools.SharpGrabber\DotNetTools.SharpGrabber.csproj" />
   </ItemGroup>
 
 </Project>

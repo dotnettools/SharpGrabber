@@ -1,12 +1,10 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
+﻿/.vs
 /.vs/SharpGrabber/v16
-/src/DotNetTools.SharpGrabber/obj
 /.vs/SharpGrabber/DesignTimeBuild
-/DotNetTools.SharpGrabber.Tests/bin/Debug/netcoreapp3.0
-/DotNetTools.SharpGrabber.Tests/obj
-/src/DotNetTools.SharpGrabber/bin/Debug/netstandard2.0
-/DotNetTools.SharpGrabber.Win/bin/Debug
-/DotNetTools.SharpGrabber.Win/obj/Debug
+/.idea
+/src/DotNetTools.SharpGrabber/obj
+/tests/DotNetTools.SharpGrabber.Tests/bin
+/tests/DotNetTools.SharpGrabber.Tests/obj
+/src/DotNetTools.SharpGrabber/bin
+/src/DotNetTools.SharpGrabber.Win/bin
+/src/DotNetTools.SharpGrabber.Win/obj
