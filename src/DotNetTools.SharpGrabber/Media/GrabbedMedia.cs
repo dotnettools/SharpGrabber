@@ -5,7 +5,7 @@ using System.Text;
 namespace DotNetTools.SharpGrabber.Media
 {
     /// <summary>
-    /// <see cref="IGrabbed"/> for media resources
+    /// <see cref="IGrabbed"/> for media resources, such as audio and video.
     /// </summary>
     public class GrabbedMedia : IGrabbed
     {

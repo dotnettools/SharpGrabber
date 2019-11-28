@@ -99,7 +99,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         {
             var ytDateText = ytPrimary.SelectToken("$.dateText.simpleText") ??
                              throw new GrabParseException("Failed to extract dateText.simpleText.");
-            var ytDateMatch = new Regex(@"^\s*([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)\s*$")
+            var ytDateMatch = new Regex(@"^[^0-9]*([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)[^0-9]*$")
                 .Match(ytDateText.Value<string>());
             if (!ytDateMatch.Success)
                 throw new GrabParseException("Failed to parse date format of dateText.simpleText.");
@@ -128,6 +128,11 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                     };
                     result.Resources.Add(grabbedImage);
                 }
+        }
+
+        protected virtual void UpdateStreamingData(GrabResult result, JObject streamingData)
+        {
+            // TODO: Implement YouTubeGrabber.UpdateStreamData
         }
 
         protected virtual void UpdateInitialData(GrabResult result, JObject ytInitialData)
@@ -171,10 +176,15 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                                                throw new GrabParseException(
                                                    "Failed to extract player_response from player config args."));
 
-            // update video details
+            // get videoDetails
             var videoDetails = playerResponse.SelectToken("videoDetails") as JObject ??
                                throw new GrabParseException("Failed to extract videoDetails from player_response.");
             UpdateVideoDetails(result, videoDetails);
+
+            // get streamingData
+            var streamingData = playerResponse.SelectToken("streamingData") as JObject ??
+                                throw new GrabParseException("Failed to extract streamingData from player_response.");
+            UpdateStreamingData(result, streamingData);
         }
 
         protected virtual async Task Grab(GrabResult result, HttpContent content)
@@ -215,8 +225,10 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 CheckResponse(response);
 
                 // grab from content
-                var result = new GrabResult(uri);
-                result.Statistics = new GrabStatisticInfo();
+                var result = new GrabResult(uri)
+                {
+                    Statistics = new GrabStatisticInfo()
+                };
                 await Grab(result, response.Content);
                 return result;
             }
