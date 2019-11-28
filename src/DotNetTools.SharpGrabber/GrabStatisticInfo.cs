@@ -1,4 +1,6 @@
-﻿namespace DotNetTools.SharpGrabber
+﻿using System;
+
+namespace DotNetTools.SharpGrabber
 {
     /// <summary>
     /// Contains statistics of a grabbed page e.g. Total views, comments, likes etc. for a YouTube video.
@@ -10,13 +12,18 @@
     public class GrabStatisticInfo
     {
         /// <summary>
+        /// Author name
+        /// </summary>
+        public string Author { get; set; }
+
+        /// <summary>
         /// Total views of the page
         /// </summary>
         public long? ViewCount { get; set; }
 
         /// <summary>
-        /// Total number of comments on the page
+        /// Overall length of media if available
         /// </summary>
-        public long? CommentCount { get; set; }
+        public TimeSpan? Length { get; set; }
     }
 }

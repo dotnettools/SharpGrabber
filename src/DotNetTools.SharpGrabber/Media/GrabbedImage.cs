@@ -18,6 +18,16 @@ namespace DotNetTools.SharpGrabber.Media
         /// Type of the grabbed image e.g. thumbnail, frame etc.
         /// </summary>
         public GrabbedImageType Type { get; }
+
+        /// <summary>
+        /// Time of the frame - if <see cref="Type"/> is <see cref="GrabbedImageType.Frame"/>
+        /// </summary>
+        public TimeSpan? FrameTime { get; set; }
+
+        /// <summary>
+        /// Size of the image - if available
+        /// </summary>
+        public GrabbedImageSize Size { get; set; }
         #endregion
 
         #region Constructors
