@@ -52,7 +52,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         {
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new GrabException(
-                    $"A server error occurred while retrieving Instagram content. Server returned {response.StatusCode} {response.ReasonPhrase}.");
+                    $"An HTTP error occurred while retrieving Instagram content. Server returned {response.StatusCode} {response.ReasonPhrase}.");
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             var nodes = doc.DocumentNode.SelectNodes(
                 "//meta[starts-with(@property, 'og:') and @property and @content]");
             if (nodes == null)
-                throw new GrabException("Failed to obtain metadata from the Instagram page.");
+                throw new GrabParseException("Failed to obtain metadata from the Instagram page.");
 
             foreach (var node in nodes)
             {

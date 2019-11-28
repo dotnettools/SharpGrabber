@@ -10,15 +10,17 @@ namespace DotNetTools.SharpGrabber.Tests
         public async void Test_Instagram()
         {
             var grabber = new InstagramGrabber();
-            var result = await grabber.Grab(new Uri("https://www.instagram.com/p/B4fk9vpnKdG/?utm_source=ig_web_button_share_sheet"));
+            var result =
+                await grabber.Grab(
+                    new Uri("https://www.instagram.com/p/B4fk9vpnKdG/?utm_source=ig_web_button_share_sheet"));
             Assert.Equal(2, result.Resources.Count);
         }
 
-        /*[Fact]
+        [Fact]
         public async void Test_YouTube()
         {
             var grabber = new YouTubeGrabber();
-            var result = await grabber.Grab(new Uri(""));
-        }*/
+            var result = await grabber.Grab(new Uri("https://www.youtube.com/watch?v=hTbhdMAjh9Y"));
+        }
     }
 }
