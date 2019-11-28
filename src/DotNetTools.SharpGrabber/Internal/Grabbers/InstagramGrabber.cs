@@ -119,6 +119,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         #endregion
 
         #region Methods
+        public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GrabId(uri));
+
         public async override Task<GrabResult> Grab(Uri uri, GrabOptions options)
         {
             // init

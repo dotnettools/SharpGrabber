@@ -20,6 +20,8 @@ namespace DotNetTools.SharpGrabber
 
         public string[] GetSupportedSchemes() => SupportedSchemes;
 
+        public abstract bool Supports(Uri uri);
+
         public Task<GrabResult> Grab(Uri uri)
         {
             Status.Update(null, "Initializing...", WorkStatusType.Initiating);

@@ -11,6 +11,7 @@ namespace DotNetTools.SharpGrabber.Tests
         {
             var grabber = new InstagramGrabber();
             var result = await grabber.Grab(new Uri("https://www.instagram.com/p/B4fk9vpnKdG/?utm_source=ig_web_button_share_sheet"));
+            Assert.Equal(2, result.Resources.Count);
         }
     }
 }

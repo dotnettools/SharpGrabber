@@ -11,8 +11,8 @@ namespace DotNetTools.SharpGrabber
     /// of all grabbers by a single call.
     /// </summary>
     /// <remarks>
-    /// Methods of same instance of classes implementing <see cref="IGrabber"/> are not expected to be used
-    /// simultaneously. Status of a grab is available through <see cref="IGrabber.Status"/>.
+    /// Members of the same instance of <see cref="IGrabber"/> object are not expected to be used
+    /// simultaneously. Status of an active grab is available through <see cref="IGrabber.Status"/>.
     /// </remarks>
     public interface IGrabber
     {
@@ -38,14 +38,19 @@ namespace DotNetTools.SharpGrabber
         string[] GetSupportedSchemes();
 
         /// <summary>
-        /// Asynchronously looks up the specified URI and grabs useful resources. In case of unsuccessful grab, NULL should
+        /// Briefly checks if this grabber supports the specified URI.
+        /// </summary>
+        bool Supports(Uri uri);
+
+        /// <summary>
+        /// Asynchronously looks up the specified URI and grabs useful resources. In case of unsupported URI, NULL should
         /// be returned.
         /// </summary>
         Task<GrabResult> Grab(Uri uri);
 
         /// <summary>
         /// Asynchronously looks up the specified URI and grabs useful resources regarding the specified <paramref name="options"/>.
-        /// In case of unsuccessful grab, NULL should be returned.
+        /// In case of unsupported URI, NULL should be returned.
         /// </summary>
         Task<GrabResult> Grab(Uri uri, GrabOptions options);
     }
