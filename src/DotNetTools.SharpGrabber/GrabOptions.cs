@@ -10,7 +10,12 @@ namespace DotNetTools.SharpGrabber
     [Flags]
     public enum GrabOptionFlag
     {
-        None = 0
+        None = 0,
+
+        /// <summary>
+        /// Grabber may decipher URIs automatically where necessary
+        /// </summary>
+        Decipher = 1,
     }
 
     /// <summary>
@@ -26,9 +31,11 @@ namespace DotNetTools.SharpGrabber
         #endregion
 
         #region Constructors
-        public GrabOptions() { }
-
-        public GrabOptions(GrabOptionFlag flag)
+        public GrabOptions()
+        {
+        }
+        
+        public GrabOptions(GrabOptionFlag flag) : this()
         {
             Flags = flag;
         }

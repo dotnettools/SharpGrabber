@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using DotNetTools.SharpGrabber.Exceptions;
@@ -17,7 +18,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
     /// </summary>
     public class YouTubeGrabber : BaseGrabber
     {
-        #region YouTube link regular expressions
+        #region Compiled Regular Expressions
         private static readonly Regex YTUNormal = new Regex(
             @"(https?://)?(www\.)?youtube\.com/(watch|embed)\?v=([A-Za-z0-9\-_]+)",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -28,6 +29,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
         private static readonly Regex YTUShort = new Regex(@"(https?://)?(www\.)?youtu\.be/([A-Za-z0-9\-_]+)",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private static readonly Regex YTBaseJsDetector = new Regex(@"<script[^<>]+src=""([^""]+base.js)""", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
         #endregion
 
         #region Properties
@@ -37,7 +40,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         /// Standard format for YouTube links which is used with String.Format that is called with video ID as the only
         /// format argument
         /// </summary>
-        public string StandardYouTubeUrlFormat { get; set; } = "https://www.youtube.com/watch?v={0}";
+        public string StandardYouTubeUrlFormat { get; set; } = "https://www.youtube.com/watch?v={0}&hl=en_US";
         #endregion
 
         #region Internal Methods
@@ -95,14 +98,33 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             return JObject.Parse(match.Groups[1].Value);
         }
 
+        protected virtual Uri GetYouTubeBaseJsUri(Uri baseUri, string html)
+        {
+            var match = YTBaseJsDetector.Match(html);
+            if (!match.Success)
+                throw new GrabParseException("Failed to find URI for base.js script.");
+            return new Uri(baseUri, match.Groups[1].Value);
+        }
+
         protected virtual int[] ExtractCreationDateTime(JToken ytPrimary)
         {
             var ytDateText = ytPrimary.SelectToken("$.dateText.simpleText") ??
                              throw new GrabParseException("Failed to extract dateText.simpleText.");
             var ytDateMatch = new Regex(@"^[^0-9]*([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)[^0-9]*$")
                 .Match(ytDateText.Value<string>());
+
             if (!ytDateMatch.Success)
-                throw new GrabParseException("Failed to parse date format of dateText.simpleText.");
+            {
+                // not in numeric format
+                // try parse in the following format: 'Premiered Aug 11, 2011'
+                ytDateMatch = new Regex(@"^([^\s]*\s+)?([A-Za-z]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)$")
+                    .Match(ytDateText.Value<string>());
+                if (!ytDateMatch.Success)
+                    throw new GrabParseException("Failed to parse date format of dateText.simpleText.");
+                var dateTime = DateTime.Parse($"{ytDateMatch.Groups[2].Value} {ytDateMatch.Groups[3].Value}, {ytDateMatch.Groups[4].Value}");
+                return new[] {dateTime.Day, dateTime.Month, dateTime.Year};
+            }
+
             return new[]
             {
                 int.Parse(ytDateMatch.Groups[1].Value), int.Parse(ytDateMatch.Groups[2].Value),
@@ -133,6 +155,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         protected virtual void UpdateStreamingData(GrabResult result, JObject streamingData)
         {
             // TODO: Implement YouTubeGrabber.UpdateStreamData
+            // So=function(a){a=a.split("&");for(var b={},c=0,d=a.length;c<d;c++){var e=a[c].split("=");if(1==e.length&&e[0]||2==e.length)try{var f=Uc(e[0]||""),k=Uc(e[1]||"");f in b?g.Ia(b[f])?fb(b[f],k):b[f]=[b[f],k]:b[f]=k}catch(m){var l=Error("Error decoding URL component");l.params="key: "+e[0]+", value: "+e[1];"q"==e[0]?g.ko(l):g.O(l)}}return b};
         }
 
         protected virtual void UpdateInitialData(GrabResult result, JObject ytInitialData)
@@ -187,7 +210,18 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             UpdateStreamingData(result, streamingData);
         }
 
-        protected virtual async Task Grab(GrabResult result, HttpContent content)
+        protected virtual async Task UpdateDecipherInfo(Uri baseJsUri, CancellationToken cancellationToken)
+        {
+            // init
+            Status.Update(null, "Deciphering YouTube links...", WorkStatusType.Decrypting);
+
+            // download base.js
+            var client = HttpHelper.CreateClient(baseJsUri);
+            var response = await client.GetAsync(baseJsUri, cancellationToken);
+            var script = await response.Content.ReadAsStringAsync();
+        }
+
+        protected virtual async Task Grab(GrabResult result, HttpContent content, CancellationToken cancellationToken, GrabOptions options)
         {
             // get html content
             var html = await content.ReadAsStringAsync();
@@ -195,6 +229,13 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             // extract javaScript info from the page
             var ytInitialData = GetYouTubeInitialData(html);
             var ytPlayerConfig = GetYouTubePlayerConfig(html);
+
+            // decipher if requested
+            if (options.Flags.HasFlag(GrabOptionFlag.Decipher) && html.Contains("cipher"))
+            {
+                var ytBaseJsUri = GetYouTubeBaseJsUri(result.OriginalUri, html);
+                await UpdateDecipherInfo(ytBaseJsUri, cancellationToken);
+            }
 
             // update result according to config
             UpdateInitialData(result, ytInitialData);
@@ -205,7 +246,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         #region Methods
         public override bool Supports(Uri uri) => !string.IsNullOrEmpty(ExtractVideoId(uri));
 
-        public override async Task<GrabResult> Grab(Uri uri, GrabOptions options)
+        public override async Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken, GrabOptions options)
         {
             // extract id
             var id = ExtractVideoId(uri);
@@ -219,7 +260,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             Status.Update(null, WorkStatusType.DownloadingPage);
             var client = HttpHelper.CreateClient(uri);
 
-            using (var response = await client.GetAsync(uri))
+            using (var response = await client.GetAsync(uri, cancellationToken))
             {
                 // check response
                 CheckResponse(response);
@@ -229,7 +270,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 {
                     Statistics = new GrabStatisticInfo()
                 };
-                await Grab(result, response.Content);
+                await Grab(result, response.Content, cancellationToken, options);
                 return result;
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber
@@ -12,18 +13,20 @@ namespace DotNetTools.SharpGrabber
     {
         public abstract string Name { get; }
 
-        public GrabOptions DefaultGrabOptions { get; } = new GrabOptions();
+        public GrabOptions DefaultGrabOptions { get; } = new GrabOptions(GrabOptionFlag.Decipher);
 
         public WorkStatus Status { get; } = new WorkStatus();
-        
+
         public abstract bool Supports(Uri uri);
 
-        public Task<GrabResult> Grab(Uri uri)
+        public Task<GrabResult> Grab(Uri uri) => Grab(uri, new CancellationToken());
+
+        public Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken)
         {
             Status.Update(null, "Initializing...", WorkStatusType.Initiating);
-            return Grab(uri, DefaultGrabOptions);
+            return Grab(uri, cancellationToken, DefaultGrabOptions);
         }
 
-        public abstract Task<GrabResult> Grab(Uri uri, GrabOptions options);
+        public abstract Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken, GrabOptions options);
     }
 }

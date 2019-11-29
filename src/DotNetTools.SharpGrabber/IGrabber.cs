@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber
@@ -41,11 +42,17 @@ namespace DotNetTools.SharpGrabber
         /// be returned.
         /// </summary>
         Task<GrabResult> Grab(Uri uri);
+        
+        /// <summary>
+        /// Asynchronously looks up the specified URI and grabs useful resources. In case of unsupported URI, NULL should
+        /// be returned.
+        /// </summary>
+        Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken);
 
         /// <summary>
         /// Asynchronously looks up the specified URI and grabs useful resources regarding the specified <paramref name="options"/>.
         /// In case of unsupported URI, NULL should be returned.
         /// </summary>
-        Task<GrabResult> Grab(Uri uri, GrabOptions options);
+        Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken, GrabOptions options);
     }
 }

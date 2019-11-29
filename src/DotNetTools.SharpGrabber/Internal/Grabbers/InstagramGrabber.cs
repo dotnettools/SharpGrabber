@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.Internal.Grabbers
@@ -122,7 +123,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         #region Methods
         public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GrabId(uri));
 
-        public override async Task<GrabResult> Grab(Uri uri, GrabOptions options)
+        public override async Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken, GrabOptions options)
         {
             // init
             var id = GrabId(uri);
@@ -135,7 +136,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             // download target page
             Status.Update(null, WorkStatusType.DownloadingPage);
             var client = HttpHelper.CreateClient(uri);
-            var response = await client.GetAsync(uri);
+            var response = await client.GetAsync(uri, cancellationToken);
 
             // check response
             CheckResponse(response);

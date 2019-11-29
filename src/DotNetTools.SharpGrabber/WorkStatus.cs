@@ -30,6 +30,11 @@ namespace DotNetTools.SharpGrabber
         ResolvingUri,
 
         /// <summary>
+        /// The grabber is decrypting/deciphering one or more URIs.
+        /// </summary>
+        Decrypting,
+
+        /// <summary>
         /// Indicates that type of the status is uncommon and a description is provided.
         /// </summary>
         Other,
