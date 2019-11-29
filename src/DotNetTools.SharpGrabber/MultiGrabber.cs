@@ -99,7 +99,7 @@ namespace DotNetTools.SharpGrabber
             {
                 try
                 {
-                    return await grabber.Grab(uri);
+                    return await grabber.GrabAsync(uri);
                 }
                 catch (GrabException exception)
                 {

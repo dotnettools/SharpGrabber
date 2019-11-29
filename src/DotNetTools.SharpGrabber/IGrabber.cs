@@ -41,18 +41,18 @@ namespace DotNetTools.SharpGrabber
         /// Asynchronously looks up the specified URI and grabs useful resources. In case of unsupported URI, NULL should
         /// be returned.
         /// </summary>
-        Task<GrabResult> Grab(Uri uri);
+        Task<GrabResult> GrabAsync(Uri uri);
         
         /// <summary>
         /// Asynchronously looks up the specified URI and grabs useful resources. In case of unsupported URI, NULL should
         /// be returned.
         /// </summary>
-        Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken);
+        Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken);
 
         /// <summary>
         /// Asynchronously looks up the specified URI and grabs useful resources regarding the specified <paramref name="options"/>.
         /// In case of unsupported URI, NULL should be returned.
         /// </summary>
-        Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken, GrabOptions options);
+        Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options);
     }
 }

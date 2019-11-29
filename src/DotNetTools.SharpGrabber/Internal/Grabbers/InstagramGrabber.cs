@@ -123,7 +123,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         #region Methods
         public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GrabId(uri));
 
-        public override async Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken, GrabOptions options)
+        public override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options)
         {
             // init
             var id = GrabId(uri);

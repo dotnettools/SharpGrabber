@@ -19,14 +19,14 @@ namespace DotNetTools.SharpGrabber
 
         public abstract bool Supports(Uri uri);
 
-        public Task<GrabResult> Grab(Uri uri) => Grab(uri, new CancellationToken());
+        public Task<GrabResult> GrabAsync(Uri uri) => GrabAsync(uri, new CancellationToken());
 
-        public Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken)
+        public Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken)
         {
             Status.Update(null, "Initializing...", WorkStatusType.Initiating);
-            return Grab(uri, cancellationToken, DefaultGrabOptions);
+            return GrabAsync(uri, cancellationToken, DefaultGrabOptions);
         }
 
-        public abstract Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken, GrabOptions options);
+        public abstract Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options);
     }
 }

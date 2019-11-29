@@ -11,7 +11,7 @@ namespace DotNetTools.SharpGrabber.Tests
         {
             var grabber = new InstagramGrabber();
             var result =
-                await grabber.Grab(
+                await grabber.GrabAsync(
                     new Uri("https://www.instagram.com/p/B4fk9vpnKdG/?utm_source=ig_web_button_share_sheet"));
             Assert.Equal(2, result.Resources.Count);
         }
@@ -20,8 +20,8 @@ namespace DotNetTools.SharpGrabber.Tests
         public async void Test_YouTube()
         {
             var grabber = new YouTubeGrabber();
-//            var result = await grabber.Grab(new Uri("https://www.youtube.com/watch?v=hTbhdMAjh9Y"));
-            var result = await grabber.Grab(new Uri("https://www.youtube.com/watch?v=-BjZmE2gtdo"));
+            // var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=hTbhdMAjh9Y"));
+            var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=-BjZmE2gtdo"));
         }
     }
 }

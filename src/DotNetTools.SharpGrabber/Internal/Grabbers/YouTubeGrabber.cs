@@ -1,278 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using DotNetTools.SharpGrabber.Exceptions;
-using DotNetTools.SharpGrabber.Media;
+using DotNetTools.SharpGrabber.Internal.Grabbers.YouTube;
 
 namespace DotNetTools.SharpGrabber.Internal.Grabbers
 {
     /// <summary>
-    /// Represents a YouTube <see cref="IGrabber"/>.
+    /// Default <see cref="IGrabber"/> for YouTube
     /// </summary>
-    public class YouTubeGrabber : BaseGrabber
+    public class YouTubeGrabber : YouTubeGrabberBase
     {
         #region Compiled Regular Expressions
-        private static readonly Regex YTUNormal = new Regex(
-            @"(https?://)?(www\.)?youtube\.com/(watch|embed)\?v=([A-Za-z0-9\-_]+)",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        private static readonly Regex YTUAlternative = new Regex(
-            @"(https?://)?(www\.)?youtube\.com/(watch|embed)/([A-Za-z0-9\-_]+)",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        private static readonly Regex YTUShort = new Regex(@"(https?://)?(www\.)?youtu\.be/([A-Za-z0-9\-_]+)",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        private static readonly Regex YTBaseJsDetector = new Regex(@"<script[^<>]+src=""([^""]+base.js)""", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-        #endregion
-
-        #region Properties
-        public override string Name { get; } = "YouTube";
-
-        /// <summary>
-        /// Standard format for YouTube links which is used with String.Format that is called with video ID as the only
-        /// format argument
-        /// </summary>
-        public string StandardYouTubeUrlFormat { get; set; } = "https://www.youtube.com/watch?v={0}&hl=en_US";
+        private static readonly Regex BaseJsLocatorRegex = new Regex(@"<script[^<>]+src=""([^""]+base\.js)""", RegexOptions.Compiled | RegexOptions.Multiline);
         #endregion
 
         #region Internal Methods
         /// <summary>
-        /// Extracts YouTube video ID from the specified URI.
+        /// Downloads video's embed page and extracts useful data.
         /// </summary>
-        protected virtual string ExtractVideoId(Uri uri)
+        protected virtual async Task<YouTubeEmbedPageData> DownloadEmbedPage(string id)
         {
-            // init
-            var uriString = uri.ToString();
-            var matchMap = new Dictionary<Regex, int>
-            {
-                {YTUNormal, 4},
-                {YTUAlternative, 4},
-                {YTUShort, 3},
-            };
+            var result = new YouTubeEmbedPageData();
 
-            // try match using each regular expression
-            foreach (var matchPair in matchMap)
-            {
-                var match = matchPair.Key.Match(uriString);
-                if (match.Success)
-                    return match.Groups[matchPair.Value].Value;
-            }
+            // get embed uri
+            var embedUri = GetYouTubeEmbedUri(id);
 
-            return null;
-        }
+            // download embed page
+            var client = HttpHelper.CreateClient();
+            var embedPageContent = await client.GetStringAsync(embedUri);
 
-        private Uri MakeStandardYouTubeUri(string videoId) => new Uri(string.Format(StandardYouTubeUrlFormat, videoId));
-
-        protected virtual void CheckResponse(HttpResponseMessage response)
-        {
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw new GrabException(
-                    $"An HTTP error occurred while retrieving YouTube content. Server returned {response.StatusCode} {response.ReasonPhrase}.");
-        }
-
-        protected virtual JObject GetYouTubeInitialData(string html)
-        {
-            var re = new Regex(@"ytInitialData[""=\]\s]+(\{.*\})[;\sA-Za-z0-9\[""]+ytInitialPlayerResponse",
-                RegexOptions.Multiline | RegexOptions.IgnoreCase);
-            var match = re.Match(html);
+            // find base.js
+            var match = BaseJsLocatorRegex.Match(embedPageContent);
             if (!match.Success)
-                throw new GrabParseException("Failed to fetch YouTube initial data.");
-            return JObject.Parse(match.Groups[1].Value);
+                throw new GrabParseException("Failed to find base.js script reference.");
+            result.BaseJsUri = new Uri(embedUri, match.Groups[1].Value);
+
+            return result;
         }
 
-        protected virtual JObject GetYouTubePlayerConfig(string html)
+        /// <summary>
+        /// Downloads metadata for the YouTube video with the specified ID.
+        /// </summary>
+        protected virtual async Task<YouTubeMetadata> DownloadMetadata(string id, CancellationToken cancellationToken)
         {
-            var re = new Regex(@"ytplayer.config\s*=\s*(\{[^\r\n]+\});\s*ytplayer",
-                RegexOptions.Multiline | RegexOptions.IgnoreCase);
-            var match = re.Match(html);
-            if (!match.Success)
-                throw new GrabParseException("Failed to fetch YouTube player config.");
-            return JObject.Parse(match.Groups[1].Value);
-        }
+            var rawMetadata = new Dictionary<string, string>();
+            Status.Update(null, "Downloading metadata...", WorkStatusType.DownloadingFile);
 
-        protected virtual Uri GetYouTubeBaseJsUri(Uri baseUri, string html)
-        {
-            var match = YTBaseJsDetector.Match(html);
-            if (!match.Success)
-                throw new GrabParseException("Failed to find URI for base.js script.");
-            return new Uri(baseUri, match.Groups[1].Value);
-        }
+            // make http client
+            var client = HttpHelper.CreateClient();
 
-        protected virtual int[] ExtractCreationDateTime(JToken ytPrimary)
-        {
-            var ytDateText = ytPrimary.SelectToken("$.dateText.simpleText") ??
-                             throw new GrabParseException("Failed to extract dateText.simpleText.");
-            var ytDateMatch = new Regex(@"^[^0-9]*([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)[^0-9]*$")
-                .Match(ytDateText.Value<string>());
-
-            if (!ytDateMatch.Success)
+            // send http request
+            using (var response = await client.GetAsync(GetYouTubeVideoInfoUri(id), cancellationToken))
             {
-                // not in numeric format
-                // try parse in the following format: 'Premiered Aug 11, 2011'
-                ytDateMatch = new Regex(@"^([^\s]*\s+)?([A-Za-z]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)$")
-                    .Match(ytDateText.Value<string>());
-                if (!ytDateMatch.Success)
-                    throw new GrabParseException("Failed to parse date format of dateText.simpleText.");
-                var dateTime = DateTime.Parse($"{ytDateMatch.Groups[2].Value} {ytDateMatch.Groups[3].Value}, {ytDateMatch.Groups[4].Value}");
-                return new[] {dateTime.Day, dateTime.Month, dateTime.Year};
-            }
-
-            return new[]
-            {
-                int.Parse(ytDateMatch.Groups[1].Value), int.Parse(ytDateMatch.Groups[2].Value),
-                int.Parse(ytDateMatch.Groups[3].Value)
-            };
-        }
-
-        protected virtual void UpdateVideoDetails(GrabResult result, JObject videoDetails)
-        {
-            // update statistics
-            result.Statistics.ViewCount = videoDetails.Value<long>("viewCount");
-            result.Statistics.Author = videoDetails.Value<string>("author");
-            result.Statistics.Length = TimeSpan.FromSeconds(videoDetails.Value<int>("lengthSeconds"));
-
-            // update thumbnails
-            if (videoDetails.SelectToken("$.thumbnail.thumbnails") is JArray thumbnails)
-                foreach (var thumbnail in thumbnails)
+                // decode metadata into rawMetadata
+                var content = await response.Content.ReadAsStringAsync();
+                var @params = content.Split('&');
+                foreach (var param in @params)
                 {
-                    var uri = new Uri(thumbnail.Value<string>("url"));
-                    var grabbedImage = new GrabbedImage(GrabbedImageType.Thumbnail, result.OriginalUri, uri)
-                    {
-                        Size = new GrabbedImageSize(thumbnail.Value<int>("width"), thumbnail.Value<int>("height"))
-                    };
-                    result.Resources.Add(grabbedImage);
+                    var pair = param.Split('=')
+                        .Select(Uri.UnescapeDataString)
+                        .ToArray();
+
+                    rawMetadata.Add(pair[0], pair[1]);
                 }
-        }
-
-        protected virtual void UpdateStreamingData(GrabResult result, JObject streamingData)
-        {
-            // TODO: Implement YouTubeGrabber.UpdateStreamData
-            // So=function(a){a=a.split("&");for(var b={},c=0,d=a.length;c<d;c++){var e=a[c].split("=");if(1==e.length&&e[0]||2==e.length)try{var f=Uc(e[0]||""),k=Uc(e[1]||"");f in b?g.Ia(b[f])?fb(b[f],k):b[f]=[b[f],k]:b[f]=k}catch(m){var l=Error("Error decoding URL component");l.params="key: "+e[0]+", value: "+e[1];"q"==e[0]?g.ko(l):g.O(l)}}return b};
-        }
-
-        protected virtual void UpdateInitialData(GrabResult result, JObject ytInitialData)
-        {
-            // fetch json data
-            var ytResults = ytInitialData.SelectToken("$.contents.twoColumnWatchNextResults") ??
-                            throw new GrabParseException("Failed to extract twoColumnWatchNextResults.");
-            var ytPrimary = ytResults.SelectToken("$.results.results.contents[*].videoPrimaryInfoRenderer") ??
-                            throw new GrabParseException("Failed to extract videoPrimaryInfoRenderer.");
-            var ytSecondary = ytResults.SelectToken("$.results.results.contents[*].videoSecondaryInfoRenderer") ??
-                              throw new GrabParseException("Failed to extract videoSecondaryInfoRenderer.");
-            var ytDateValues = ExtractCreationDateTime(ytPrimary);
-
-            // extract useful info from the JSON data
-            var ytText = ytPrimary.SelectToken("$.title.runs[*].text");
-            var ytDescription = ytSecondary.SelectTokens("$.description.runs[*].text") ??
-                                throw new GrabParseException("Failed to extract description.");
-
-            // update grab result
-            result.Title = ytText.Value<string>();
-            result.Description = string.Join(Environment.NewLine, ytDescription.Select(run => run.Value<string>()));
-            result.CreationDate = new DateTime(ytDateValues[2], ytDateValues[1], ytDateValues[0]);
-        }
-
-        protected virtual void UpdatePlayerConfig(GrabResult result, JObject ytPlayerConfig)
-        {
-            // init
-            var ytPlayerArgs = ytPlayerConfig.SelectToken("args") ??
-                               throw new GrabParseException("Failed to extract player config args.");
-
-            var fmtList = ytPlayerArgs.SelectToken("fmt_list")?.Value<string>()?.Split(',') ??
-                          throw new GrabParseException("Failed to extract fmt_list from player config args.");
-
-            var adaptiveFmts = ytPlayerArgs.SelectToken("adaptive_fmts")?.Value<string>()?.Split('&') ??
-                               throw new GrabParseException("Failed to extract adaptive_fmts from player config args.");
-
-            var streamMap = ytPlayerArgs.SelectToken("url_encoded_fmt_stream_map")?.Value<string>()?.Split('&') ??
-                            throw new GrabParseException("Failed to extract url_encoded_fmt_stream_map from player config args.");
-
-            var playerResponse = JObject.Parse(ytPlayerArgs.SelectToken("player_response")?.Value<string>() ??
-                                               throw new GrabParseException(
-                                                   "Failed to extract player_response from player config args."));
-
-            // get videoDetails
-            var videoDetails = playerResponse.SelectToken("videoDetails") as JObject ??
-                               throw new GrabParseException("Failed to extract videoDetails from player_response.");
-            UpdateVideoDetails(result, videoDetails);
-
-            // get streamingData
-            var streamingData = playerResponse.SelectToken("streamingData") as JObject ??
-                                throw new GrabParseException("Failed to extract streamingData from player_response.");
-            UpdateStreamingData(result, streamingData);
-        }
-
-        protected virtual async Task UpdateDecipherInfo(Uri baseJsUri, CancellationToken cancellationToken)
-        {
-            // init
-            Status.Update(null, "Deciphering YouTube links...", WorkStatusType.Decrypting);
-
-            // download base.js
-            var client = HttpHelper.CreateClient(baseJsUri);
-            var response = await client.GetAsync(baseJsUri, cancellationToken);
-            var script = await response.Content.ReadAsStringAsync();
-        }
-
-        protected virtual async Task Grab(GrabResult result, HttpContent content, CancellationToken cancellationToken, GrabOptions options)
-        {
-            // get html content
-            var html = await content.ReadAsStringAsync();
-
-            // extract javaScript info from the page
-            var ytInitialData = GetYouTubeInitialData(html);
-            var ytPlayerConfig = GetYouTubePlayerConfig(html);
-
-            // decipher if requested
-            if (options.Flags.HasFlag(GrabOptionFlag.Decipher) && html.Contains("cipher"))
-            {
-                var ytBaseJsUri = GetYouTubeBaseJsUri(result.OriginalUri, html);
-                await UpdateDecipherInfo(ytBaseJsUri, cancellationToken);
             }
 
-            // update result according to config
-            UpdateInitialData(result, ytInitialData);
-            UpdatePlayerConfig(result, ytPlayerConfig);
-        }
-        #endregion
-
-        #region Methods
-        public override bool Supports(Uri uri) => !string.IsNullOrEmpty(ExtractVideoId(uri));
-
-        public override async Task<GrabResult> Grab(Uri uri, CancellationToken cancellationToken, GrabOptions options)
-        {
-            // extract id
-            var id = ExtractVideoId(uri);
-            if (string.IsNullOrEmpty(id))
-                return null;
-
-            // generate standard YouTube uri
-            uri = MakeStandardYouTubeUri(id);
-
-            // download target page
-            Status.Update(null, WorkStatusType.DownloadingPage);
-            var client = HttpHelper.CreateClient(uri);
-
-            using (var response = await client.GetAsync(uri, cancellationToken))
+            // extract metadata
+            var metadata = new YouTubeMetadata
             {
-                // check response
-                CheckResponse(response);
+            };
+            return metadata;
+        }
 
-                // grab from content
-                var result = new GrabResult(uri)
-                {
-                    Statistics = new GrabStatisticInfo()
-                };
-                await Grab(result, response.Content, cancellationToken, options);
-                return result;
-            }
+        protected override async Task GrabAsync(GrabResult result, string id, CancellationToken cancellationToken, GrabOptions options)
+        {
+            // extract base.js script
+            var embedPageData = await DownloadEmbedPage(id);
+
+            // download metadata
+            var metaData = await DownloadMetadata(id, cancellationToken);
+
+            throw new NotImplementedException();
         }
         #endregion
     }
