@@ -37,6 +37,12 @@ namespace DotNetTools.SharpGrabber
         /// Optional statistics grabbed from the page
         /// </summary>
         public GrabStatisticInfo Statistics { get; set; }
+
+        /// <summary>
+        /// Whether or not the media is secured. For example, <see cref="IsSecure"/> is true if a YouTube video
+        /// has signature and its download links need to be deciphered.
+        /// </summary>
+        public bool IsSecure { get; set; }
         #endregion
 
         #region Constructors

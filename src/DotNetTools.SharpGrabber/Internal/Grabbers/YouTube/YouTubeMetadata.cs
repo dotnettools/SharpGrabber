@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
 {
@@ -32,6 +33,14 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         /// player_response: YouTube player metadata
         /// </summary>
         public YouTubePlayerResponse PlayerResponse { get; set; } = new YouTubePlayerResponse();
+        #endregion
+
+        #region Implied Properties
+        /// <summary>
+        /// Concatenates <see cref="MuxedStreams"/> with <see cref="AdaptiveStreams"/> and returns the result as
+        /// an enumerable.
+        /// </summary>
+        public IEnumerable<YouTubeStreamInfo> AllStreams => MuxedStreams.Concat<YouTubeStreamInfo>(AdaptiveStreams);
         #endregion
     }
 }

@@ -16,5 +16,7 @@
         public string Url { get; set; }
 
         public string Signature { get; set; }
+
+        public string Decipher { get; set; }
     }
 }

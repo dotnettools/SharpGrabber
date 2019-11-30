@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -20,6 +22,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
     {
         #region Compiled Regular Expressions
         private static readonly Regex BaseJsLocatorRegex = new Regex(@"<script[^<>]+src=""([^""]+base\.js)""", RegexOptions.Compiled | RegexOptions.Multiline);
+        private static readonly Regex DecipherFunctionRegex = new Regex(@"\s(\w+)=function\S+split\([^\n\r]+join\(\S+", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
         #endregion
 
         #region Internal Methods => Metadata
@@ -217,6 +220,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
         protected virtual YouTubePlayerResponse ExtractPlayerResponseMetadata(JToken playerResponse)
         {
+            var statusString = playerResponse.SelectToken("$.playabilityStatus.status").Value<string>();
+            if (!statusString.Equals("OK", StringComparison.InvariantCultureIgnoreCase))
+                throw new GrabException("YouTube video is inaccessible.");
             return new YouTubePlayerResponse();
         }
 
@@ -275,6 +281,45 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         }
         #endregion
 
+        #region Internal Methods => Deciphering
+        /// <summary>
+        /// Invoked by <see cref="GrabAsync"/> method when the target video has a signature.
+        /// This method downloads the necessary script (base.js) and decipher all grabbed links. 
+        /// </summary>
+        protected virtual async Task Decipher(YouTubeEmbedPageData embedPageData, YouTubeMetadata metaData, CancellationToken cancellationToken)
+        {
+            // download base.js
+            var client = HttpHelper.CreateClient();
+            using (var response = await client.GetAsync(embedPageData.BaseJsUri, cancellationToken))
+            {
+                var scriptContent = await response.Content.ReadAsStringAsync();
+                var script = new YouTubeScript(scriptContent);
+
+                // find decipher function name
+                var match = DecipherFunctionRegex.Match(scriptContent);
+                if (!match.Success)
+                    throw new GrabParseException("Failed to locate decipher function.");
+                var fn = match.Groups[1].Value;
+
+                // prepare script host to execute the decipher function along with its used functions
+                script.PrepareDecipherFunctionCall(fn);
+
+                // call decipher function
+                foreach (var streamInfo in metaData.AllStreams)
+                {
+                    if (string.IsNullOrEmpty(streamInfo.Signature))
+                        continue;
+
+                    // calculate decipher
+                    streamInfo.Decipher = script.CallDecipherFunction(fn, streamInfo.Signature);
+
+                    // update uri
+                    streamInfo.Url += $"&sig={Uri.EscapeDataString(streamInfo.Decipher)}";
+                }
+            }
+        }
+        #endregion
+
         #region Internal Methods
         /// <summary>
         /// Downloads video's embed page and extracts useful data.
@@ -317,6 +362,13 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 result.Resources.Add(img);
             }
         }
+
+        protected virtual void AppendStreamToResult(GrabResult result, YouTubeStreamInfo stream, YouTubeStreamType type)
+        {
+            var format = new MediaFormat(stream.Mime, null);
+            var grabbed = new GrabbedMedia(new Uri(stream.Url), null, format, MediaType.Video);
+            result.Resources.Add(grabbed);
+        }
         #endregion
 
         #region Grab Method
@@ -328,9 +380,24 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             // download metadata
             var metaData = await DownloadMetadata(id, cancellationToken);
 
+            // are there any encrypted streams?
+            result.IsSecure = metaData.AllStreams.Any(stream => !string.IsNullOrEmpty(stream.Signature));
+
+            // should we decipher the signature?
+            if (result.IsSecure && options.Flags.HasFlag(GrabOptionFlag.Decipher))
+                await Decipher(embedPageData, metaData, cancellationToken);
+
             // append images to the result
             if (options.Flags.HasFlag(GrabOptionFlag.GrabImages))
                 AppendImagesToResult(result, id);
+
+            // append muxed streams to result
+            foreach (var stream in metaData.MuxedStreams)
+                AppendStreamToResult(result, stream, YouTubeStreamType.Multiplexed);
+
+            // append muxed streams to result
+            foreach (var stream in metaData.AdaptiveStreams)
+                AppendStreamToResult(result, stream, YouTubeStreamType.Adaptive);
         }
         #endregion
     }
