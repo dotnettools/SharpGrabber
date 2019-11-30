@@ -27,10 +27,10 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
         #region Internal Methods => Metadata
         /// <summary>
-        /// URL-encoded data are randomly mangled by YouTube. Some entries are merged with other entries separated by comma.
-        /// This method will iterate through the mangled entries and invokes <paramref name="feedCallback"/> for each real
-        /// independent entry. Finally, <paramref name="feedCallback"/> is called with NULL parameters to enforce a final
-        /// commit.
+        /// URL-encoded data are randomly mangled by YouTube. Some entries are merged with other ones separated by comma.
+        /// This method iterates through the mangled entries and invokes <paramref name="feedCallback"/> for each real
+        /// independent entry. Finally, <paramref name="feedCallback"/> is called supplied with NULL arguments to enforce
+        /// a final commit.
         /// </summary>
         protected virtual void UnmangleEntries(List<KeyValuePair<string, string>> entries, Action<string, string> feedCallback)
         {
@@ -349,10 +349,10 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         /// </summary>
         protected virtual void AppendImagesToResult(GrabResult result, string id, bool useHttps = true)
         {
-            // We are gonna iterate through all possible image types and add link to every image
-            // in result resources. Notice that since these URIs are not checked by sending HTTP
-            // requests, there is a rare possibility for some generated links to be missing from
-            // YouTube servers.
+            // We are gonna iterate through all possible image types and add links to every image
+            // into result resources. Notice that since these URIs are not checked by sending HTTP
+            // requests, there is a rare possibility for some generated links to be invalid and
+            // missing from YouTube servers.
 
             var imageTypes = Enum.GetValues(typeof(YouTubeImageType));
             foreach (YouTubeImageType imageType in imageTypes)
