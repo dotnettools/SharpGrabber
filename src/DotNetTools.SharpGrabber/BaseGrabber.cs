@@ -13,7 +13,7 @@ namespace DotNetTools.SharpGrabber
     {
         public abstract string Name { get; }
 
-        public GrabOptions DefaultGrabOptions { get; } = new GrabOptions(GrabOptionFlag.Decipher);
+        public GrabOptions DefaultGrabOptions { get; } = new GrabOptions(GrabOptionFlag.Decipher | GrabOptionFlag.GrabImages);
 
         public WorkStatus Status { get; } = new WorkStatus();
 

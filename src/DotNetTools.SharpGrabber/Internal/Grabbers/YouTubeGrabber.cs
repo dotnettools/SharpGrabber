@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Internal.Grabbers.YouTube;
+using DotNetTools.SharpGrabber.Media;
 
 namespace DotNetTools.SharpGrabber.Internal.Grabbers
 {
@@ -72,10 +73,33 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             // extract metadata
             var metadata = new YouTubeMetadata
             {
+                FormatList = rawMetadata["fmt_list"],
+                Status = rawMetadata["status"],
             };
             return metadata;
         }
 
+        /// <summary>
+        /// Generates all possible image URLs of the specified YouTube video.
+        /// </summary>
+        protected virtual void AppendImagesToResult(GrabResult result, string id, bool useHttps = true)
+        {
+            // We are gonna iterate through all possible image types and add link to every image
+            // in result resources. Notice that since these URIs are not checked by sending HTTP
+            // requests, there is a rare possibility for some generated links to be missing from
+            // YouTube servers.
+
+            var imageTypes = Enum.GetValues(typeof(YouTubeImageType));
+            foreach (YouTubeImageType imageType in imageTypes)
+            {
+                var uri = GetYouTubeImageUri(id, imageType, useHttps);
+                var img = new GrabbedImage(GrabbedImageType.Primary, null, uri);
+                result.Resources.Add(img);
+            }
+        }
+        #endregion
+
+        #region Grab Method
         protected override async Task GrabAsync(GrabResult result, string id, CancellationToken cancellationToken, GrabOptions options)
         {
             // extract base.js script
@@ -83,6 +107,10 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
             // download metadata
             var metaData = await DownloadMetadata(id, cancellationToken);
+
+            // append images to the result
+            if (options.Flags.HasFlag(GrabOptionFlag.GrabImages))
+                AppendImagesToResult(result, id);
 
             throw new NotImplementedException();
         }

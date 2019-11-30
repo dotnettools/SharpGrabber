@@ -13,9 +13,14 @@ namespace DotNetTools.SharpGrabber
         None = 0,
 
         /// <summary>
-        /// Grabber may decipher URIs automatically where necessary
+        /// Grabber may decipher URIs automatically where necessary.
         /// </summary>
         Decipher = 1,
+        
+        /// <summary>
+        /// Grabber may grab related images.
+        /// </summary>
+        GrabImages = 2,
     }
 
     /// <summary>

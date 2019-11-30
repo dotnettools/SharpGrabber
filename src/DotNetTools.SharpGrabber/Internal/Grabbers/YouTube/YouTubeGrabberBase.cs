@@ -11,6 +11,18 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
     /// </summary>
     public abstract class YouTubeGrabberBase : BaseGrabber
     {
+        #region Constants
+        /// <summary>
+        /// Standard format for YouTube image links which is used with String.Format provided with the following arguments:
+        /// <list type="bullet">
+        /// <item>{0} Protocol Schema e.g. https</item>
+        /// <item>{1} Video ID</item>
+        /// <item>{2} Image name e.g. hqdefault</item>
+        /// </list>
+        /// </summary>
+        private static string StandardYouTubeImageUrlFormat { get; set; } = "{0}://img.youtube.com/vi/{1}/{2}.jpg";
+        #endregion
+
         #region Compiled Regular Expressions
         private static readonly Regex YTUNormal = new Regex(
             @"(https?://)?(www\.)?youtube\.com/(watch|embed)\?v=([A-Za-z0-9\-_]+)",
@@ -28,8 +40,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         public override string Name { get; } = "YouTube";
 
         /// <summary>
-        /// Standard format for YouTube links which is used with String.Format that is called with video ID as the only
-        /// format argument
+        /// Standard format for YouTube links which is used with String.Format supplied with video ID as the only
+        /// format argument.
         /// </summary>
         public string StandardYouTubeUrlFormat { get; set; } = "https://www.youtube.com/watch?v={0}&hl=en_US";
         #endregion
@@ -108,6 +120,17 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
 
             return result;
         }
+        #endregion
+
+        #region Static Methods
+        /// <summary>
+        /// Returns URI for the specified YouTube image.  
+        /// </summary>
+        public static Uri GetYouTubeImageUri(string videoId, YouTubeImageType type, bool useHttps = true)
+            => new Uri(string.Format(StandardYouTubeImageUrlFormat,
+                useHttps ? "https" : "http",
+                videoId,
+                type.ToYouTubeString()));
         #endregion
     }
 }
