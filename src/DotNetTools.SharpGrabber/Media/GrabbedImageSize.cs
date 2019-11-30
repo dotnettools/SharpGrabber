@@ -3,26 +3,11 @@
     /// <summary>
     /// Stores grabbed image size
     /// </summary>
-    public class GrabbedImageSize
+    public class GrabbedImageSize : Size
     {
-        #region Properties
-        public int Width { get; }
-
-        public int Height { get; }
-        #endregion
-
-        #region Constructor
-        public GrabbedImageSize(int width, int height)
+        #region Constructors
+        public GrabbedImageSize(int width, int height) : base(width, height)
         {
-            Width = width;
-            Height = height;
-        }
-        #endregion
-
-        #region Methods
-        public override string ToString()
-        {
-            return $"{Width}x{Height}";
         }
         #endregion
     }

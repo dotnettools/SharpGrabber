@@ -171,6 +171,43 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 // update draft
                 switch (key.ToLowerInvariant())
                 {
+                    case "quality_label":
+                        draft.QualityLabel = value;
+                        break;
+
+                    case "itag":
+                        draft.iTag = int.Parse(value);
+                        break;
+
+                    case "fps":
+                        draft.FPS = int.Parse(value);
+                        break;
+
+                    case "bitrate":
+                        draft.BitRate = int.Parse(value);
+                        break;
+
+                    case "type":
+                        draft.Type = value;
+                        var parts = value.Split(new[] {';'}, 2, StringSplitOptions.RemoveEmptyEntries);
+                        draft.Mime = parts[0];
+                        break;
+
+                    case "size":
+                        var sizeRegex = new Regex(@"([0-9]+)[^0-9]+([0-9]+)");
+                        var match = sizeRegex.Match(value);
+                        if (!match.Success)
+                            throw new GrabParseException($"Failed to parse stream size: {value}.");
+                        draft.Size = new Size(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                        break;
+
+                    case "url":
+                        draft.Url = value;
+                        break;
+
+                    case "s":
+                        draft.Signature = value;
+                        break;
                 }
             }
 

@@ -6,5 +6,12 @@
     /// </summary>
     public class YouTubeAdaptiveStream : YouTubeStreamInfo
     {
+        public string QualityLabel { get; set; }
+
+        public int FPS { get; set; }
+
+        public int BitRate { get; set; }
+
+        public Size Size { get; set; }
     }
 }
