@@ -223,7 +223,24 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             var statusString = playerResponse.SelectToken("$.playabilityStatus.status").Value<string>();
             if (!statusString.Equals("OK", StringComparison.InvariantCultureIgnoreCase))
                 throw new GrabException("YouTube video is inaccessible.");
-            return new YouTubePlayerResponse();
+
+            // get video details
+            var videoDetails = playerResponse.SelectToken("$.videoDetails");
+            var microformat = playerResponse.SelectToken("$.microformat");
+            var captions = playerResponse.SelectToken("$.captions");
+
+            return new YouTubePlayerResponse
+            {
+                Author = StringHelper.DecodeUriString(videoDetails.SelectToken("author").Value<string>()),
+                Length = TimeSpan.FromSeconds(videoDetails.SelectToken("lengthSeconds").Value<int>()),
+                Title = StringHelper.DecodeUriString(videoDetails.SelectToken("title").Value<string>()),
+                AverageRating = videoDetails.SelectToken("averageRating").Value<double>(),
+                ChannelId = videoDetails.SelectToken("channelId").Value<string>(),
+                ShortDescription = StringHelper.DecodeUriString(videoDetails.SelectToken("shortDescription").Value<string>()),
+                ViewCount = videoDetails.SelectToken("viewCount").Value<int>(),
+                UploadedAt = microformat.SelectToken("..uploadDate").Value<DateTime>(),
+                PublishedAt = microformat.SelectToken("..publishDate").Value<DateTime>(),
+            };
         }
 
         /// <summary>
@@ -363,11 +380,32 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             }
         }
 
-        protected virtual void AppendStreamToResult(GrabResult result, YouTubeStreamInfo stream, YouTubeStreamType type)
+        protected virtual void AppendStreamToResult(GrabResult result, YouTubeStreamInfo stream)
         {
-            var format = new MediaFormat(stream.Mime, null);
+            // extract extension from mime
+            var extension = stream.Extension ?? stream.Mime.Split('/').Last();
+
+            var format = new MediaFormat(stream.Mime, extension);
             var grabbed = new GrabbedMedia(new Uri(stream.Url), null, format, MediaType.Video);
             result.Resources.Add(grabbed);
+        }
+
+        /// <summary>
+        /// Updates <see cref="GrabResult"/> according to the information obtained from metadata.
+        /// </summary>
+        private void UpdateResult(GrabResult result, YouTubeMetadata md)
+        {
+            var response = md.PlayerResponse;
+            result.Title = response.Title;
+            result.CreationDate = response.UploadedAt;
+            result.Description = response.ShortDescription;
+
+            result.Statistics = new GrabStatisticInfo
+            {
+                Author = response.Author,
+                Length = response.Length,
+                ViewCount = response.ViewCount
+            };
         }
         #endregion
 
@@ -379,6 +417,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
             // download metadata
             var metaData = await DownloadMetadata(id, cancellationToken);
+
+            // update result according to the metadata
+            UpdateResult(result, metaData);
 
             // are there any encrypted streams?
             result.IsSecure = metaData.AllStreams.Any(stream => !string.IsNullOrEmpty(stream.Signature));
@@ -393,11 +434,11 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
             // append muxed streams to result
             foreach (var stream in metaData.MuxedStreams)
-                AppendStreamToResult(result, stream, YouTubeStreamType.Multiplexed);
+                AppendStreamToResult(result, stream);
 
             // append muxed streams to result
             foreach (var stream in metaData.AdaptiveStreams)
-                AppendStreamToResult(result, stream, YouTubeStreamType.Adaptive);
+                AppendStreamToResult(result, stream);
         }
         #endregion
     }

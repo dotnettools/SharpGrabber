@@ -11,6 +11,11 @@
 
         public string Mime { get; set; }
 
+        /// <summary>
+        /// Optional suggested extension of the file. If this value is NULL, the extension can be implied from <see cref="Mime"/>.
+        /// </summary>
+        public string Extension { get; set; }
+
         public string Quality { get; set; }
 
         public string Url { get; set; }
