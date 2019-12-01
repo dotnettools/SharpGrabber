@@ -106,7 +106,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             if (!string.IsNullOrEmpty(video))
             {
                 var format = new MediaFormat(video_type, MimeHelper.ExtractMimeExtension(video_type));
-                var vid = new GrabbedMedia(new Uri(video), null, format, MediaType.Video);
+                var vid = new GrabbedMedia(new Uri(video), null, format, MediaChannels.Both);
                 grabList.Add(vid);
             }
 

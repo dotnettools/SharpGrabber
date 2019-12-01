@@ -380,14 +380,58 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             }
         }
 
+        /// <summary>
+        /// Updates information about the grabbed media according to the given YouTube iTag info.
+        /// </summary>
+        protected virtual void UpdateStreamITagInfo(GrabbedMedia grabbed, YouTubeTagInfo itag)
+        {
+            grabbed.BitRateString = itag.BitRateString;
+            grabbed.Container = itag.Container;
+            grabbed.Resolution = itag.VideoResolution;
+            var attributes = new List<string>
+            {
+                grabbed.Container?.ToUpperInvariant(),
+                grabbed.Resolution
+            };
+            if (grabbed.Channels != MediaChannels.Both)
+                attributes.Add($"({grabbed.Channels} only)");
+            grabbed.FormatTitle = string.Join(" ", attributes.Where(attr => !string.IsNullOrWhiteSpace(attr)));
+        }
+
         protected virtual void AppendStreamToResult(GrabResult result, YouTubeStreamInfo stream)
         {
+            MediaChannels channels;
+
+            // get iTag info
+            var itagInfo = stream.iTag == null ? null : YouTubeTags.For(stream.iTag.Value);
+
             // extract extension from mime
             var extension = stream.Extension ?? stream.Mime.Split('/').Last();
 
+            // decide according to stream type - adaptive, or muxed
+            if (stream is YouTubeMuxedStream muxedStream)
+            {
+                // Muxed stream
+                channels = MediaChannels.Both;
+            }
+            else if (stream is YouTubeAdaptiveStream adaptiveStream)
+            {
+                bool hasVideo;
+
+                // Adaptive stream
+                hasVideo = itagInfo?.HasVideo ?? stream.Mime.StartsWith("video");
+                channels = hasVideo ? MediaChannels.Video : MediaChannels.Audio;
+            }
+            else
+                throw new NotImplementedException($"YouTube stream of type {stream.GetType()} is not implemented in {nameof(YouTubeGrabber)}.{nameof(AppendStreamToResult)}.");
+
             var format = new MediaFormat(stream.Mime, extension);
-            var grabbed = new GrabbedMedia(new Uri(stream.Url), null, format, MediaType.Video);
+            var grabbed = new GrabbedMedia(new Uri(stream.Url), null, format, channels);
             result.Resources.Add(grabbed);
+
+            // update grabbed media iTag info
+            if (itagInfo != null)
+                UpdateStreamITagInfo(grabbed, itagInfo.Value);
         }
 
         /// <summary>
