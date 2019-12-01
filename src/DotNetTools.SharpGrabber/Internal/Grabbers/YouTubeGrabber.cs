@@ -423,7 +423,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 channels = hasVideo ? MediaChannels.Video : MediaChannels.Audio;
             }
             else
-                throw new NotImplementedException($"YouTube stream of type {stream.GetType()} is not implemented in {nameof(YouTubeGrabber)}.{nameof(AppendStreamToResult)}.");
+                throw new NotSupportedException($"YouTube stream of type {stream.GetType()} is not implemented in {nameof(YouTubeGrabber)}.{nameof(AppendStreamToResult)}.");
 
             var format = new MediaFormat(stream.Mime, extension);
             var grabbed = new GrabbedMedia(new Uri(stream.Url), null, format, channels);
