@@ -20,7 +20,7 @@ to easily add more or even override part of grabbing algorithm with your own cod
 Install *SharpGrabber* automatically using a package manager.
 
 ### Install via NuGet
-    Install-Package DotNetTools.SharpGrabber
+    Install-Package DotNetTools.SharpGrabber -Version 1.0.0
     
 ## Usage Example
 
