@@ -43,6 +43,9 @@ are top priority:
 - Conversion support (especially useful for high quality YouTube videos)
 - Support for more media providers
 
+## Support
+If you want to support this project, the best support is to star it :)
+
 ## Contribution
 To contribute to this project, I'd appreciate if you'd  help with adding support for
 more top providers such as *Vimeo*, *DailyMotion* etc.
