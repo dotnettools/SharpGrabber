@@ -19,7 +19,7 @@ to easily add more or even override part of grabbing algorithm with your own cod
 - Instagram
 
 ## Installation
-Install *SharpGrabber* automatically using a package manager.
+Install *SharpGrabber* automatically using NuGet package manager.
 
 ### Install via NuGet
     Install-Package DotNetTools.SharpGrabber -Version 1.0.0
