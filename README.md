@@ -1,14 +1,8 @@
 # SharpGrabber
-<table>
-    <tr>
-        <td><img src="./assets/icon.png" alt="SharpGrabber" width="64"/></td>
-        <td>
+<img src="./assets/icon.png" alt="SharpGrabber" width="64"/>
             
 A **.NET Standard** library for grabbing information and 
 downloading from top media providers such as **YouTube**, **Instagram** etc.
-        </td>
-    </tr>
-</table>
 
 ## Features
 - Grabs useful information about media such as length, title, author and many more.
