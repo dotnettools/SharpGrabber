@@ -20,7 +20,7 @@ to easily add more or even override part of grabbing algorithm with your own cod
 Install *SharpGrabber* automatically using a package manager.
 
 ### Install via NuGet
-    Install-Package DotNetTools.SharpGrabber
+    Install-Package DotNetTools.SharpGrabber -Version 1.0.0
     
 ## Usage Example
 
@@ -42,6 +42,9 @@ are top priority:
 - .NET Core demo app
 - Conversion support (especially useful for high quality YouTube videos)
 - Support for more media providers
+
+## Support
+If you want to support this project, the best support is to star it :)
 
 ## Contribution
 To contribute to this project, I'd appreciate if you'd  help with adding support for
