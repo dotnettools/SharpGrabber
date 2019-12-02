@@ -112,11 +112,14 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         {
             lock (_tags)
                 return _tags.ContainsKey(iTag)
-                    ? (YouTubeTagInfo?) _tags[iTag]
+                    ? (YouTubeTagInfo?)_tags[iTag]
                     : null;
         }
     }
 
+    /// <summary>
+    /// Info about a YouTube iTag number
+    /// </summary>
     public struct YouTubeTagInfo
     {
         #region Properties
@@ -160,6 +163,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Creates a read-only instance of <see cref="YouTubeTagInfo"/> with the specified properties.
+        /// </summary>
         public YouTubeTagInfo(int iTag, string container, bool hasAudio, bool hasVideo, string videoResolution, int? bitRate)
         {
             this.iTag = iTag;

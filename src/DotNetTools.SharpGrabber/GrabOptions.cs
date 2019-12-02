@@ -10,13 +10,16 @@ namespace DotNetTools.SharpGrabber
     [Flags]
     public enum GrabOptionFlag
     {
+        /// <summary>
+        /// No grab flags
+        /// </summary>
         None = 0,
 
         /// <summary>
         /// Grabber may decipher URIs automatically where necessary.
         /// </summary>
         Decipher = 1,
-        
+
         /// <summary>
         /// Grabber may grab related images.
         /// </summary>
@@ -36,14 +39,16 @@ namespace DotNetTools.SharpGrabber
         #endregion
 
         #region Constructors
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public GrabOptions()
         {
         }
-        
+
         public GrabOptions(GrabOptionFlag flag) : this()
         {
             Flags = flag;
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         #endregion
     }
 }

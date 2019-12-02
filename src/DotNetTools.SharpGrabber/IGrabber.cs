@@ -28,7 +28,7 @@ namespace DotNetTools.SharpGrabber
         WorkStatus Status { get; }
 
         /// <summary>
-        /// Default grab options for this grabber - if none is specified while invoking <see cref="IGrabber.Grab"/>.
+        /// Default grab options for this grabber - if none is specified while invoking <see cref="IGrabber.GrabAsync(Uri, CancellationToken, GrabOptions)"/>.
         /// </summary>
         GrabOptions DefaultGrabOptions { get; }
         

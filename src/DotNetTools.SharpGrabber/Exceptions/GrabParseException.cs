@@ -13,6 +13,7 @@ namespace DotNetTools.SharpGrabber.Exceptions
     /// </remarks>
     public class GrabParseException : GrabException
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public GrabParseException() : base("Failed to parse information from the target link.")
         {
         }
@@ -24,5 +25,6 @@ namespace DotNetTools.SharpGrabber.Exceptions
         public GrabParseException(string message, Exception innerException) : base(message, innerException)
         {
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

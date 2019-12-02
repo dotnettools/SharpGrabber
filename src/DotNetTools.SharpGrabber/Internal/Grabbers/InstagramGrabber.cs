@@ -25,18 +25,25 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         #endregion
 
         #region Properties
+        /// <inheritdoc />
         public override string Name { get; } = "Instagram";
 
         /// <summary>
-        /// Represents the template of standard Instagram links. This value will be formatted using <see cref="String.Format"/>
+        /// Represents the template of standard Instagram links. This value will be formatted using <see cref="String.Format(string, object[])"/>
         /// passing an Instagram post identifier containing alpha-numeric characters.
         /// </summary>
         public virtual string StandardUrlTemplate { get; set; } = "https://www.instagram.com/p/{0}/";
         #endregion
 
         #region Internal Methods
+        /// <summary>
+        /// Makes a standard Instagram URL using the given post ID.
+        /// </summary>
         protected virtual Uri MakeStandardInstagramUri(string id) => new Uri(string.Format(StandardUrlTemplate, id));
 
+        /// <summary>
+        /// Extracts post ID from the specified URI.
+        /// </summary>
         protected virtual string GrabId(Uri uri)
         {
             var uriString = uri.ToString();
@@ -82,6 +89,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             return dictionary;
         }
 
+        /// <summary>
+        /// Given the specified <paramref name="metaData"/>, generates proper <see cref="GrabResult"/>.
+        /// </summary>
         protected virtual GrabResult GrabUsingMetadata(IDictionary<string, string> metaData)
         {
             var grabList = new List<IGrabbed>();
@@ -121,8 +131,10 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         #endregion
 
         #region Methods
+        /// <inheritdoc />
         public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GrabId(uri));
 
+        /// <inheritdoc />
         public override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options)
         {
             // init

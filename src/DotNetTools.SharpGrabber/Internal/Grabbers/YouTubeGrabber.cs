@@ -41,7 +41,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             {
                 sb.Clear();
                 var currentKey = pair.Key;
-                foreach (var ch in pair.Value.Concat(new[] {'\0'}))
+                foreach (var ch in pair.Value.Concat(new[] { '\0' }))
                 {
                     switch (ch)
                     {
@@ -118,7 +118,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
                     case "type":
                         draft.Type = value;
-                        var parts = value.Split(new[] {';'}, 2, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = value.Split(new[] { ';' }, 2, StringSplitOptions.RemoveEmptyEntries);
                         draft.Mime = parts[0];
                         break;
 
@@ -192,7 +192,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
                     case "type":
                         draft.Type = value;
-                        var parts = value.Split(new[] {';'}, 2, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = value.Split(new[] { ';' }, 2, StringSplitOptions.RemoveEmptyEntries);
                         draft.Mime = parts[0];
                         break;
 
@@ -218,6 +218,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             return list;
         }
 
+        /// <summary>
+        /// Given player_response JSON data, returns its .NET representation.
+        /// </summary>
         protected virtual YouTubePlayerResponse ExtractPlayerResponseMetadata(JToken playerResponse)
         {
             var statusString = playerResponse.SelectToken("$.playabilityStatus.status").Value<string>();
@@ -398,6 +401,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             grabbed.FormatTitle = string.Join(" ", attributes.Where(attr => !string.IsNullOrWhiteSpace(attr)));
         }
 
+        /// <summary>
+        /// Appends the specified <paramref name="stream"/> to the specified <paramref name="result"/>.
+        /// </summary>
         protected virtual void AppendStreamToResult(GrabResult result, YouTubeStreamInfo stream)
         {
             MediaChannels channels;
@@ -416,10 +422,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             }
             else if (stream is YouTubeAdaptiveStream adaptiveStream)
             {
-                bool hasVideo;
-
                 // Adaptive stream
-                hasVideo = itagInfo?.HasVideo ?? stream.Mime.StartsWith("video");
+                var hasVideo = itagInfo?.HasVideo ?? stream.Mime.StartsWith("video");
                 channels = hasVideo ? MediaChannels.Video : MediaChannels.Audio;
             }
             else
@@ -454,6 +458,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         #endregion
 
         #region Grab Method
+        /// <inheritdoc />
         protected override async Task GrabAsync(GrabResult result, string id, CancellationToken cancellationToken, GrabOptions options)
         {
             // extract base.js script

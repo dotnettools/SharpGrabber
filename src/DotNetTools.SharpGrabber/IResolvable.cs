@@ -35,6 +35,7 @@ namespace DotNetTools.SharpGrabber
         #endregion
 
         #region Constructors
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public BaseResolvable() { }
 
         public BaseResolvable(T resolvedValue)
@@ -42,6 +43,7 @@ namespace DotNetTools.SharpGrabber
             _value = resolvedValue;
             _resolved = true;
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         #endregion
 
         #region Internal Methods
@@ -52,6 +54,7 @@ namespace DotNetTools.SharpGrabber
         #endregion
 
         #region Methods
+        /// <inheritdoc />
         public bool IsResolved
         {
             get
@@ -61,6 +64,7 @@ namespace DotNetTools.SharpGrabber
             }
         }
 
+        /// <inheritdoc />
         public Task<T> Resolve()
         {
             var task = new TaskCompletionSource<T>();

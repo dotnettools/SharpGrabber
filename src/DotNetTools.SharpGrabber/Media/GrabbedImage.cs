@@ -10,8 +10,10 @@ namespace DotNetTools.SharpGrabber.Media
     public class GrabbedImage : IGrabbed
     {
         #region Properties
+        /// <inheritdoc />
         public Uri OriginalUri { get; }
 
+        /// <inheritdoc />
         public Uri ResourceUri { get; }
 
         /// <summary>
@@ -31,12 +33,14 @@ namespace DotNetTools.SharpGrabber.Media
         #endregion
 
         #region Constructors
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public GrabbedImage(GrabbedImageType type, Uri originalUri, Uri resourceUri)
         {
             Type = type;
             OriginalUri = originalUri;
             ResourceUri = resourceUri;
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         #endregion
     }
 }

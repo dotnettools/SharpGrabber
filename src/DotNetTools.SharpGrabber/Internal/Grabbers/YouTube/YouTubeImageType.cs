@@ -33,6 +33,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         MaximumResolution,
     }
 
+    /// <summary>
+    /// Contains helper methods for <see cref="YouTubeImageType"/>.
+    /// </summary>
     public static class YouTubeImageTypeHelper
     {
         /// <summary>

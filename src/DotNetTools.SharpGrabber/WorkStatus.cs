@@ -64,6 +64,7 @@ namespace DotNetTools.SharpGrabber
         #endregion
 
         #region Constructors
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public WorkStatus()
         {
         }
@@ -72,6 +73,7 @@ namespace DotNetTools.SharpGrabber
         {
             Update(progress, description, type);
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         #endregion
 
         #region Methods

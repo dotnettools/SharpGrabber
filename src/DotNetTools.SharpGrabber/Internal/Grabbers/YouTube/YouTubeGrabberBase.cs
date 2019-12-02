@@ -37,6 +37,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         #endregion
 
         #region Properties
+        /// <inheritdoc />
         public override string Name { get; } = "YouTube";
 
         /// <summary>
@@ -94,14 +95,16 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         protected virtual Uri GetYouTubeEmbedUri(string videoId) => new Uri($"https://youtube.com/embed/{videoId}");
 
         /// <summary>
-        /// This method gets called internally by <see cref="GrabAsync"/> after necessary initializations.
+        /// This method gets called internally by <see cref="GrabAsync(Uri, CancellationToken, GrabOptions)"/> after necessary initializations.
         /// </summary>
         protected abstract Task GrabAsync(GrabResult result, string id, CancellationToken cancellationToken, GrabOptions options);
         #endregion
 
         #region Methods
+        /// <inheritdoc />
         public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GetYouTubeId(uri));
 
+        /// <inheritdoc />
         public sealed override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options)
         {
             // get YouTube ID

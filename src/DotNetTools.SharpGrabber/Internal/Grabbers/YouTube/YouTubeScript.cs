@@ -48,11 +48,13 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         #endregion
 
         #region Constructor
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public YouTubeScript(string scriptSource)
         {
             _source = scriptSource;
             _engine = new Engine();
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         #endregion
 
         #region Internal Methods
@@ -188,7 +190,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
                 {"split", "join"};
             foreach (var usage in GetUsedFunctions(functionBody))
             {
-                var call = usage.Split(new[] {'.'}, 2);
+                var call = usage.Split(new[] { '.' }, 2);
                 var targetObject = call.First();
                 var targetMethod = call.Last();
                 if (methodBlackList.Contains(targetMethod))
@@ -214,6 +216,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
             _engine.Execute(functionDefinition);
         }
 
+        /// <summary>
+        /// Calls the decipher function with the specified name supplied with the specified signature and returns the string result.
+        /// </summary>
         public string CallDecipherFunction(string functionName, string signature)
         {
             return _engine.Invoke(functionName, signature).AsString();

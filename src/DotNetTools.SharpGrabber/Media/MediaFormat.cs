@@ -22,6 +22,7 @@ namespace DotNetTools.SharpGrabber.Media
         #endregion
 
         #region Methods
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public MediaFormat() { }
 
         public MediaFormat(string mime, string extension)
@@ -29,6 +30,7 @@ namespace DotNetTools.SharpGrabber.Media
             Mime = mime;
             Extension = extension;
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         #endregion
     }
 }

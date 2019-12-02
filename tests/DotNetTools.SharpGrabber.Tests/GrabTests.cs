@@ -21,7 +21,8 @@ namespace DotNetTools.SharpGrabber.Tests
         {
             var grabber = new YouTubeGrabber();
 //            var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=hTbhdMAjh9Y"));
-            var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=-BjZmE2gtdo"));
+//            var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=-BjZmE2gtdo"));
+            var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=kBNt8hYvn8A")); // jonas
         }
     }
 }
