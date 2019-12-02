@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DotNetTools.NExtension.Structures;
 using DotNetTools.SharpGrabber.Exceptions;
+using DotNetTools.SharpGrabber.Internal.Grabbers;
 
 namespace DotNetTools.SharpGrabber
 {
@@ -109,6 +110,19 @@ namespace DotNetTools.SharpGrabber
 
             // throw the last exception
             throw lastException;
+        }
+        #endregion
+
+        #region Static Methods
+        /// <summary>
+        /// Creates an instance of <see cref="MultiGrabber"/> with internal providers registered. 
+        /// </summary>
+        public static MultiGrabber CreateDefault()
+        {
+            var multiGrabber = new MultiGrabber();
+            multiGrabber.Register<YouTubeGrabber>();
+            multiGrabber.Register<InstagramGrabber>();
+            return multiGrabber;
         }
         #endregion
     }
