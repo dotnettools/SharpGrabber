@@ -46,14 +46,14 @@ Install *SharpGrabber* automatically using NuGet package manager.
     var result = await grabber.GrabAsync(new Uri("<Target Link>"));
     IList<IGrabbed> grabbedResources = result.Resources;
 
+## SharpGrabber.Desktop
+<img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
+
 ## Roadmap
 This project is very much in progress and the following features
 are top priority:
 - Support for Android
 - Support for more media providers
-
-## SharpGrabber.Desktop
-<img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
 ## Support
 If you want to support this project, the best thing is to star it :)
