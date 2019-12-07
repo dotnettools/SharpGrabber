@@ -41,12 +41,12 @@ Install *SharpGrabber* automatically using NuGet package manager.
 ## Roadmap
 This project is very much in progress and the following features
 are top priority:
-- .NET Core demo app
 - Conversion support (especially useful for high quality YouTube videos)
+- .NET Core demo app
 - Support for more media providers
 
 ## Support
-If you want to support this project, the best support is to star it :)
+If you want to support this project, the best thing is to star it :)
 
 ## Contribution
 To contribute to this project, I'd appreciate if you'd  help with adding support for
