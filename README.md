@@ -1,15 +1,11 @@
 # SharpGrabber
 <img src="./assets/icon.png" alt="SharpGrabber" width="64"/>
-            
-A **.NET Standard** library for grabbing information and 
-downloading from top media providers such as **YouTube**, **Instagram** etc.
 
-## Features
-- Grabs useful information about media such as length, title, author and many more.
-- Deciphers secure *YouTube* videos optionally.
-- Extracts direct links to all available qualities.
-- Extracts images and thumbnails.
-- Supports *asynchronous* operations.
+This project consists of several connected sub-projects:            
+- `SharpGrabber` is a *.NET Standard* library for crawling into top media provider websites such as **YouTube**, **Instagram** etc. in order to grab information and return direct links to audio/video files.
+- `SharpGrabber.Converter` is a *.NET Core* library based on `ffmpeg` to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files.
+- `SharpGrabber.Desktop` A cross-platform desktop application
+which uses both of the mentioned libraries to expose their functionality for desktop end users.
 
 ### Supported Providers
 The following providers are currently supported with the option
@@ -18,13 +14,25 @@ to easily add more or even override part of grabbing algorithm with your own cod
 - YouTube
 - Instagram
 
+## Features
+#### SharpGrabber Library
+- Grabs useful information about media such as length, title, author and many more.
+- Deciphers secure *YouTube* videos optionally.
+- Extracts direct links to all available qualities.
+- Extracts images and thumbnails.
+- Supports *asynchronous* operations.
+
+#### SharpGrabber.Desktop Application
+- Displays information obtained by the `SharpGrabber` library and downloads the resolved direct links.
+- Uses `SharpGrabber.Converter` to merge YouTube separated audio and video streams into complete media files.
+
 ## Installation
 Install *SharpGrabber* automatically using NuGet package manager.
 
 ### Install via NuGet
     Install-Package DotNetTools.SharpGrabber -Version 1.0.0
     
-## Usage Example
+## SharpGrabber Usage Example
 
 ### Download specifically from a provider
 
@@ -41,9 +49,11 @@ Install *SharpGrabber* automatically using NuGet package manager.
 ## Roadmap
 This project is very much in progress and the following features
 are top priority:
-- Conversion support (especially useful for high quality YouTube videos)
-- .NET Core demo app
+- Support for Android
 - Support for more media providers
+
+## SharpGrabber.Desktop
+<img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
 ## Support
 If you want to support this project, the best thing is to star it :)
