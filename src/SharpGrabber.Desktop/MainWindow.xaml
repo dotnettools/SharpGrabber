@@ -78,9 +78,11 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="txtTitle" Grid.Column="0" Text="#Grabber" VerticalAlignment="Center" Margin="16 0 16 2" FontSize="24" Cursor="Hand" />
+                <TextBlock x:Name="txtTitle" Grid.Column="0" Text="#Grabber" VerticalAlignment="Center"
+                           Margin="16 0 16 2" FontSize="24" Cursor="Hand" />
 
-                <Border Grid.Column="1" Margin="0 0 10 0" CornerRadius="6" Height="36" VerticalAlignment="Center" Background="#80FFFFFF" ClipToBounds="True" BorderBrush="#10000000" BorderThickness="1">
+                <Border Grid.Column="1" Margin="0 0 10 0" CornerRadius="6" Height="36" VerticalAlignment="Center"
+                        Background="#80FFFFFF" ClipToBounds="True" BorderBrush="#10000000" BorderThickness="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -102,18 +104,27 @@
                             <Path Stroke="#33000000" StrokeThickness="1" Fill="#CCFFFFFF" Data="M14,7 l13,10 l-13,10 Z" />
                         </Border>
 
-                        <TextBox x:Name="tbUrl" Grid.Column="1" Background="Transparent" VerticalAlignment="Center" BorderThickness="0" Margin="8 0 0 0" AcceptsReturn="False" AcceptsTab="False" />
-                        <TextBlock x:Name="tbPlaceholder" Grid.Column="1" Text="Enter URL of the video here..." VerticalAlignment="Center" Margin="10 0 0 0" IsHitTestVisible="False" />
+                        <TextBox x:Name="tbUrl" Grid.Column="1" Background="Transparent" VerticalAlignment="Center"
+                                 BorderThickness="0" Margin="8 0 0 0" AcceptsReturn="False" AcceptsTab="False" />
+                        <TextBlock x:Name="tbPlaceholder" Grid.Column="1" Text="Enter URL of the video here..."
+                                   VerticalAlignment="Center" Margin="10 0 0 0" IsHitTestVisible="False" />
 
-                        <Button x:Name="btnPaste" Classes="btn" Grid.Column="2" Width="40" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="Paste">
+                        <Button x:Name="btnPaste" Classes="btn" Grid.Column="2" Width="40"
+                                VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                ToolTip.Tip="Paste">
                             <!--<TextBlock Text="Paste" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
-                            <DrawingPresenter Drawing="{StaticResource FA.ClipboardListSolid}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="4" />
+                            <DrawingPresenter Drawing="{StaticResource FA.ClipboardListSolid}"
+                                              VerticalAlignment="Center" HorizontalAlignment="Center" Margin="4" />
                         </Button>
 
-                        <Button x:Name="btnGrab" Classes="grab" Grid.Column="3" Width="70" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsDefault="True">
+                        <Button x:Name="btnGrab" Classes="grab" Grid.Column="3" Width="70"
+                                VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                IsDefault="True">
                             <Grid>
-                                <TextBlock x:Name="txtGrab" Text="Grab" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                <components:LoadingSpinner x:Name="spGrab" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <TextBlock x:Name="txtGrab" Text="Grab" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                                <components:LoadingSpinner x:Name="spGrab" HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" />
                             </Grid>
                         </Button>
                     </Grid>
@@ -134,7 +145,8 @@
                 </Grid.ColumnDefinitions>
 
                 <Border Grid.Column="0" Grid.RowSpan="2" Margin="16" Width="150" Height="128" MaxHeight="128">
-                    <Border Background="#11000000" CornerRadius="3" ClipToBounds="True" BorderThickness="1" BorderBrush="#22000000" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Border Background="#11000000" CornerRadius="3" ClipToBounds="True" BorderThickness="1"
+                            BorderBrush="#22000000" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Grid>
                             <Image x:Name="img" Stretch="Uniform" VerticalAlignment="Stretch" Margin="1" />
                             <components:LoadingSpinner x:Name="imgSpinner" Margin="32" />
@@ -146,7 +158,8 @@
                     <TextBlock x:Name="txtMediaTitle" Text="MEDIA_TITLE" />
                 </Grid>
 
-                <ScrollViewer Grid.Column="1" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                <ScrollViewer Grid.Column="1" Grid.Row="1" HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Disabled">
                     <Grid Margin="0 6 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -162,7 +175,8 @@
                         <TextBlock Grid.Column="1" x:Name="txtCol1" Text="-" IsVisible="False" />
                         <TextBlock Grid.Column="2" x:Name="txtCol2" Text="-" IsVisible="False" />
 
-                        <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 10 10">
+                        <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="0" Orientation="Horizontal"
+                                    HorizontalAlignment="Right" Margin="0 0 10 10">
                             <Button Classes="btn small" x:Name="btnSaveImages">
                                 <TextBlock Text="Save images" />
                             </Button>
@@ -179,7 +193,7 @@
                         <StackPanel x:Name="resourceContainer" Orientation="Vertical" Margin="0 10 0 0" />
                     </ScrollViewer>
 
-                    <Border Height="10" VerticalAlignment="Top">
+                    <Border Height="10" VerticalAlignment="Top" IsHitTestVisible="False">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,10">
                                 <LinearGradientBrush.GradientStops>
@@ -204,7 +218,8 @@
                     </LinearGradientBrush>
                 </Grid.Background>
 
-                <TextBlock Text="Insert a YouTube or Instagram link to begin." VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" FontWeight="DemiBold" />
+                <TextBlock Text="Insert a YouTube or Instagram link to begin." VerticalAlignment="Center"
+                           HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" FontWeight="DemiBold" />
             </Grid>
             <!--End No Content Layer-->
         </Grid>
@@ -212,7 +227,8 @@
 
         <!--Begin Overlay-->
         <Grid x:Name="overlayRoot" Background="#CC000000" IsVisible="False">
-            <Border x:Name="overlayContent" Background="White" Margin="20" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Border x:Name="overlayContent" Background="White" Margin="20" VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
                 <Grid>
 
                     <!--Message Box-->
@@ -230,7 +246,8 @@
 
                         <Border Grid.Row="1" Height="1" Background="#11000000" />
 
-                        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
                             <TextBlock x:Name="txtMsgContent" Text="Message Content" TextWrapping="Wrap" Margin="16" />
                         </ScrollViewer>
 
