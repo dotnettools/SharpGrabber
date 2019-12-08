@@ -26,8 +26,8 @@ to easily add more or even override part of grabbing algorithm with your own cod
 - Displays information obtained by the `SharpGrabber` library and downloads the resolved direct links.
 - Uses `SharpGrabber.Converter` to merge YouTube separated audio and video streams into complete media files.
 
-## Installation
-Install *SharpGrabber* automatically using NuGet package manager.
+## SharpGrabber Installation
+Include *SharpGrabber* library in your own .NET projects.
 
 ### Install via NuGet
     Install-Package DotNetTools.SharpGrabber -Version 1.0.0
