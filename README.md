@@ -2,10 +2,10 @@
 <img src="./assets/icon.png" alt="SharpGrabber" width="64"/>
 
 This project consists of several connected sub-projects:            
-- `SharpGrabber` is a *.NET Standard* library for crawling into top media provider websites such as **YouTube**, **Instagram** etc. in order to grab information and return direct links to audio/video files.
-- `SharpGrabber.Converter` is a *.NET Core* library based on `ffmpeg` to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files.
+- `SharpGrabber` is a *.NET Standard* library for crawling into top media provider websites such as **YouTube**, **Instagram** etc. in order to grab information and return direct links of the audio/video files.
+- `SharpGrabber.Converter` is a *.NET Standard* library based on `ffmpeg` to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files.
 - `SharpGrabber.Desktop` A cross-platform desktop application
-which uses both of the mentioned libraries to expose their functionality for desktop end users.
+which utilizes both mentioned libraries to expose their functionality for desktop end-users.
 
 ### Supported Providers
 The following providers are currently supported with the option
@@ -47,12 +47,18 @@ Install *SharpGrabber* automatically using NuGet package manager.
     IList<IGrabbed> grabbedResources = result.Resources;
 
 ## SharpGrabber.Desktop
+Requirements of the cross-platform desktop application to run and operate correctly: 
+ - .NET Core 2.1 or higher (.NET Framework 4.6.1 or higher)
+ - Shared libraries of *ffmpeg* copied into `ffmpeg` directory alongside app executable files for media conversion support.
+   - On Windows, you may download the latest <a href="https://ffmpeg.zeranoe.com/builds/">Zeranoe ffmpeg build</a>.
+ 
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
 ## Roadmap
 This project is very much in progress and the following features
 are top priority:
 - Support for Android
+- Accelerate downloads in the desktop app (like a download manager)
 - Support for more media providers
 
 ## Support
