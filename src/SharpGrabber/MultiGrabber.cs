@@ -109,6 +109,8 @@ namespace DotNetTools.SharpGrabber
             }
 
             // throw the last exception
+            if (lastException == null) // just to suppress compiler's possible NullPointerException warning.
+                throw new InvalidOperationException();
             throw lastException;
         }
         #endregion
@@ -122,6 +124,7 @@ namespace DotNetTools.SharpGrabber
             var multiGrabber = new MultiGrabber();
             multiGrabber.Register<YouTubeGrabber>();
             multiGrabber.Register<InstagramGrabber>();
+            multiGrabber.Register<PornHubGrabber>();
             return multiGrabber;
         }
         #endregion

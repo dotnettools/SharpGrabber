@@ -1,4 +1,5 @@
-﻿/.vs
+﻿*.DotSettings
+/.vs
 /.vs/SharpGrabber/v16
 /.vs/SharpGrabber/DesignTimeBuild
 /.idea
@@ -8,3 +9,16 @@
 /src/DotNetTools.SharpGrabber/bin
 /src/DotNetTools.SharpGrabber.Win/bin
 /src/DotNetTools.SharpGrabber.Win/obj
+/assets
+/src/DotNetTools.SharpGrabber/DotNetTools.SharpGrabber.xml
+/src/SharpGrabber/DotNetTools.SharpGrabber.xml
+/src/SharpGrabber/bin
+/src/SharpGrabber/obj
+/src/SharpGrabber.Converter/bin
+/src/SharpGrabber.Converter/obj
+/src/SharpGrabber.Desktop/bin
+/src/SharpGrabber.Desktop/obj
+/src/SharpGrabber.Desktop/SharpGrabber.Desktop.csproj.user
+/src/SharpGrabber.Desktop/Properties
+/SharpGrabber.sln.DotSettings.user
+/src/SharpGrabber.Desktop/nuget.config

@@ -19,6 +19,14 @@ namespace DotNetTools.SharpGrabber.Media
         public Uri ResourceUri { get; }
 
         /// <summary>
+        /// Optional unique identifier of this format - For YouTube media, this value would be the same as iTag integer number.
+        /// </summary>
+        /// <remarks>
+        /// If specified, this value should be unique amongst all other grabbed media.
+        /// </remarks>
+        public object FormatId { get; set; }
+
+        /// <summary>
         /// Contains information about mime type and extension of the media.
         /// </summary>
         public MediaFormat Format { get; }

@@ -391,6 +391,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             grabbed.BitRateString = itag.BitRateString;
             grabbed.Container = itag.Container;
             grabbed.Resolution = itag.VideoResolution;
+            grabbed.FormatId = itag.iTag;
             if (!string.IsNullOrEmpty(grabbed.Container))
                 grabbed.Format.Extension = grabbed.Container.ToLowerInvariant();
             var attributes = new List<string>

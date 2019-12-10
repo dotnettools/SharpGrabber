@@ -20,9 +20,16 @@ namespace DotNetTools.SharpGrabber.Tests
         public async void Test_YouTube()
         {
             var grabber = new YouTubeGrabber();
-//            var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=hTbhdMAjh9Y"));
-//            var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=-BjZmE2gtdo"));
-            var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=kBNt8hYvn8A")); // jonas
+            var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=-BjZmE2gtdo"));
+        }
+
+        [Fact]
+        public async void Test_PornHub()
+        {
+            var grabber = new PornHubGrabber();
+            var result =
+                await grabber.GrabAsync(
+                    new Uri("https://www.pornhub.com/view_video.php?viewkey=ph5d90d22feab4b"));
         }
     }
 }
