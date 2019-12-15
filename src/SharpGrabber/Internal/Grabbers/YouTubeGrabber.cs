@@ -41,7 +41,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             {
                 sb.Clear();
                 var currentKey = pair.Key;
-                foreach (var ch in pair.Value.Concat(new[] { '\0' }))
+                foreach (var ch in pair.Value.Concat(new[] {'\0'}))
                 {
                     switch (ch)
                     {
@@ -118,7 +118,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
                     case "type":
                         draft.Type = value;
-                        var parts = value.Split(new[] { ';' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = value.Split(new[] {';'}, 2, StringSplitOptions.RemoveEmptyEntries);
                         draft.Mime = parts[0];
                         break;
 
@@ -192,7 +192,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
                     case "type":
                         draft.Type = value;
-                        var parts = value.Split(new[] { ';' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = value.Split(new[] {';'}, 2, StringSplitOptions.RemoveEmptyEntries);
                         draft.Mime = parts[0];
                         break;
 
@@ -276,12 +276,12 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             // extract metadata
             var metadata = new YouTubeMetadata
             {
-                FormatList = rawMetadata["fmt_list"],
+                FormatList = rawMetadata.ContainsKey("fmt_list") ? rawMetadata["fmt_list"] : null,
                 Status = rawMetadata["status"],
             };
 
             // extract muxed streams
-            var urlEncodedFmtStreamMap = rawMetadata["url_encoded_fmt_stream_map"]
+            var urlEncodedFmtStreamMap = rawMetadata.GetOrDefault("url_encoded_fmt_stream_map")
                                          ?? throw new GrabParseException("Failed to fetch url_encoded_fmt_stream_map from metadata.");
             var fmtStreamMap = YouTubeUtils.ExtractUrlEncodedParamList(urlEncodedFmtStreamMap);
             metadata.MuxedStreams = ExtractMuxedStreamsMetadata(fmtStreamMap);

@@ -14,21 +14,24 @@
     <Authors>Javid Shoaei</Authors>
     <Product>SharpGrabber</Product>
     <PackageIconUrl>https://raw.githubusercontent.com/dotnettools/SharpGrabber/master/assets/icon.png</PackageIconUrl>
-    <FileVersion>1.0.1.0</FileVersion>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <Version>1.0.1</Version>
+    <FileVersion>1.0.3.0</FileVersion>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <Version>1.0.3</Version>
     <RootNamespace>DotNetTools.SharpGrabber</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>Javid.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Projects\C#\SharpGrabber\src\DotNetTools.SharpGrabber\DotNetTools.SharpGrabber.xml</DocumentationFile>
+    <DocumentationFile>D:\Projects\C#\SharpGrabber\src\SharpGrabber\SharpGrabber.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.16" />
     <PackageReference Include="Jint" Version="2.11.58" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NExtension" Version="1.2.0" />
+    <PackageReference Include="NExtension" Version="1.2.1" />
   </ItemGroup>
 
 </Project>
