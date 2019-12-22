@@ -22,12 +22,12 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         /// <summary>
         /// url_encoded_fmt_stream_map: Multiplexed streams
         /// </summary>
-        public List<YouTubeMuxedStream> MuxedStreams { get; set; } = new List<YouTubeMuxedStream>();
+        public List<YouTubeMuxedStream> MuxedStreams { get; set; }
 
         /// <summary>
         /// adaptive_fmts: Video-only and audio-only streams
         /// </summary>
-        public List<YouTubeAdaptiveStream> AdaptiveStreams { get; set; } = new List<YouTubeAdaptiveStream>();
+        public List<YouTubeAdaptiveStream> AdaptiveStreams { get; set; }
 
         /// <summary>
         /// player_response: YouTube player metadata

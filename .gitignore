@@ -22,3 +22,4 @@
 /src/SharpGrabber.Desktop/Properties
 /SharpGrabber.sln.DotSettings.user
 /src/SharpGrabber.Desktop/nuget.config
+*.pfx
