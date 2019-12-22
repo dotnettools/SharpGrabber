@@ -187,7 +187,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                         break;
 
                     case "bitrate":
-                        draft.BitRate = int.Parse(value);
+                        draft.AudioSampleRate = int.Parse(value) * 1000;
                         break;
 
                     case "type":
@@ -201,7 +201,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                         var match = sizeRegex.Match(value);
                         if (!match.Success)
                             throw new GrabParseException($"Failed to parse stream size: {value}.");
-                        draft.Size = new Size(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                        draft.FrameSize = new Size(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
                         break;
 
                     case "url":
@@ -219,6 +219,117 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         }
 
         /// <summary>
+        /// Accepts <paramref name="cipher"/> as a URI-encoded string in the following form:
+        /// <para>sp=sig&amp;s=wggj6zg7m-...&amp;url=https%3A%2F%2Fr5---sn-5hnekn7k.googlevideo.com%2Fvideoplayback...</para>
+        /// Extracts its useful encoded parameters and puts them into the specified <paramref name="streamInfo"/>.
+        /// </summary>
+        protected virtual void UpdateStreamCipherInfo(YouTubeStreamInfo streamInfo, string cipher)
+        {
+            if (string.IsNullOrEmpty(cipher))
+                throw new ArgumentNullException(nameof(cipher));
+
+            var map = YouTubeUtils.ExtractUrlEncodedParamMap(cipher);
+            streamInfo.Url = map.GetOrDefault("url") ?? throw new GrabParseException("Failed to extract URL from cipher.");
+            streamInfo.Signature = map.GetOrDefault("s") ?? throw new GrabParseException("Failed to extract signature from cipher.");
+        }
+
+        /// <summary>
+        /// Given the content type, extracts its pure mime type. For instance, accepts 'video/webm;+codecs=vp9' and returns 'video/webm'. 
+        /// </summary>
+        protected virtual string ExtractActualMime(string contentType)
+        {
+            var re = new Regex(@"^([^;]+)(;|$)");
+            var match = re.Match(contentType);
+            if (!match.Success)
+                throw new GrabParseException("Failed to extract mime information of muxed stream type.");
+            return match.Groups[1].Value;
+        }
+
+        /// <summary>
+        /// Translates the given JSON object extracted from YouTube to its managed representation.
+        /// </summary>
+        protected virtual YouTubeMuxedStream TranslateMuxedStream(JObject input)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            var result = new YouTubeMuxedStream
+            {
+                iTag = input.Value<int?>("itag"),
+                Type = input.Value<string>("mimeType"),
+                AudioSampleRate = input.Value<long>("audioSampleRate"),
+                ContentLength = input.Value<long>("contentLength"),
+                Quality = input.Value<string>("quality"),
+                QualityLabel = input.Value<string>("qualityLabel"),
+                Url = input.Value<string>("url"),
+                FrameSize = input.ContainsKey("width") && input.ContainsKey("height")
+                    ? new Size(input.Value<int>("width"), input.Value<int>("height"))
+                    : null
+            };
+            result.Mime = ExtractActualMime(result.Type);
+
+            // get cipher info
+            var cipher = input.Value<string>("cipher");
+            if (!string.IsNullOrEmpty(cipher))
+                UpdateStreamCipherInfo(result, cipher);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Translates the given JSON object extracted from YouTube to its managed representation.
+        /// </summary>
+        protected virtual YouTubeAdaptiveStream TranslateAdaptiveStream(JObject input)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            var result = new YouTubeAdaptiveStream
+            {
+                iTag = input.Value<int?>("itag"),
+                Type = input.Value<string>("mimeType"),
+                AudioSampleRate = input.Value<long>("audioSampleRate"),
+                ContentLength = input.Value<long>("contentLength"),
+                FPS = input.Value<int>("fps"),
+                Quality = input.Value<string>("quality"),
+                QualityLabel = input.Value<string>("qualityLabel"),
+                Url = input.Value<string>("url"),
+                FrameSize = input.ContainsKey("width") && input.ContainsKey("height")
+                    ? new Size(input.Value<int>("width"), input.Value<int>("height"))
+                    : null
+            };
+            result.Mime = ExtractActualMime(result.Type);
+
+            // get cipher info
+            var cipher = input.Value<string>("cipher");
+            if (!string.IsNullOrEmpty(cipher))
+                UpdateStreamCipherInfo(result, cipher);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Given the specified JSON array, returns a list of multiplexed streams.
+        /// </summary>
+        protected List<YouTubeMuxedStream> TranslateMuxedStreams(JArray array)
+        {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+
+            return array.Children<JObject>().Select(TranslateMuxedStream).ToList();
+        }
+
+        /// <summary>
+        /// Given the specified JSON array, returns a list of adaptive streams.
+        /// </summary>
+        protected List<YouTubeAdaptiveStream> TranslateAdaptiveStreams(JArray array)
+        {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+            return array.Children<JObject>().Select(TranslateAdaptiveStream).ToList();
+        }
+
+        /// <summary>
         /// Given player_response JSON data, returns its .NET representation.
         /// </summary>
         protected virtual YouTubePlayerResponse ExtractPlayerResponseMetadata(JToken playerResponse)
@@ -232,7 +343,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             var microformat = playerResponse.SelectToken("$.microformat");
             var captions = playerResponse.SelectToken("$.captions");
 
-            return new YouTubePlayerResponse
+            // prepare result
+            var result = new YouTubePlayerResponse
             {
                 Author = StringHelper.DecodeUriString(videoDetails.SelectToken("author").Value<string>()),
                 Length = TimeSpan.FromSeconds(videoDetails.SelectToken("lengthSeconds").Value<int>()),
@@ -244,6 +356,19 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 UploadedAt = microformat.SelectToken("..uploadDate").Value<DateTime>(),
                 PublishedAt = microformat.SelectToken("..publishDate").Value<DateTime>(),
             };
+
+            // get streaming data
+            if (playerResponse.SelectToken("$.streamingData") is JObject streamingData)
+            {
+                var muxedFormats = streamingData.Value<JArray>("formats");
+                var adaptiveFormats = streamingData.Value<JArray>("adaptiveFormats");
+                if (muxedFormats != null)
+                    result.MuxedStreams = TranslateMuxedStreams(muxedFormats);
+                if (adaptiveFormats != null)
+                    result.AdaptiveStreams = TranslateAdaptiveStreams(adaptiveFormats);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -280,23 +405,34 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 Status = rawMetadata["status"],
             };
 
-            // extract muxed streams
-            var urlEncodedFmtStreamMap = rawMetadata.GetOrDefault("url_encoded_fmt_stream_map")
-                                         ?? throw new GrabParseException("Failed to fetch url_encoded_fmt_stream_map from metadata.");
-            var fmtStreamMap = YouTubeUtils.ExtractUrlEncodedParamList(urlEncodedFmtStreamMap);
-            metadata.MuxedStreams = ExtractMuxedStreamsMetadata(fmtStreamMap);
-
-            // extract adaptive streams
-            var urlEncodedAdaptiveFormats = rawMetadata["adaptive_fmts"]
-                                            ?? throw new GrabParseException("Failed to fetch adaptive_fmts from metadata.");
-            var adaptiveFmts = YouTubeUtils.ExtractUrlEncodedParamList(urlEncodedAdaptiveFormats);
-            metadata.AdaptiveStreams = ExtractAdaptiveFormatsMetadata(adaptiveFmts);
-
             // extract player response
             var rawPlayerResponse = rawMetadata["player_response"]
                                     ?? throw new GrabParseException("Failed to fetch player_response from metadata.");
             var playerResponse = JToken.Parse(rawPlayerResponse);
             metadata.PlayerResponse = ExtractPlayerResponseMetadata(playerResponse);
+
+            // extract muxed streams
+            if (metadata.PlayerResponse.MuxedStreams != null)
+                metadata.MuxedStreams = metadata.PlayerResponse.MuxedStreams;
+            if (metadata.MuxedStreams == null)
+            {
+                var urlEncodedFmtStreamMap = rawMetadata.GetOrDefault("url_encoded_fmt_stream_map")
+                                             ?? throw new GrabParseException("Failed to fetch url_encoded_fmt_stream_map from metadata.");
+                var fmtStreamMap = YouTubeUtils.ExtractUrlEncodedParamList(urlEncodedFmtStreamMap);
+                metadata.MuxedStreams = ExtractMuxedStreamsMetadata(fmtStreamMap);
+            }
+
+            // extract adaptive streams
+            if (metadata.PlayerResponse.AdaptiveStreams != null)
+                metadata.AdaptiveStreams = metadata.PlayerResponse.AdaptiveStreams;
+            if (metadata.AdaptiveStreams == null)
+            {
+                var urlEncodedAdaptiveFormats = rawMetadata["adaptive_fmts"]
+                                                ?? throw new GrabParseException("Failed to fetch adaptive_fmts from metadata.");
+                var adaptiveFmts = YouTubeUtils.ExtractUrlEncodedParamList(urlEncodedAdaptiveFormats);
+                metadata.AdaptiveStreams = ExtractAdaptiveFormatsMetadata(adaptiveFmts);
+            }
+
             return metadata;
         }
         #endregion
@@ -415,7 +551,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             var itagInfo = stream.iTag == null ? null : YouTubeTags.For(stream.iTag.Value);
 
             // extract extension from mime
-            var extension = stream.Extension ?? stream.Mime.Split('/').Last();
+            var extension = stream.Extension ?? stream.Mime?.Split('/')?.Last();
 
             // decide according to stream type - adaptive, or muxed
             if (stream is YouTubeMuxedStream muxedStream)
@@ -488,7 +624,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             foreach (var stream in metaData.MuxedStreams)
                 AppendStreamToResult(result, stream);
 
-            // append muxed streams to result
+            // append adaptive streams to result
             foreach (var stream in metaData.AdaptiveStreams)
                 AppendStreamToResult(result, stream);
         }

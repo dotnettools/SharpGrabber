@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
 {
@@ -51,5 +52,15 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         /// Publish date
         /// </summary>
         public DateTime PublishedAt { get; set; }
+
+        /// <summary>
+        /// For some YouTube videos, adaptive streams exist in player response.
+        /// </summary>
+        public List<YouTubeAdaptiveStream> AdaptiveStreams { get; set; }
+
+        /// <summary>
+        /// For some YouTube videos, muxed streams exist in player response.
+        /// </summary>
+        public List<YouTubeMuxedStream> MuxedStreams { get; set; }
     }
 }

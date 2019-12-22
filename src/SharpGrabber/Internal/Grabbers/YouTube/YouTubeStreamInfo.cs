@@ -31,6 +31,21 @@
         public string Quality { get; set; }
 
         /// <summary>
+        /// Name of this quality suggested by YouTube e.g. mp4 720p
+        /// </summary>
+        public string QualityLabel { get; set; }
+
+        /// <summary>
+        /// Audio Sample Rate e.g. 48000, which stands for 48k (optional, audio only)
+        /// </summary>
+        public long AudioSampleRate { get; set; }
+
+        /// <summary>
+        /// Optional content length
+        /// </summary>
+        public long ContentLength { get; set; }
+
+        /// <summary>
         /// Direct URL to the target file
         /// If deciphering is enabled, this property will correctly point to the secure resource.
         /// </summary>
@@ -45,5 +60,11 @@
         /// Calculated decipher
         /// </summary>
         public string Decipher { get; set; }
+
+
+        /// <summary>
+        /// Video frame size (video only)
+        /// </summary>
+        public Size FrameSize { get; set; }
     }
 }

@@ -10,13 +10,13 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
     <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
-    <PackageTags>grab,media,youtube,instagram</PackageTags>
+    <PackageTags>youtube,instagram,download,grab,media,audio,video</PackageTags>
     <Authors>Javid Shoaei</Authors>
     <Product>SharpGrabber</Product>
     <PackageIconUrl>https://raw.githubusercontent.com/dotnettools/SharpGrabber/master/assets/icon.png</PackageIconUrl>
-    <FileVersion>1.0.3.0</FileVersion>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
-    <Version>1.0.3</Version>
+    <FileVersion>1.1.0.0</FileVersion>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <Version>1.1.0</Version>
     <RootNamespace>DotNetTools.SharpGrabber</RootNamespace>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
