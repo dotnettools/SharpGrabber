@@ -55,8 +55,7 @@ Requirements of the cross-platform desktop application to run and operate correc
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
 ## Roadmap
-This project is very much in progress and the following features
-are top priority:
+The following features are top priority:
 - Support for Android
 - Accelerate downloads in the desktop app (like a download manager)
 - Support for more media providers
