@@ -29,7 +29,7 @@ to easily add more or even override part of grabbing algorithm with your own cod
 ## SharpGrabber Installation
 Include *SharpGrabber* library in your own .NET projects.
 
-### Install via NuGet
+### Install via <a href="https://www.nuget.org/packages/SharpGrabber/">NuGet</a>
     Install-Package SharpGrabber -Version 1.1.0
     
 ## SharpGrabber Usage Example
