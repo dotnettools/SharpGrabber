@@ -18,9 +18,8 @@
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <Version>1.1.0</Version>
     <RootNamespace>DotNetTools.SharpGrabber</RootNamespace>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>Javid.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
