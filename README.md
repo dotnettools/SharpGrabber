@@ -30,7 +30,7 @@ to easily add more or even override part of grabbing algorithm with your own cod
 Include *SharpGrabber* library in your own .NET projects.
 
 ### Install via <a href="https://www.nuget.org/packages/SharpGrabber/">NuGet</a>
-    Install-Package SharpGrabber -Version 1.1.0
+    Install-Package SharpGrabber -Version 1.2.0
     
 ## SharpGrabber Usage Example
 
@@ -67,7 +67,7 @@ To contribute to this project, I'd appreciate if you'd  help with adding support
 more top providers such as *Vimeo*, *DailyMotion* etc.
 
 ## License
-Copyright &copy; 2019 Javid Shoaei<br />
+Copyright &copy; 2020 Javid Shoaei<br />
 All Rights Reserved &reg;
 
 This project is licensed under the GNU Lesser General Public License (LGPL) version 3.
