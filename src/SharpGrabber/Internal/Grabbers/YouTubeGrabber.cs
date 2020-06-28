@@ -41,7 +41,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             {
                 sb.Clear();
                 var currentKey = pair.Key;
-                foreach (var ch in pair.Value.Concat(new[] {'\0'}))
+                foreach (var ch in pair.Value.Concat(new[] { '\0' }))
                 {
                     switch (ch)
                     {
@@ -118,7 +118,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
                     case "type":
                         draft.Type = value;
-                        var parts = value.Split(new[] {';'}, 2, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = value.Split(new[] { ';' }, 2, StringSplitOptions.RemoveEmptyEntries);
                         draft.Mime = parts[0];
                         break;
 
@@ -192,7 +192,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
                     case "type":
                         draft.Type = value;
-                        var parts = value.Split(new[] {';'}, 2, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = value.Split(new[] { ';' }, 2, StringSplitOptions.RemoveEmptyEntries);
                         draft.Mime = parts[0];
                         break;
 
@@ -268,8 +268,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             };
             result.Mime = ExtractActualMime(result.Type);
 
-            // get cipher info
-            var cipher = input.Value<string>("cipher");
+            // get cipher info (+signatureCipher)
+            var cipher = input.Value<string>("cipher") ?? input.Value<string>("signatureCipher");
             if (!string.IsNullOrEmpty(cipher))
                 UpdateStreamCipherInfo(result, cipher);
 
@@ -301,7 +301,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             result.Mime = ExtractActualMime(result.Type);
 
             // get cipher info
-            var cipher = input.Value<string>("cipher");
+            var cipher = input.Value<string>("cipher") ?? input.Value<string>("signatureCipher");
             if (!string.IsNullOrEmpty(cipher))
                 UpdateStreamCipherInfo(result, cipher);
 
@@ -376,7 +376,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         /// </summary>
         protected virtual async Task<YouTubeMetadata> DownloadMetadata(string id, CancellationToken cancellationToken)
         {
-            var rawMetadata = new Dictionary<string, string>();
+            IDictionary<string, string> rawMetadata;
             Status.Update(null, "Downloading metadata...", WorkStatusType.DownloadingFile);
 
             // make http client
@@ -387,15 +387,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             {
                 // decode metadata into rawMetadata
                 var content = await response.Content.ReadAsStringAsync();
-                var @params = content.Split('&');
-                foreach (var param in @params)
-                {
-                    var pair = param.Split('=')
-                        .Select(Uri.UnescapeDataString)
-                        .ToArray();
-
-                    rawMetadata.Add(pair[0], pair[1]);
-                }
+                rawMetadata = YouTubeUtils.ExtractUrlEncodedParamMap(content);
             }
 
             // extract metadata

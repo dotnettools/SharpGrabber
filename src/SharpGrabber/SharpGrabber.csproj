@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>SharpGrabber</Title>
     <Description>Grab information and media from YouTube and Instagram. Supports images, thumbnails, video, audio with different formats and qualities. YouTube deciphering is supported.</Description>
-    <Copyright>Copyright (C) 2019 Javid Shoaei</Copyright>
+    <Copyright>Copyright (C) 2020 Javid Shoaei</Copyright>
     <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
@@ -16,7 +16,7 @@
     <PackageIconUrl>https://raw.githubusercontent.com/dotnettools/SharpGrabber/master/assets/icon.png</PackageIconUrl>
     <FileVersion>1.1.0.0</FileVersion>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <RootNamespace>DotNetTools.SharpGrabber</RootNamespace>
     <SignAssembly>false</SignAssembly>
     <DelaySign>false</DelaySign>
