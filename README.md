@@ -56,9 +56,8 @@ Requirements of the cross-platform desktop application to run and operate correc
 
 ## Roadmap
 The following features are top priority:
-- Support for Android
-- Accelerate downloads in the desktop app (like a download manager)
 - Support for more media providers
+- Accelerate downloads in the desktop app (like a download manager)
 
 ## Support
 If you want to support this project, the best thing is to star it :)
