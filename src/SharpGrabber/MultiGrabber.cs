@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using DotNetTools.NExtension.Structures;
 using DotNetTools.SharpGrabber.Exceptions;
+using DotNetTools.SharpGrabber.Internal;
 using DotNetTools.SharpGrabber.Internal.Grabbers;
 
 namespace DotNetTools.SharpGrabber
@@ -81,7 +81,7 @@ namespace DotNetTools.SharpGrabber
         /// </summary>
         /// <remarks>
         /// This method will return the <see cref="GrabResult"/> of the very first successful grab while suppressing exceptions
-        /// thrown by unsuccessful grab attempts. Throws the last exception thrown by the last used grabber.
+        /// thrown by unsuccessful grab attempts. Throws the last exception thrown by the grabber tried last.
         /// <para>Status of the grab is unavailable when using this method because it might automatically make use of multiple
         /// compatible grabbers. To have status of the grab, use <see cref="GetGrabbers(Uri)"/> and grab manually instead.</para>
         /// </remarks>
