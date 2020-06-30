@@ -8,7 +8,7 @@ namespace DotNetTools.SharpGrabber
     /// <summary>
     /// Represents a value that is lazy loaded.
     /// </summary>
-    /// <remarks>Implementers are expected to be thread-safe.</remarks>
+    /// <remarks>Implementations are expected to be thread-safe.</remarks>
     public interface IResolvable<T>
     {
         /// <summary>
