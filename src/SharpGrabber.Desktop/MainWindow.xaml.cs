@@ -130,7 +130,7 @@ namespace SharpGrabber.Desktop
                 .Append("Version ").AppendLine(Constants.AppVersion.ToString())
                 .Append("FFMpeg Version: ").Append(IOHelper.FFMpegLoaded ? ffmpeg.av_version_info() : "Not loaded").AppendLine()
                 .AppendLine()
-                .AppendLine("Copyright © 2019 Javid Shoaei (javidsh.ir)")
+                .AppendLine("Copyright © 2020 Javid Shoaei (javidsh.ir)")
                 .AppendLine("All Rights Reserved ®");
             ShowMessage("About", sb.ToString());
         }
