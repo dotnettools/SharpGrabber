@@ -19,12 +19,17 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
     public class InstagramGrabber : BaseGrabber
     {
         #region Fields
+
         private readonly Regex _idPattern =
-            new Regex(@"^https?://(www\.)?instagram\.com/[A-Za-z0-9]/([A-Za-z0-9]+)(/.*)?$",
+            new Regex(@"^https?://(www\.)?instagram\.com/\w/([A-Za-z0-9_]+)(/.*)?$",
                 RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+        private readonly Regex _graphqlScriptRegex = new Regex(@"<script[^<>]+>([^<>]+)graphql([^<>]+)</script>");
+
         #endregion
 
         #region Properties
+
         /// <inheritdoc />
         public override string Name { get; } = "Instagram";
 
@@ -33,9 +38,11 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         /// passing an Instagram post identifier containing alpha-numeric characters.
         /// </summary>
         public virtual string StandardUrlTemplate { get; set; } = "https://www.instagram.com/p/{0}/";
+
         #endregion
 
         #region Internal Methods
+
         /// <summary>
         /// Makes a standard Instagram URL using the given post ID.
         /// </summary>
@@ -70,21 +77,15 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         {
             var dictionary = new Dictionary<string, string>();
 
+            string content;
+            using (var reader = new StreamReader(responseStream))
+                content = reader.ReadToEnd();
 
-            // parse page html
-            var doc = new HtmlDocument();
-            doc.Load(responseStream);
+            // TODO: Instagram is changed and needs user to be authorized before accessing the content
 
-            // update result
-            var nodes = doc.DocumentNode.SelectNodes(
-                "//meta[starts-with(@property, 'og:') and @property and @content]");
-            if (nodes == null)
+            var match = _graphqlScriptRegex.Match(content);
+            if (!match.Success)
                 throw new GrabParseException("Failed to obtain metadata from the Instagram page.");
-
-            foreach (var node in nodes)
-            {
-                dictionary.Add(node.Attributes["property"].Value, node.Attributes["content"].Value);
-            }
 
             return dictionary;
         }
@@ -128,14 +129,17 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             };
             return result;
         }
+
         #endregion
 
         #region Methods
+
         /// <inheritdoc />
         public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GrabId(uri));
 
         /// <inheritdoc />
-        public override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options)
+        public override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken,
+            GrabOptions options)
         {
             // init
             var id = GrabId(uri);
@@ -162,6 +166,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 return GrabUsingMetadata(meta);
             }
         }
+
         #endregion
     }
 }
