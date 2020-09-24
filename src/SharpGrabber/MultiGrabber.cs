@@ -125,6 +125,7 @@ namespace DotNetTools.SharpGrabber
             multiGrabber.Register<YouTubeGrabber>();
             multiGrabber.Register<InstagramGrabber>();
             multiGrabber.Register<PornHubGrabber>();
+            multiGrabber.Register<VimeoGrabber>();
             return multiGrabber;
         }
         #endregion
