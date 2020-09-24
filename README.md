@@ -12,7 +12,7 @@ The following providers are currently supported with the option
 to easily add more or even override part of grabbing algorithm with your own code.
 
 - YouTube
-- Instagram
+- Vimeo
 
 ## Features
 #### SharpGrabber Library
@@ -30,14 +30,14 @@ to easily add more or even override part of grabbing algorithm with your own cod
 Include *SharpGrabber* library in your own .NET projects.
 
 ### Install via <a href="https://www.nuget.org/packages/SharpGrabber/">NuGet</a>
-    Install-Package SharpGrabber -Version 1.2.0
+    Install-Package SharpGrabber -Version 1.3.0
     
 ## SharpGrabber Usage Example
 
 ### Download specifically from a provider
 
-    var grabber = new InstagramGrabber();
-    var result = await grabber.GrabAsync(new Uri("<Link to Instagram post>"));
+    var grabber = new YouTubeGrabber();
+    var result = await grabber.GrabAsync(new Uri("<URL of a YouTube video>"));
     IList<IGrabbed> grabbedResources = result.Resources;
 
 ### Automatically detect provider and grab
@@ -64,7 +64,7 @@ If you want to support this project, the best thing is to star it :)
 
 ## Contribution
 To contribute to this project, I'd appreciate if you'd  help with adding support for
-more top providers such as *Vimeo*, *DailyMotion* etc.
+more top providers such as *DailyMotion*, *Instagram*, *Facebook*, *Twitch* etc.
 
 ## License
 Copyright &copy; 2020 Javid Shoaei<br />
