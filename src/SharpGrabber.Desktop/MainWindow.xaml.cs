@@ -128,7 +128,7 @@ namespace SharpGrabber.Desktop
             sb
                 .Append(Constants.AppName).AppendFormat(" [{0}-bit process]", Environment.Is64BitProcess ? 64 : 32).AppendLine()
                 .Append("Version ").AppendLine(Constants.AppVersion.ToString())
-                .Append("FFMpeg Version: ").Append(IOHelper.FFMpegLoaded ? ffmpeg.av_version_info() : "Not loaded").AppendLine()
+                .Append("FFMpeg Version: ").Append(IOHelper.FFMpegLoaded ? ffmpeg.av_version_info() : "<Not Loaded>").AppendLine()
                 .AppendLine()
                 .AppendLine("Copyright © 2020 Javid Shoaei (javidsh.ir)")
                 .AppendLine("All Rights Reserved ®");
