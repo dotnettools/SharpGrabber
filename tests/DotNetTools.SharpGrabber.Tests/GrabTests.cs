@@ -18,6 +18,16 @@ namespace DotNetTools.SharpGrabber.Tests
         }
 
         [Fact]
+        public async void Test_Instagram_VideoClip2()
+        {
+            var grabber = new InstagramGrabber();
+            var result =
+                await grabber.GrabAsync(
+                    new Uri("https://www.instagram.com/p/CIE3H_-DDJ1/?hl=en"));
+            Assert.Equal(2, result.Resources.Count);
+        }
+
+        [Fact]
         public async void Test_YouTube_Normal()
         {
             var grabber = new YouTubeGrabber();
