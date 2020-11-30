@@ -123,8 +123,6 @@ namespace DotNetTools.SharpGrabber
         {
             var multiGrabber = new MultiGrabber();
             multiGrabber.Register<YouTubeGrabber>();
-            multiGrabber.Register<InstagramGrabber>();
-            multiGrabber.Register<PornHubGrabber>();
             multiGrabber.Register<VimeoGrabber>();
             return multiGrabber;
         }
