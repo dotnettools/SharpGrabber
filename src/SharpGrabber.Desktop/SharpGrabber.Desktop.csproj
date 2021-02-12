@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+    <StartupObject>SharpGrabber.Desktop.Program</StartupObject>
+    <RootNamespace>SharpGrabber.Desktop</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>

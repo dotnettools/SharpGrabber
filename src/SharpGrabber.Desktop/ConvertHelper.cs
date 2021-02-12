@@ -53,7 +53,7 @@ namespace SharpGrabber.Desktop
 
         public static void Convert(GrabbedMedia videoStream, GrabbedMedia audioStream, string videoPath, string audioPath, string outputPath)
         {
-            var builder = new MediaBuilder(outputPath);
+            var builder = new MediaMerger(outputPath);
             builder.AddStreamSource(videoPath, MediaStreamType.Video);
             builder.AddStreamSource(audioPath, MediaStreamType.Audio);
             builder.OutputMimeType = videoStream.Format.Mime;

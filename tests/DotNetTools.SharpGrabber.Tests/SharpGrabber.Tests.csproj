@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\SharpGrabber.Converter\SharpGrabber.Converter.csproj" />
     <ProjectReference Include="..\..\src\SharpGrabber\SharpGrabber.csproj" />
   </ItemGroup>
 

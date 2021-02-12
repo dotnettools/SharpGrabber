@@ -11,7 +11,7 @@ namespace DotNetTools.SharpGrabber.Converter
     /// <summary>
     /// Can mux multiple media streams together into a container.
     /// </summary>
-    public unsafe sealed class MediaBuilder
+    public unsafe sealed class MediaMerger
     {
         #region Fields
         private readonly Dictionary<MediaStreamType, MediaStreamSource> _sources = new Dictionary<MediaStreamType, MediaStreamSource>();
@@ -35,9 +35,9 @@ namespace DotNetTools.SharpGrabber.Converter
         #endregion
 
         #region Constructor
-        public MediaBuilder() { }
+        public MediaMerger() { }
 
-        public MediaBuilder(string outputPath)
+        public MediaMerger(string outputPath)
         {
             OutputPath = outputPath;
         }
