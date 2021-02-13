@@ -18,7 +18,7 @@ to easily add more or even override part of grabbing algorithm with your own cod
 - Any HLS service and M3U8 playlist
 
 ### HLS Support
-M3U8 streams and master playlists are now supported! The `SharpGrabber` library can parse and grab information from the playlists. Also, the `SharpGrabber.Converter` library can concatenate the segment files using `ffmpeg` shared libraries.
+M3U8 files are now supported - including master playlists. The `SharpGrabber` library can parse and grab information from the playlists. Also, the `SharpGrabber.Converter` library can concatenate the segment files using `ffmpeg` shared libraries.
 
 ## Features
 #### SharpGrabber Library
