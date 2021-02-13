@@ -1,57 +1,68 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
-    <StartupObject>SharpGrabber.Desktop.Program</StartupObject>
-    <RootNamespace>SharpGrabber.Desktop</RootNamespace>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Update="**\*.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <AvaloniaResource Include="**\*.xaml">
-      <SubType>Designer</SubType>
-    </AvaloniaResource>
-  </ItemGroup>
-  <ItemGroup>
-    <AvaloniaResource Remove="Components\LoadingSpinner.xaml" />
-    <AvaloniaResource Remove="Components\MediaResourceView.xaml" />
-    <AvaloniaResource Remove="UI\ButtonStyle.xaml" />
-    <AvaloniaResource Remove="UI\Icons.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Components\LoadingSpinner.xaml" />
-    <None Remove="Components\MediaResourceView.xaml" />
-    <None Remove="Icons.xaml" />
-    <None Remove="UI\ButtonStyle.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.8.0" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.8.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Components\LoadingSpinner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Icons.xaml">
-      <Generator></Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Components\MediaResourceView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\ButtonStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpGrabber.Converter\SharpGrabber.Converter.csproj" />
-    <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+        <StartupObject>SharpGrabber.Desktop.Program</StartupObject>
+        <RootNamespace>SharpGrabber.Desktop</RootNamespace>
+        <LangVersion>8.0</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Update="**\*.xaml.cs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+        <AvaloniaResource Include="**\*.xaml">
+            <SubType>Designer</SubType>
+        </AvaloniaResource>
+    </ItemGroup>
+    <ItemGroup>
+        <AvaloniaResource Remove="Components\LoadingSpinner.xaml" />
+        <AvaloniaResource Remove="Components\MediaResourceView.xaml" />
+        <AvaloniaResource Remove="Components\StreamResourceView.xaml" />
+        <AvaloniaResource Remove="UI\ButtonStyle.xaml" />
+        <AvaloniaResource Remove="UI\Icons.xaml" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="Components\LoadingSpinner.xaml" />
+        <None Remove="Components\MediaResourceView.xaml" />
+        <None Remove="Components\StreamResourceView.xaml" />
+        <None Remove="Icons.xaml" />
+        <None Remove="UI\ButtonStyle.xaml" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="0.10.0" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Components\LoadingSpinner.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Components\StreamResourceView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </EmbeddedResource>
+        <EmbeddedResource Include="UI\Icons.xaml">
+            <Generator></Generator>
+        </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Components\MediaResourceView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="UI\ButtonStyle.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\SharpGrabber.Converter\SharpGrabber.Converter.csproj" />
+        <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Components\StreamResourceView.xaml.cs">
+            <DependentUpon>StreamResourceView.xaml</DependentUpon>
+        </Compile>
+    </ItemGroup>
 </Project>

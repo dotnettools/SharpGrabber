@@ -63,8 +63,8 @@ namespace DotNetTools.SharpGrabber.Converter
 
         public void WriteFrame(AVCodecContext* codecContext, MediaFrame mediaFrame)
         {
-            using (var packet = EncodeFrame(codecContext, mediaFrame))
-                WritePacket(packet.Pointer);
+            using var packet = EncodeFrame(codecContext, mediaFrame);
+            WritePacket(packet.Pointer);
         }
 
         public void WriteTrailer()

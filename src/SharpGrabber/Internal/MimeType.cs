@@ -696,6 +696,7 @@ namespace DotNetTools.SharpGrabber.Internal
                           new MimeInfo() { Name = @"Microsoft Windows Media Video Playlist", Mime = @"video/x-ms-wvx", Types = new[] { "wvx",  } },
                           new MimeInfo() { Name = @"SGI Movie", Mime = @"video/x-sgi-movie", Types = new[] { "movie",  } },
                           new MimeInfo() { Name = @"CoolTalk", Mime = @"x-conference/x-cooltalk", Types = new[] { "ice",  } },
+                          new MimeInfo() { Name = @"HLS Playlist", Mime = @"application/x-mpegURL", Types = new[] { "m3u8",  } },
                      };
         #endregion
 

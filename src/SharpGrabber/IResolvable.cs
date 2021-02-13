@@ -19,7 +19,7 @@ namespace DotNetTools.SharpGrabber
         /// <summary>
         /// Asynchronously resolves the value if it is not already resolved.
         /// </summary>
-        Task<T> Resolve();
+        Task<T> ResolveAsync();
     }
 
     /// <remarks>
@@ -65,7 +65,7 @@ namespace DotNetTools.SharpGrabber
         }
 
         /// <inheritdoc />
-        public Task<T> Resolve()
+        public Task<T> ResolveAsync()
         {
             var task = new TaskCompletionSource<T>();
 

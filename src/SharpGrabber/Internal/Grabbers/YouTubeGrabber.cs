@@ -438,32 +438,30 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         {
             // download base.js
             var client = HttpHelper.CreateClient();
-            using (var response = await client.GetAsync(embedPageData.BaseJsUri, cancellationToken))
+            using var response = await client.GetAsync(embedPageData.BaseJsUri, cancellationToken);
+            var scriptContent = await response.Content.ReadAsStringAsync();
+            var script = new YouTubeScript(scriptContent);
+
+            // find decipher function name
+            var match = DecipherFunctionRegex.Match(scriptContent);
+            if (!match.Success)
+                throw new GrabParseException("Failed to locate decipher function.");
+            var fn = match.Groups[1].Value;
+
+            // prepare script host to execute the decipher function along with its used functions
+            script.PrepareDecipherFunctionCall(fn);
+
+            // call decipher function
+            foreach (var streamInfo in metaData.AllStreams)
             {
-                var scriptContent = await response.Content.ReadAsStringAsync();
-                var script = new YouTubeScript(scriptContent);
+                if (string.IsNullOrEmpty(streamInfo.Signature))
+                    continue;
 
-                // find decipher function name
-                var match = DecipherFunctionRegex.Match(scriptContent);
-                if (!match.Success)
-                    throw new GrabParseException("Failed to locate decipher function.");
-                var fn = match.Groups[1].Value;
+                // calculate decipher
+                streamInfo.Decipher = script.CallDecipherFunction(fn, streamInfo.Signature);
 
-                // prepare script host to execute the decipher function along with its used functions
-                script.PrepareDecipherFunctionCall(fn);
-
-                // call decipher function
-                foreach (var streamInfo in metaData.AllStreams)
-                {
-                    if (string.IsNullOrEmpty(streamInfo.Signature))
-                        continue;
-
-                    // calculate decipher
-                    streamInfo.Decipher = script.CallDecipherFunction(fn, streamInfo.Signature);
-
-                    // update uri
-                    streamInfo.Url += $"&sig={Uri.EscapeDataString(streamInfo.Decipher)}";
-                }
+                // update uri
+                streamInfo.Url += $"&sig={Uri.EscapeDataString(streamInfo.Decipher)}";
             }
         }
         #endregion

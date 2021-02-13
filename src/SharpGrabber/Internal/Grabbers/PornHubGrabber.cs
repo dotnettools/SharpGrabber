@@ -117,30 +117,28 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 return null;
             uri = MakeStandardUri(viewId);
 
-            using (var client = HttpHelper.CreateClient())
-            {
-                // download content
-                var response = await client.GetAsync(uri, cancellationToken);
-                response.EnsureSuccessStatusCode();
-                var htmlContent = await response.Content.ReadAsStringAsync();
+            using var client = HttpHelper.CreateClient();
+            // download content
+            var response = await client.GetAsync(uri, cancellationToken);
+            response.EnsureSuccessStatusCode();
+            var htmlContent = await response.Content.ReadAsStringAsync();
 
-                // cut the useful part of htmlContent to speed up regex look up
-                htmlContent = CutUsefulPart(htmlContent);
+            // cut the useful part of htmlContent to speed up regex look up
+            htmlContent = CutUsefulPart(htmlContent);
 
-                htmlContent = htmlContent.Insert(htmlContent.IndexOf("playerObjList."), "var playerObjList = {};\r\n");
+            htmlContent = htmlContent.Insert(htmlContent.IndexOf("playerObjList."), "var playerObjList = {};\r\n");
 
-                // grab javascript flashvars
-                var match = FlashVarsFinder.Match(htmlContent);
-                if (!match.Success)
-                    throw new GrabParseException("Failed to locate flashvars.");
-                var variableName = match.Groups[3].Value;
-                var flashVars = await ExtractFlashVars(match.Groups[1].Value, variableName);
+            // grab javascript flashvars
+            var match = FlashVarsFinder.Match(htmlContent);
+            if (!match.Success)
+                throw new GrabParseException("Failed to locate flashvars.");
+            var variableName = match.Groups[3].Value;
+            var flashVars = await ExtractFlashVars(match.Groups[1].Value, variableName);
 
-                // generate result
-                var result = new GrabResult(uri);
-                Grab(result, flashVars, options);
-                return result;
-            }
+            // generate result
+            var result = new GrabResult(uri);
+            Grab(result, flashVars, options);
+            return result;
         }
         #endregion
     }

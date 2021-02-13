@@ -178,28 +178,22 @@ namespace DotNetTools.SharpGrabber.Converter
 
         public MediaFrame ReadFrame()
         {
-            using (var packet = ReadPacket())
-            {
-                if (packet == null)
-                    return null;
-                return ReadFrame(packet);
-            }
+            using var packet = ReadPacket();
+            if (packet == null)
+                return null;
+            return ReadFrame(packet);
         }
 
         public bool ReadFrameAndConvert(Action<AVFrame, IntPtr> frameFeed, AVPixelFormat pixelFormat = AVPixelFormat.AV_PIX_FMT_BGR24)
         {
-            using (var frame = ReadFrame())
-            {
-                if (frame == null)
-                    return false;
+            using var frame = ReadFrame();
+            if (frame == null)
+                return false;
 
-                using (var conf = new VideoFrameConverter(FrameSize, PixelFormat, FrameSize, pixelFormat))
-                {
-                    var convFrame = conf.Convert(*frame.Pointer);
-                    frameFeed.Invoke(convFrame, (IntPtr)convFrame.data[0]);
-                    return true;
-                }
-            }
+            using var conf = new VideoFrameConverter(FrameSize, PixelFormat, FrameSize, pixelFormat);
+            var convFrame = conf.Convert(*frame.Pointer);
+            frameFeed.Invoke(convFrame, (IntPtr)convFrame.data[0]);
+            return true;
         }
         #endregion
 

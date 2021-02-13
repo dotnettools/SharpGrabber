@@ -11,7 +11,7 @@ namespace DotNetTools.SharpGrabber.Media
     public enum MediaChannels
     {
         /// <summary>
-        /// No channel (not for library practical purposes)
+        /// No channel (not for practical purposes)
         /// </summary>
         /// <remarks>
         /// No <see cref="IGrabber"/> is supposed to return a media with no channels.
