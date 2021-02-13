@@ -124,6 +124,8 @@ namespace DotNetTools.SharpGrabber
             var multiGrabber = new MultiGrabber();
             multiGrabber.Register<YouTubeGrabber>();
             multiGrabber.Register<VimeoGrabber>();
+            multiGrabber.Register<HlsGrabber>();
+            multiGrabber.Register<XnxxGrabber>();
             return multiGrabber;
         }
         #endregion

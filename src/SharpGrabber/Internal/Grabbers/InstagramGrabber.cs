@@ -162,14 +162,12 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             // check response
             CheckResponse(response);
 
-            using (var responseStream = await response.Content.ReadAsStreamAsync())
-            {
-                // parse page
-                var meta = ParsePage(responseStream);
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            // parse page
+            var meta = ParsePage(responseStream);
 
-                // parse pairs
-                return GrabUsingMetadata(meta);
-            }
+            // parse pairs
+            return GrabUsingMetadata(meta);
         }
 
         #endregion

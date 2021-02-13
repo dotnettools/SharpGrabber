@@ -3,7 +3,7 @@
 namespace DotNetTools.SharpGrabber.Exceptions
 {
     /// <summary>
-    /// Represents grab exceptions that occur when a grabber is trying to parse information on the target page
+    /// Base class for grab exceptions that occur when a grabber is trying to parse information on the target page
     /// and fails to locate or fetch necessary data from them. 
     /// </summary>
     /// <remarks>

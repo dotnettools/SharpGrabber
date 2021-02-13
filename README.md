@@ -1,8 +1,10 @@
-# SharpGrabber
+﻿# SharpGrabber
 <img src="./assets/icon.png" alt="SharpGrabber" width="64"/>
 
+*⭐ Please support us by starring the project if you find it useful.*
+
 This project consists of several connected sub-projects:            
-- `SharpGrabber` is a *.NET Standard* library for crawling into top media provider websites such as **YouTube**, **Instagram** etc. in order to grab information and return direct links of the audio/video files.
+- `SharpGrabber` is a *.NET Standard* library for crawling into top media provider websites such as **YouTube**, **Vimeo** etc. in order to grab information and return direct links of the audio/video files. **HLS** and **M3U8 files** are also supported.
 - `SharpGrabber.Converter` is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files.
 - `SharpGrabber.Desktop` A cross-platform desktop application
 which utilizes both mentioned libraries to expose their functionality for desktop end-users.
@@ -13,6 +15,10 @@ to easily add more or even override part of grabbing algorithm with your own cod
 
 - YouTube
 - Vimeo
+- Any HLS service and M3U8 playlist
+
+### HLS Support
+M3U8 files are now supported - including master playlists. The `SharpGrabber` library can parse and grab information from the playlists. Also, the `SharpGrabber.Converter` library can concatenate the segment files using `ffmpeg` shared libraries.
 
 ## Features
 #### SharpGrabber Library
@@ -30,7 +36,7 @@ to easily add more or even override part of grabbing algorithm with your own cod
 Include *SharpGrabber* library in your own .NET projects.
 
 ### Install via <a href="https://www.nuget.org/packages/SharpGrabber/">NuGet</a>
-    Install-Package SharpGrabber -Version 1.3.0
+    Install-Package SharpGrabber -Version 1.4.0
     
 ## SharpGrabber Usage Example
 
@@ -55,17 +61,10 @@ Requirements of the cross-platform desktop application to run and operate correc
  
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
-## Roadmap
-The following features are top priority:
-- Support for more media providers
-- Accelerate downloads in the desktop app (like a download manager)
-
-## Support
-If you want to support this project, the best thing is to star it :)
-
 ## Contribution
-To contribute to this project, I'd appreciate if you'd  help with adding support for
-more top providers such as *DailyMotion*, *Instagram*, *Facebook*, *Twitch* etc.
+Your contributions are much appreciated!
+- Support for more media providers such as *DailyMotion*, *Instagram*, *Facebook*, *Twitch* etc.
+- Accelerate downloads in the desktop app (like a download manager)
 
 ## License
 Copyright &copy; 2021 Javid Shoaei<br />

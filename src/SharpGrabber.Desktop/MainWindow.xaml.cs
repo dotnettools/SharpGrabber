@@ -66,9 +66,6 @@ namespace SharpGrabber.Desktop
 
             InitializeComponent();
             basicInfo.IsVisible = resourceContainer.IsVisible = false;
-#if DEBUG
-            this.AttachDevTools();
-#endif
             CheckLibrary();
         }
 
@@ -130,8 +127,7 @@ namespace SharpGrabber.Desktop
                 .Append("Version ").AppendLine(Constants.AppVersion.ToString())
                 .Append("FFMpeg Version: ").Append(IOHelper.FFMpegLoaded ? ffmpeg.av_version_info() : "<Not Loaded>").AppendLine()
                 .AppendLine()
-                .AppendLine("Copyright © 2020 Javid Shoaei (javidsh.ir)")
-                .AppendLine("All Rights Reserved ®");
+                .AppendLine("Copyright © 2021 Javid Shoaei (javidsh.ir)");
             ShowMessage("About", sb.ToString());
         }
 
@@ -139,8 +135,21 @@ namespace SharpGrabber.Desktop
         {
             try
             {
-                var downloader = new Downloader(grabbed, path);
-                await downloader.Download();
+                var downloader = new MediaDownloader(grabbed, path);
+                await downloader.DownloadAsync();
+            }
+            catch (Exception exception)
+            {
+                ShowMessage("Download error", exception.Message);
+            }
+        }
+
+        public async Task Download(GrabbedStreamViewModel grabbed, string path)
+        {
+            try
+            {
+                var downloader = new StreamDownloader(grabbed, path);
+                await downloader.DownloadAsync();
             }
             catch (Exception exception)
             {
@@ -186,20 +195,28 @@ namespace SharpGrabber.Desktop
         private void LoadMedia(IList<IGrabbed> allGrabbedResources)
         {
             // init
-            var grabs = allGrabbedResources.Select(g => g as GrabbedMedia).Where(g => g != null).ToList();
+            var medias = allGrabbedResources.OfType<GrabbedMedia>().ToList();
             resourceContainer.Children.Clear();
 
             // add sugguested conversions
-            foreach (var vm in ConvertHelper.SuggestConversions(grabs))
+            foreach (var vm in ConvertHelper.SuggestConversions(medias))
             {
                 var view = new MediaResourceView(vm);
                 resourceContainer.Children.Add(view);
             }
 
             // add views for grabbed objects
-            foreach (var grab in grabs)
+            foreach (var grab in medias)
             {
                 var view = new MediaResourceView(new GrabbedMediaViewModel(grab));
+                resourceContainer.Children.Add(view);
+            }
+
+            // present streams
+            var streams = allGrabbedResources.OfType<GrabbedStreamMetadata>().ToList();
+            foreach (var streamMetadata in streams)
+            {
+                var view = new StreamResourceView(new GrabbedStreamViewModel(streamMetadata));
                 resourceContainer.Children.Add(view);
             }
         }
@@ -225,7 +242,8 @@ namespace SharpGrabber.Desktop
             LoadMedia(result.Resources);
 
             // display media info for the first time
-            basicInfo.IsVisible = resourceContainer.IsVisible = true;
+            resourceContainer.IsVisible = true;
+            basicInfo.IsVisible = images.Any() || mediaFiles.Any();
 
             // load thumbnail
             img.Source = null;
@@ -235,16 +253,14 @@ namespace SharpGrabber.Desktop
                 imgSpinner.IsVisible = true;
                 try
                 {
-                    using (var client = new HttpClient())
-                    using (var response = await client.GetAsync(thumbnail.ResourceUri))
-                    {
-                        if (response.IsSuccessStatusCode)
-                            using (var stream = await response.Content.ReadAsStreamAsync())
-                            {
-                                var bitmap = new Bitmap(stream);
-                                img.Source = bitmap;
-                            }
-                    }
+                    using var client = new HttpClient();
+                    using var response = await client.GetAsync(thumbnail.ResourceUri);
+                    if (response.IsSuccessStatusCode)
+                        using (var stream = await response.Content.ReadAsStreamAsync())
+                        {
+                            var bitmap = new Bitmap(stream);
+                            img.Source = bitmap;
+                        }
                 }
                 finally
                 {
@@ -282,15 +298,13 @@ namespace SharpGrabber.Desktop
                 foreach (var image in images)
                 {
                     // download image
-                    using (var response = await client.GetAsync(image.ResourceUri))
-                    {
-                        if (!response.IsSuccessStatusCode)
-                            continue;
-                        var ext = response.Content.Headers.ContentType?.MediaType?.Split('/')?.LastOrDefault();
-                        var path = Path.Combine(folderPath, $"image-{++count}.{ext}");
-                        using (var imageStream = new FileStream(path, FileMode.Create, FileAccess.Write))
-                            await response.Content.CopyToAsync(imageStream);
-                    }
+                    using var response = await client.GetAsync(image.ResourceUri);
+                    if (!response.IsSuccessStatusCode)
+                        continue;
+                    var ext = response.Content.Headers.ContentType?.MediaType?.Split('/')?.LastOrDefault();
+                    var path = Path.Combine(folderPath, $"image-{++count}.{ext}");
+                    using var imageStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+                    await response.Content.CopyToAsync(imageStream);
                 }
 
                 ShowMessage("Save images", $"{count} images were successfully downloaded.");

@@ -42,7 +42,7 @@ namespace DotNetTools.SharpGrabber.Media
         public string Title { get; set; }
 
         /// <summary>
-        /// Length of the media (optional)
+        /// Duration of the media (optional)
         /// </summary>
         public TimeSpan? Length { get; set; }
 

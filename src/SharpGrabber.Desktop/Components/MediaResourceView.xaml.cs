@@ -21,8 +21,10 @@ namespace SharpGrabber.Desktop.Components
         #region Properties
         public GrabbedMediaViewModel GrabbedMedia => DataContext as GrabbedMediaViewModel;
 
-        public MainWindow MainWindow => Application.Current.MainWindow as MainWindow;
+        public MainWindow MainWindow => Program.MainWindow;
         #endregion
+
+        public MediaResourceView() { }
 
         public MediaResourceView(GrabbedMediaViewModel viewModel)
         {

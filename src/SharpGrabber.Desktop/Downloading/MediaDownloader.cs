@@ -12,15 +12,15 @@ using System.Threading.Tasks;
 namespace SharpGrabber.Desktop
 {
 
-    public class Downloader
+    public class MediaDownloader
     {
         #region Fields
-        private GrabbedMediaViewModel _viewModel;
-        private string _targetPath;
+        private readonly GrabbedMediaViewModel _viewModel;
+        private readonly string _targetPath;
         #endregion
 
         #region Constructors
-        public Downloader(GrabbedMediaViewModel grabbedViewModel, string targetPath)
+        public MediaDownloader(GrabbedMediaViewModel grabbedViewModel, string targetPath)
         {
             _viewModel = grabbedViewModel;
             _targetPath = targetPath;
@@ -30,51 +30,47 @@ namespace SharpGrabber.Desktop
         #region Internal Methods
         private async Task SingleDownload(Uri uri, Stream outputStream, string downloadingText = "Downloading {0}...")
         {
-            using (var client = new HttpClient())
-            using (var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead))
+            using var client = new HttpClient();
+            using var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            var totalBytes = response.Content.Headers.ContentLength;
+            if (totalBytes == 0)
+                throw new Exception("No data to download.");
+            else
+                _viewModel.DownloadStatus = string.Format(downloadingText, UIHelpers.BytesToString(totalBytes.Value));
+            var remainingBytes = totalBytes;
+            var lastProgress = double.MinValue;
+
+            using var stream = await response.Content.ReadAsStreamAsync();
+            var buffer = new byte[4096];
+            while (true)
             {
-                response.EnsureSuccessStatusCode();
-                var totalBytes = response.Content.Headers.ContentLength;
-                if (totalBytes == 0)
-                    throw new Exception("No data to download.");
-                else
-                    _viewModel.DownloadStatus = string.Format(downloadingText, UIHelpers.BytesToString(totalBytes.Value));
-                var remainingBytes = totalBytes;
-                var lastProgress = double.MinValue;
+                var countToRead = (int)Math.Min(remainingBytes ?? int.MaxValue, buffer.Length);
+                var read = await stream.ReadAsync(buffer, 0, countToRead);
+                if (read <= 0)
+                    break;
+                await outputStream.WriteAsync(buffer, 0, read);
 
-                using (var stream = await response.Content.ReadAsStreamAsync())
+                if (totalBytes.HasValue)
                 {
-                    var buffer = new byte[4096];
-                    while (true)
+                    remainingBytes -= read;
+                    var progress = (totalBytes.Value - remainingBytes.Value) / (double)totalBytes.Value;
+                    if (Math.Abs(progress - lastProgress) > 0.005)
                     {
-                        var countToRead = (int)Math.Min(remainingBytes ?? int.MaxValue, buffer.Length);
-                        var read = await stream.ReadAsync(buffer, 0, countToRead);
-                        if (read <= 0)
-                            break;
-                        await outputStream.WriteAsync(buffer, 0, read);
-
-                        if (totalBytes.HasValue)
-                        {
-                            remainingBytes -= read;
-                            var progress = (totalBytes.Value - remainingBytes.Value) / (double)totalBytes.Value;
-                            if (Math.Abs(progress - lastProgress) > 0.005)
-                            {
-                                _viewModel.DownloadProgress = progress;
-                                lastProgress = progress;
-                            }
-                        }
+                        _viewModel.DownloadProgress = progress;
+                        lastProgress = progress;
                     }
-                    _viewModel.DownloadProgress = 1;
                 }
             }
+            _viewModel.DownloadProgress = 1;
         }
 
         private async Task SingleDownload(Uri uri, string outputPath, string downloadingText = "Downloading {0}...")
         {
             try
             {
-                using (var outputStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.None))
-                    await SingleDownload(uri, outputStream, downloadingText);
+                using var outputStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.None);
+                await SingleDownload(uri, outputStream, downloadingText);
             }
             catch (Exception)
             {
@@ -115,7 +111,7 @@ namespace SharpGrabber.Desktop
         #endregion
 
         #region Methods
-        public async Task Download()
+        public async Task DownloadAsync()
         {
             // init
             var media = _viewModel.Media;

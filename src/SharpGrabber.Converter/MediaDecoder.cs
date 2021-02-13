@@ -71,10 +71,13 @@ namespace DotNetTools.SharpGrabber.Converter
         #endregion
 
         #region Methods
-        public void SelectStream(AVMediaType type)
+        public bool SelectStream(AVMediaType type)
         {
             AVCodec* avCodec = null;
-            _streamIndex = ffmpeg.av_find_best_stream(_avFormatContext, type, -1, -1, &avCodec, 0).ThrowOnError();
+            _streamIndex = ffmpeg.av_find_best_stream(_avFormatContext, type, -1, -1, &avCodec, 0);
+            if (_streamIndex == ffmpeg.AVERROR_STREAM_NOT_FOUND)
+                return false;
+            _streamIndex.ThrowOnError();
             _avCodecContext = ffmpeg.avcodec_alloc_context3(avCodec);
             var stream = _avFormatContext->streams[_streamIndex];
 
@@ -92,6 +95,8 @@ namespace DotNetTools.SharpGrabber.Converter
             BitRate = _avCodecContext->bit_rate;
             FrameRate = _avCodecContext->framerate;
             TimeBase = stream->time_base;
+
+            return true;
         }
 
         public AVStream* GetStream()
@@ -173,28 +178,22 @@ namespace DotNetTools.SharpGrabber.Converter
 
         public MediaFrame ReadFrame()
         {
-            using (var packet = ReadPacket())
-            {
-                if (packet == null)
-                    return null;
-                return ReadFrame(packet);
-            }
+            using var packet = ReadPacket();
+            if (packet == null)
+                return null;
+            return ReadFrame(packet);
         }
 
         public bool ReadFrameAndConvert(Action<AVFrame, IntPtr> frameFeed, AVPixelFormat pixelFormat = AVPixelFormat.AV_PIX_FMT_BGR24)
         {
-            using (var frame = ReadFrame())
-            {
-                if (frame == null)
-                    return false;
+            using var frame = ReadFrame();
+            if (frame == null)
+                return false;
 
-                using (var conf = new VideoFrameConverter(FrameSize, PixelFormat, FrameSize, pixelFormat))
-                {
-                    var convFrame = conf.Convert(*frame.Pointer);
-                    frameFeed.Invoke(convFrame, (IntPtr)convFrame.data[0]);
-                    return true;
-                }
-            }
+            using var conf = new VideoFrameConverter(FrameSize, PixelFormat, FrameSize, pixelFormat);
+            var convFrame = conf.Convert(*frame.Pointer);
+            frameFeed.Invoke(convFrame, (IntPtr)convFrame.data[0]);
+            return true;
         }
         #endregion
 

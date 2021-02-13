@@ -24,5 +24,10 @@ namespace DotNetTools.SharpGrabber.Media
         /// the exact time of the frame.
         /// </summary>
         Frame,
+
+        /// <summary>
+        /// Indicates that the image is a preview of the media.
+        /// </summary>
+        Preview,
     }
 }
