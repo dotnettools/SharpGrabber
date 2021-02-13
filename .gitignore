@@ -23,3 +23,4 @@
 /SharpGrabber.sln.DotSettings.user
 /src/SharpGrabber.Desktop/nuget.config
 *.pfx
+/src/SharpGrabber/SharpGrabber.xml
