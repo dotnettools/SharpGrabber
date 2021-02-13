@@ -32,6 +32,8 @@ M3U8 files are now supported - including master playlists. The `SharpGrabber` li
 - Displays information obtained by the `SharpGrabber` library and downloads the resolved direct links.
 - Uses `SharpGrabber.Converter` to merge YouTube separated audio and video streams into complete media files.
 
+Download binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
+
 ## SharpGrabber Installation
 Include *SharpGrabber* library in your own .NET projects.
 
