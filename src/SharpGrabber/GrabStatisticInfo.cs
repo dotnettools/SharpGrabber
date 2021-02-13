@@ -22,7 +22,7 @@ namespace DotNetTools.SharpGrabber
         public long? ViewCount { get; set; }
 
         /// <summary>
-        /// Overall length of media if available
+        /// Overall duration of media if available
         /// </summary>
         public TimeSpan? Length { get; set; }
     }

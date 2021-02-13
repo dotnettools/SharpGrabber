@@ -29,6 +29,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         {
             using var client = HttpHelper.CreateClient(uri);
             using var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             var doc = new PlaylistDocument();
             try
