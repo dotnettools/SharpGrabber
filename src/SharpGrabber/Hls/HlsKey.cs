@@ -14,7 +14,7 @@ namespace DotNetTools.SharpGrabber.Hls
         }
 
         public HlsKeyMethod Method { get; }
-        public Uri? Uri { get; }
+        public Uri Uri { get; }
         public byte[] Iv { get; }
     }
 }

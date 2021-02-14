@@ -10,9 +10,6 @@ namespace DotNetTools.SharpGrabber
     [Flags]
     public enum GrabOptionFlag
     {
-        /// <summary>
-        /// No grab flags
-        /// </summary>
         None = 0,
 
         /// <summary>
@@ -24,6 +21,11 @@ namespace DotNetTools.SharpGrabber
         /// Grabber may grab related images.
         /// </summary>
         GrabImages = 2,
+
+        /// <summary>
+        /// Grabber may decrypt the output stream via <see cref="GrabResult.OutputStreamWrapper"/>.
+        /// </summary>
+        Decrypt = 4,
     }
 
     /// <summary>

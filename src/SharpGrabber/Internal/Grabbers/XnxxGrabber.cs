@@ -1,4 +1,5 @@
 ﻿using DotNetTools.SharpGrabber.Exceptions;
+using DotNetTools.SharpGrabber.Internal.Grabbers.Hls;
 using DotNetTools.SharpGrabber.Media;
 using HtmlAgilityPack;
 using Newtonsoft.Json;

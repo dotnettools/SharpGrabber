@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media;
+using DotNetTools.SharpGrabber;
 using DotNetTools.SharpGrabber.Converter;
 using DotNetTools.SharpGrabber.Media;
 using Microsoft.VisualBasic.CompilerServices;
@@ -15,11 +16,13 @@ namespace SharpGrabber.Desktop
 {
     public class StreamDownloader
     {
+        private readonly GrabResult _grabResult;
         private readonly GrabbedStreamViewModel _viewModel;
         private readonly string _targetPath;
 
-        public StreamDownloader(GrabbedStreamViewModel viewModel, string targetPath)
+        public StreamDownloader(GrabbedStreamViewModel viewModel, string targetPath, GrabResult grabResult)
         {
+            _grabResult = grabResult;
             _viewModel = viewModel;
             _targetPath = targetPath;
         }
@@ -79,7 +82,8 @@ namespace SharpGrabber.Desktop
         {
             using var client = new HttpClient();
             using var response = await client.GetAsync(segment.Uri, HttpCompletionOption.ResponseHeadersRead);
-            using var stream = await response.Content.ReadAsStreamAsync();
+            using var originalStream = await response.Content.ReadAsStreamAsync();
+            using var stream = await _grabResult.WrapStreamAsync(originalStream);
             var contentLength = response.Content.Headers.ContentLength;
 
             if (contentLength == null)

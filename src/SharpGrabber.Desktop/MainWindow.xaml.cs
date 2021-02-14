@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using DotNetTools.SharpGrabber;
@@ -24,7 +25,7 @@ namespace SharpGrabber.Desktop
         #region Fields
         private bool _uiEnabled = true;
         private TextBox tbUrl;
-        private TextBlock tbPlaceholder, txtGrab;
+        private TextBlock tbPlaceholder, txtGrab, tbGrabbers;
         private Button btnGrab, btnPaste, btnSaveImages;
         private LoadingSpinner spGrab;
         private Grid overlayRoot, noContent;
@@ -78,6 +79,7 @@ namespace SharpGrabber.Desktop
             btnGrab = this.FindControl<Button>("btnGrab");
             btnPaste = this.FindControl<Button>("btnPaste");
             btnSaveImages = this.FindControl<Button>("btnSaveImages");
+            tbGrabbers = this.FindControl<TextBlock>("tbGrabbers");
             spGrab = this.FindControl<LoadingSpinner>("spGrab");
             txtGrab = this.FindControl<TextBlock>("txtGrab");
             overlayRoot = this.FindControl<Grid>("overlayRoot");
@@ -97,6 +99,7 @@ namespace SharpGrabber.Desktop
             this.Subscribe(KeyDownEvent, MainWindow_KeyDown);
             tbUrl.Subscribe(GotFocusEvent, TbUrl_GotFocus);
             tbUrl.Subscribe(LostFocusEvent, TbUrl_LostFocus);
+            tbGrabbers.Subscribe(PointerReleasedEvent, TbGrabbers_Click);
             btnGrab.Subscribe(Button.ClickEvent, BtnGrab_Click);
             btnPaste.Subscribe(Button.ClickEvent, BtnPaste_Click);
             btnSaveImages.Subscribe(Button.ClickEvent, BtnSaveImages_Click);
@@ -135,7 +138,7 @@ namespace SharpGrabber.Desktop
         {
             try
             {
-                var downloader = new MediaDownloader(grabbed, path);
+                var downloader = new MediaDownloader(grabbed, path, CurrentGrab);
                 await downloader.DownloadAsync();
             }
             catch (Exception exception)
@@ -148,7 +151,7 @@ namespace SharpGrabber.Desktop
         {
             try
             {
-                var downloader = new StreamDownloader(grabbed, path);
+                var downloader = new StreamDownloader(grabbed, path, CurrentGrab);
                 await downloader.DownloadAsync();
             }
             catch (Exception exception)
@@ -332,6 +335,17 @@ namespace SharpGrabber.Desktop
             overlayRoot.IsVisible = false;
         }
         #endregion
+
+        private void TbGrabbers_Click(object sender, RoutedEventArgs e)
+        {
+            var sb = new StringBuilder();
+            foreach (var t in DefaultGrabbers.Types)
+            {
+                var g = Activator.CreateInstance(t) as IGrabber;
+                sb.AppendLine(g.Name);
+            }
+            ShowMessage("Registered Grabbers", sb.ToString());
+        }
 
         private async void BtnGrab_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
