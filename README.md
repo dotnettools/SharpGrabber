@@ -19,6 +19,7 @@ to easily add more or even override part of grabbing algorithm with your own cod
 
 ### HLS Support
 M3U8 files are now supported - including master playlists. The `SharpGrabber` library can parse and grab information from the playlists. Also, the `SharpGrabber.Converter` library can concatenate the segment files using `ffmpeg` shared libraries.
+AES-128 decryption is also supported.
 
 ## Features
 #### SharpGrabber Library
@@ -38,7 +39,7 @@ Download binaries from the <a href="https://github.com/dotnettools/SharpGrabber/
 Include *SharpGrabber* library in your own .NET projects.
 
 ### Install via <a href="https://www.nuget.org/packages/SharpGrabber/">NuGet</a>
-    Install-Package SharpGrabber -Version 1.4.0
+    Install-Package SharpGrabber -Version 1.5.0
     
 ## SharpGrabber Usage Example
 
