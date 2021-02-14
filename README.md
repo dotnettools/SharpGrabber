@@ -19,7 +19,7 @@ to easily add more or even override part of grabbing algorithm with your own cod
 
 ### HLS Support
 M3U8 files are now supported - including master playlists. The `SharpGrabber` library can parse and grab information from the playlists. Also, the `SharpGrabber.Converter` library can concatenate the segment files using `ffmpeg` shared libraries.
-AES-128 decryption is also supported.
+**AES-128** decryption is also supported.
 
 ## Features
 #### SharpGrabber Library
@@ -61,6 +61,8 @@ Requirements of the cross-platform desktop application to run and operate correc
  - Shared libraries of *ffmpeg* copied into `ffmpeg` directory alongside app executable files for media conversion support.
    - On Windows, you may download the latest <a href="https://github.com/BtbN/FFmpeg-Builds/releases">BtbN ffmpeg build</a>.
    - On any OS check out the <a href="https://ffmpeg.org/download.html">official website</a>.
+ 
+ Download binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
  
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
