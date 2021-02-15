@@ -1,4 +1,5 @@
 ﻿using DotNetTools.SharpGrabber.Internal.Grabbers;
+using DotNetTools.SharpGrabber.Internal.Grabbers.Adult;
 using DotNetTools.SharpGrabber.Internal.Grabbers.Hls;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,24 @@ namespace DotNetTools.SharpGrabber
 {
     public static class DefaultGrabbers
     {
-        public static IReadOnlyCollection<Type> Types { get; }
+        public static IReadOnlyCollection<Type> AllTypes { get; }
+        public static IReadOnlyCollection<Type> NormalTypes { get; }
+        public static IReadOnlyCollection<Type> AdultTypes { get; }
 
         static DefaultGrabbers()
         {
-            Types = new[] {
+            NormalTypes = new[] {
                 typeof(YouTubeGrabber),
                 typeof(VimeoGrabber),
                 typeof(HlsGrabber),
-                typeof(XnxxGrabber),
             }.ToList().AsReadOnly();
+
+            AdultTypes = new[] {
+                typeof(XnxxGrabber),
+                typeof(XVideosGrabber),
+            }.ToList().AsReadOnly();
+
+            AllTypes = NormalTypes.Union(AdultTypes).ToList().AsReadOnly();
         }
     }
 }

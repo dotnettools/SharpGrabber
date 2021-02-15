@@ -122,7 +122,7 @@ namespace DotNetTools.SharpGrabber
         public static MultiGrabber CreateDefault()
         {
             var multiGrabber = new MultiGrabber();
-            foreach (var type in DefaultGrabbers.Types)
+            foreach (var type in DefaultGrabbers.AllTypes)
                 multiGrabber.Register(new TypeFactory<IGrabber>(type));
             return multiGrabber;
         }

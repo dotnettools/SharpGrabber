@@ -339,7 +339,7 @@ namespace SharpGrabber.Desktop
         private void TbGrabbers_Click(object sender, RoutedEventArgs e)
         {
             var sb = new StringBuilder();
-            foreach (var t in DefaultGrabbers.Types)
+            foreach (var t in DefaultGrabbers.AllTypes)
             {
                 var g = Activator.CreateInstance(t) as IGrabber;
                 sb.AppendLine(g.Name);

@@ -10,7 +10,7 @@ using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Media;
 using System.Linq;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers
+namespace DotNetTools.SharpGrabber.Internal.Grabbers.Adult
 {
     /// <summary>
     /// Represents a PornHub.com grabber.
