@@ -108,6 +108,8 @@ namespace DotNetTools.SharpGrabber.Hls
             while (!tokenizer.EndOfStream)
             {
                 token = await tokenizer.ReadAsync().ConfigureAwait(false);
+                if (token == null)
+                    break;
                 context.Token = token;
 
                 switch (token.Type)

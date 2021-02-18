@@ -23,8 +23,9 @@ namespace DotNetTools.SharpGrabber
             }.ToList().AsReadOnly();
 
             AdultTypes = new[] {
-                typeof(XnxxGrabber),
+                typeof(PornHubGrabber),
                 typeof(XVideosGrabber),
+                typeof(XnxxGrabber),
             }.ToList().AsReadOnly();
 
             AllTypes = NormalTypes.Union(AdultTypes).ToList().AsReadOnly();

@@ -20,6 +20,7 @@
     <ItemGroup>
         <AvaloniaResource Remove="Components\LoadingSpinner.xaml" />
         <AvaloniaResource Remove="Components\MediaResourceView.xaml" />
+        <AvaloniaResource Remove="Components\StreamReferenceView.xaml" />
         <AvaloniaResource Remove="Components\StreamResourceView.xaml" />
         <AvaloniaResource Remove="UI\ButtonStyle.xaml" />
         <AvaloniaResource Remove="UI\Icons.xaml" />
@@ -27,6 +28,7 @@
     <ItemGroup>
         <None Remove="Components\LoadingSpinner.xaml" />
         <None Remove="Components\MediaResourceView.xaml" />
+        <None Remove="Components\StreamReferenceView.xaml" />
         <None Remove="Components\StreamResourceView.xaml" />
         <None Remove="Icons.xaml" />
         <None Remove="UI\ButtonStyle.xaml" />
@@ -38,6 +40,9 @@
     <ItemGroup>
         <EmbeddedResource Include="Components\LoadingSpinner.xaml">
             <Generator>MSBuild:Compile</Generator>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Components\StreamReferenceView.xaml">
+          <Generator>MSBuild:Compile</Generator>
         </EmbeddedResource>
         <EmbeddedResource Include="Components\StreamResourceView.xaml">
             <Generator>MSBuild:Compile</Generator>
@@ -61,6 +66,9 @@
         <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Update="Components\StreamReferenceView.xaml.cs">
+          <DependentUpon>StreamReferenceView.xaml</DependentUpon>
+        </Compile>
         <Compile Update="Components\StreamResourceView.xaml.cs">
             <DependentUpon>StreamResourceView.xaml</DependentUpon>
         </Compile>

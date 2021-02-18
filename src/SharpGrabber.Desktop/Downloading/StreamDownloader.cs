@@ -40,6 +40,8 @@ namespace SharpGrabber.Desktop
             {
                 // download all segments
                 var segmentIndex = 0;
+                var downloaded = new Reference<long>(0);
+                var segmentCount = new Reference<int>(0);
                 foreach (var segment in stream.Segments)
                 {
                     _viewModel.DownloadStatus = $"Downloading segments ({segmentIndex}/{stream.Segments.Count})...";
@@ -48,7 +50,7 @@ namespace SharpGrabber.Desktop
                     segmentIndex++;
 
                     using var outStream = new FileStream(segmentPath, FileMode.Create, FileAccess.Write);
-                    await DownloadAsync(segment, outStream);
+                    await DownloadAsync(segment, outStream, stream.Segments.Count, downloaded, segmentCount);
                 }
 
                 // create output file
@@ -78,7 +80,8 @@ namespace SharpGrabber.Desktop
             return Task.CompletedTask;
         }
 
-        private async Task DownloadAsync(MediaSegment segment, Stream outStream)
+        private async Task DownloadAsync(MediaSegment segment, Stream outStream, int totalSegmentCount,
+            Reference<long> overallDownloaded, Reference<int> downloadedSegmentCount)
         {
             using var client = new HttpClient();
             using var response = await client.GetAsync(segment.Uri, HttpCompletionOption.ResponseHeadersRead);
@@ -92,7 +95,9 @@ namespace SharpGrabber.Desktop
                 return;
             }
 
+            var avgSegmentSize = downloadedSegmentCount > 0 ? overallDownloaded / (double)downloadedSegmentCount : contentLength.Value;
             var downloaded = 0L;
+            var totalBytes = avgSegmentSize * totalSegmentCount;
 
             const int BUFFER_LENGTH = 4096;
             var buffer = new byte[BUFFER_LENGTH];
@@ -103,8 +108,11 @@ namespace SharpGrabber.Desktop
                     break;
                 await outStream.WriteAsync(buffer, 0, read);
                 downloaded += read;
-                _viewModel.DownloadProgress = downloaded / (double)contentLength.Value;
+                _viewModel.DownloadProgress = (avgSegmentSize * downloadedSegmentCount + downloaded) / totalBytes;
             }
+
+            overallDownloaded.Value += contentLength.Value;
+            downloadedSegmentCount.Value++;
         }
     }
 }

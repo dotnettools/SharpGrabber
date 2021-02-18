@@ -222,6 +222,14 @@ namespace SharpGrabber.Desktop
                 var view = new StreamResourceView(new GrabbedStreamViewModel(streamMetadata));
                 resourceContainer.Children.Add(view);
             }
+
+            // present stream references
+            var streamRefs = allGrabbedResources.OfType<GrabbedStreamReference>().ToList();
+            foreach (var streamRef in streamRefs)
+            {
+                var view = new StreamReferenceView(new GrabbedStreamRefViewModel(streamRef));
+                resourceContainer.Children.Add(view);
+            }
         }
 
         private async Task LoadGrabResult(GrabResult result)
@@ -347,12 +355,12 @@ namespace SharpGrabber.Desktop
             ShowMessage("Registered Grabbers", sb.ToString());
         }
 
-        private async void BtnGrab_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        public async Task SetUrlAndGrab(string url)
         {
             IsUIEnabled = false;
             try
             {
-                await Grab(tbUrl.Text);
+                await Grab(url);
             }
             catch (Exception exception)
             {
@@ -363,6 +371,9 @@ namespace SharpGrabber.Desktop
                 IsUIEnabled = true;
             }
         }
+
+        private async void BtnGrab_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+            => await SetUrlAndGrab(tbUrl.Text);
 
         private async void BtnPaste_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {

@@ -15,7 +15,7 @@ to easily add more or even override part of grabbing algorithm with your own cod
 
 - YouTube
 - Vimeo
-- Any HLS service and M3U8 playlist
+- Any HLS service (M3U8 playlists)
 
 ### HLS Support
 M3U8 files are now supported - including master playlists.
@@ -60,7 +60,7 @@ Include *SharpGrabber* library in your own .NET projects.
 ## SharpGrabber.Desktop
 Requirements of the cross-platform desktop application to run and operate correctly: 
  - .NET Core 3.1
- - Shared libraries of *ffmpeg* copied into `ffmpeg` directory alongside app executable files for media conversion support.
+ - **Shared libraries** of *ffmpeg* copied into `ffmpeg` directory alongside app executable files for media conversion support.
    - On Windows, you may download the latest <a href="https://github.com/BtbN/FFmpeg-Builds/releases">BtbN ffmpeg build</a>.
    - On any OS check out the <a href="https://ffmpeg.org/download.html">official website</a>.
  
@@ -75,7 +75,6 @@ Your contributions are much appreciated!
 
 ## License
 Copyright &copy; 2021 Javid Shoaei<br />
-All Rights Reserved &reg;
 
 This project is licensed under the GNU Lesser General Public License (LGPL) version 3.
 

@@ -1,0 +1,73 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SharpGrabber.Desktop.ViewModel;assembly=SharpGrabber.Desktop"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="56"
+             x:Class="SharpGrabber.Desktop.Components.StreamReferenceView">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="resm:SharpGrabber.Desktop.UI.Icons.xaml?assembly=SharpGrabber.Desktop" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="Border.root:pointerover">
+        </Style>
+
+        <StyleInclude Source="resm:SharpGrabber.Desktop.UI.ButtonStyle.xaml?assembly=SharpGrabber.Desktop" />
+    </UserControl.Styles>
+
+    <Border Classes="root" Padding="8" BorderThickness="0 0 0 1" BorderBrush="#11000000">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" MaxWidth="24" MaxHeight="24" Margin="8 0 8 0">
+                <DrawingPresenter IsVisible="False" x:Name="iconCheck" Drawing="{StaticResource EI.CheckmarkCircle2}" />
+                <DrawingPresenter IsVisible="False" x:Name="iconVideo" Drawing="{StaticResource BI.RegularFilm}" />
+                <DrawingPresenter IsVisible="False" x:Name="iconAudio" Drawing="{StaticResource MD.Audiotrack}" />
+                <DrawingPresenter IsVisible="False" x:Name="iconCreate" Drawing="{StaticResource M.Asterisk}" />
+            </Grid>
+
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" MinWidth="128">
+                <TextBlock Text="{Binding Path=Name, FallbackValue=FORMAT_TITLE}" FontSize="16" />
+            </StackPanel>
+
+            <TextBlock Grid.Column="1" Grid.Row="1" Foreground="#99000000" Text="{Binding Path=Consideration, FallbackValue=CONSIDERATION}" />
+
+            <!--Progress Begin-->
+            <Grid Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="16 0 8 0" VerticalAlignment="Center" IsVisible="{Binding Path=IsDownloading}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="{Binding Path=DownloadStatus, FallbackValue=Please wait...}" Margin="0 0 0 4" FontSize="10" />
+                <ProgressBar Grid.Row="1" Value="{Binding Path=DownloadPercent}" Maximum="100" Height="3" MinHeight="1" />
+            </Grid>
+            <!--Progress End-->
+
+            <StackPanel Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Button x:Name="btnDownload" Classes="btn" Margin="4 0 0 4">
+                    <TextBlock Text="Download" FontWeight="Bold" />
+                </Button>
+                <Button x:Name="btnCopyLink" Classes="btn" Margin="4 0 0 4">
+                    <TextBlock Text="Copy link" />
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
