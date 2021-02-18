@@ -3,13 +3,14 @@ using DotNetTools.SharpGrabber.Hls;
 using DotNetTools.SharpGrabber.Media;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers
+namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
 {
     public class HlsGrabber : BaseGrabber
     {
@@ -28,7 +29,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         public override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options)
         {
             using var client = HttpHelper.CreateClient(uri);
-            using var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            using var response = await client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             var doc = new PlaylistDocument();
@@ -46,11 +47,37 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         private Task<GrabResult> GrabAsync(Uri uri, PlaylistDocument doc, CancellationToken cancellationToken,
             GrabOptions options)
         {
+            // get resources
+            IList<IGrabbed> grabs;
             if (doc.Streams.Count > 0)
-                return Task.FromResult(new GrabResult(uri, GrabStreams(uri, doc)));
+                grabs = GrabStreams(uri, doc);
             else if (doc.Segments.Count > 0)
-                return Task.FromResult(new GrabResult(uri, GrabSegments(uri, doc)));
-            return Task.FromResult<GrabResult>(null);
+                grabs = GrabSegments(uri, doc);
+            else
+                grabs = null;
+
+            // make result
+            var result = new GrabResult(uri, grabs);
+            if (options.Flags.HasFlag(GrabOptionFlag.Decrypt) && doc.Key != null)
+                UpdateDecryptionMethod(result, doc.Key);
+            return Task.FromResult(result);
+        }
+
+        private void UpdateDecryptionMethod(GrabResult result, HlsKey key)
+        {
+            switch (key.Method)
+            {
+                case HlsKeyMethod.Aes128:
+                    var decryptor = new HlsAes128Decryptor(key);
+                    result.OutputStreamWrapper = decryptor.WrapStreamAsync;
+                    break;
+
+                case HlsKeyMethod.None:
+                    break;
+
+                default:
+                    throw new NotSupportedException($"HLS grab error: Decrypting {key.Method} is not supported.");
+            }
         }
 
         private IList<IGrabbed> GrabStreams(Uri originalUri, PlaylistDocument doc)
