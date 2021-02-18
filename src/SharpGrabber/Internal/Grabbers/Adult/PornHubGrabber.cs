@@ -52,7 +52,10 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Adult
             // cut the useful part of htmlContent to speed up regex look up
             htmlContent = CutUsefulPart(htmlContent);
 
-            htmlContent = htmlContent.Insert(htmlContent.IndexOf("playerObjList."), "var playerObjList = {};\r\n");
+            var objListIndex = htmlContent.IndexOf("playerObjList.");
+            if (objListIndex < 0)
+                throw new GrabParseException("Could not find the video.");
+            htmlContent = htmlContent.Insert(objListIndex, "var playerObjList = {};\r\n");
 
             // grab javascript flashvars
             var flashVarsMatch = FlashVarsFinder.Match(htmlContent);

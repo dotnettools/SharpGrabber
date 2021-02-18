@@ -51,9 +51,10 @@ namespace DotNetTools.SharpGrabber.Converter
         private void Open()
         {
             string path = Source.IsFile ? Source.LocalPath : Source.ToString();
-            var avFormatContext = _avFormatContext = ffmpeg.avformat_alloc_context();
+            AVFormatContext* avFormatContext;
             ffmpeg.avformat_open_input(&avFormatContext, path, null, null).ThrowOnError();
             ffmpeg.avformat_find_stream_info(avFormatContext, null).ThrowOnError();
+            _avFormatContext = avFormatContext;
         }
         #endregion
 
