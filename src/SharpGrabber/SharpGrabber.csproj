@@ -1,49 +1,56 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Title>SharpGrabber</Title>
-    <Description>Grab information and media from YouTube, Vimeo and any HLS service provider (M3U8 playlists). Supports images, thumbnails, video, audio with different formats and qualities. Deciphering and decryption are implemented.</Description>
-    <Copyright>Copyright (C) 2021 Javid Shoaei</Copyright>
-    <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
-    <PackageTags>youtube,instagram,vimeo,hls,m3u8,download,grab,media,audio,video,aes-128</PackageTags>
-    <Authors>Javid Shoaei</Authors>
-    <Product>SharpGrabber</Product>
-    <PackageIconUrl></PackageIconUrl>
-    <FileVersion>1.5.1.0</FileVersion>
-    <AssemblyVersion>1.5.1.0</AssemblyVersion>
-    <Version>1.5.1</Version>
-    <RootNamespace>DotNetTools.SharpGrabber</RootNamespace>
-    <SignAssembly>false</SignAssembly>
-    <DelaySign>false</DelaySign>
-    <PackageVersion>1.5.0</PackageVersion>
-    <LangVersion>8.0</LangVersion>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageIcon>icon.png</PackageIcon>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>SharpGrabber</Title>
+        <Description>Grab information and media from YouTube, Vimeo and any HLS service provider (M3U8 playlists). Supports images, thumbnails, video, audio with different formats and qualities. Deciphering and decryption are implemented.</Description>
+        <Copyright>Copyright (C) 2021 Javid Shoaei</Copyright>
+        <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
+        <PackageLicenseUrl></PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
+        <PackageTags>youtube,instagram,vimeo,hls,m3u8,download,grab,media,audio,video,aes-128</PackageTags>
+        <Authors>Javid Shoaei</Authors>
+        <Product>SharpGrabber</Product>
+        <PackageIconUrl></PackageIconUrl>
+        <FileVersion>1.5.1.0</FileVersion>
+        <AssemblyVersion>1.5.1.0</AssemblyVersion>
+        <PackageVersion>1.5.1</PackageVersion>
+        <Version>1.5.1</Version>
+        <RootNamespace>DotNetTools.SharpGrabber</RootNamespace>
+        <PackageVersion>1.5.1</PackageVersion>
+        <SignAssembly>false</SignAssembly>
+        <PackageVersion>1.5.1</PackageVersion>
+        <DelaySign>false</DelaySign>
+        <LangVersion>8.0</LangVersion>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageIcon>icon.png</PackageIcon>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Projects\C#\SharpGrabber\src\SharpGrabber\SharpGrabber.xml</DocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.33" />
-    <PackageReference Include="Jint" Version="2.11.58" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\assets\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="HtmlAgilityPack" Version="1.11.33" />
+        <PackageReference Include="Jint" Version="2.11.58" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\assets\icon.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
 
 </Project>

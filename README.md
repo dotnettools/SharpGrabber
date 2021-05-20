@@ -41,7 +41,7 @@ Download binaries from the <a href="https://github.com/dotnettools/SharpGrabber/
 Include *SharpGrabber* library in your own .NET projects.
 
 ### Install via <a href="https://www.nuget.org/packages/SharpGrabber/">NuGet</a>
-    Install-Package SharpGrabber -Version 1.5.0
+    Install-Package SharpGrabber -Version 1.5.1
     
 ## SharpGrabber Usage Example
 
