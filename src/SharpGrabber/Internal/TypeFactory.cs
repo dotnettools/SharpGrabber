@@ -8,13 +8,28 @@ namespace DotNetTools.SharpGrabber.Internal
     /// A simple implementation for <see cref="IFactory{T}"/> that makes instances of
     /// <typeparamref name="TImplementationType"/>.
     /// </summary>
-    public class TypeFactory<TImplementationType, TFactoryType> : IFactory<TFactoryType>
+    public class TypeFactory<TImplementationType, TFactoryType> : TypeFactory<TFactoryType>
         where TImplementationType : TFactoryType
     {
-        #region Methods
+        public TypeFactory() : base(typeof(TImplementationType))
+        {
+        }
+    }
+
+    /// <summary>
+    /// A simple implementation for <see cref="IFactory{T}"/> that makes instances of <see cref="ImplementationType"/>.
+    /// </summary>
+    public class TypeFactory<TFactoryType> : IFactory<TFactoryType>
+    {
+        public TypeFactory(Type implementationType)
+        {
+            ImplementationType = implementationType;
+        }
+
+        public Type ImplementationType { get; }
+
         /// <inheritdoc />
         public TFactoryType Create()
-            => Activator.CreateInstance<TImplementationType>();
-        #endregion
+            => (TFactoryType)Activator.CreateInstance(ImplementationType);
     }
 }

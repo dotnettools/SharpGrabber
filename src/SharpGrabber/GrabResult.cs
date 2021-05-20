@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber
 {
@@ -10,7 +12,20 @@ namespace DotNetTools.SharpGrabber
     /// </summary>
     public class GrabResult
     {
-        #region Properties
+        private StreamWrappingDelegate _streamWrappingDelegate = stream => Task.FromResult(stream);
+
+        public GrabResult(Uri originalUri)
+        {
+            Resources = new List<IGrabbed>();
+            OriginalUri = originalUri;
+        }
+
+        public GrabResult(Uri originalUri, IList<IGrabbed> grabbedList)
+        {
+            Resources = grabbedList;
+            OriginalUri = originalUri;
+        }
+
         /// <inheritdoc />
         public Uri OriginalUri { get; }
 
@@ -44,22 +59,25 @@ namespace DotNetTools.SharpGrabber
         /// has signature and its download links need to be deciphered.
         /// </summary>
         public bool IsSecure { get; set; }
-        #endregion
 
-        #region Constructors
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public GrabResult(Uri originalUri)
+        /// <summary>
+        /// Gets or sets the function that accepts an stream and wraps it with other streams if necessary.
+        /// This value cannot be NULL.
+        /// </summary>
+        public StreamWrappingDelegate OutputStreamWrapper
         {
-            Resources = new List<IGrabbed>();
-            OriginalUri = originalUri;
+            get => _streamWrappingDelegate;
+            set => _streamWrappingDelegate = value ?? throw new ArgumentNullException(nameof(OutputStreamWrapper));
         }
 
-        public GrabResult(Uri originalUri, IList<IGrabbed> grabbedList)
-        {
-            Resources = grabbedList;
-            OriginalUri = originalUri;
-        }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-        #endregion
+        /// <summary>
+        /// Accepts an stream and wraps it with other streams if necessary.
+        /// This method should always be invoked after downloading a media file or segment.
+        /// </summary>
+        /// <remarks>
+        /// The original and the result stream should be disposed by the caller.
+        /// </remarks>
+        public Task<Stream> WrapStreamAsync(Stream stream)
+            => OutputStreamWrapper.Invoke(stream);
     }
 }

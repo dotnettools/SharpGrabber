@@ -1,4 +1,5 @@
 ﻿using DotNetTools.SharpGrabber.Exceptions;
+using DotNetTools.SharpGrabber.Internal.Grabbers.Hls;
 using DotNetTools.SharpGrabber.Media;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
@@ -9,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers
+namespace DotNetTools.SharpGrabber.Internal.Grabbers.Adult
 {
     public class XnxxGrabber : BaseGrabber
     {

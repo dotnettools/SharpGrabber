@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Internal;
 using DotNetTools.SharpGrabber.Internal.Grabbers;
+using DotNetTools.SharpGrabber.Internal.Grabbers.Hls;
 
 namespace DotNetTools.SharpGrabber
 {
@@ -115,19 +116,15 @@ namespace DotNetTools.SharpGrabber
         }
         #endregion
 
-        #region Static Methods
         /// <summary>
         /// Creates an instance of <see cref="MultiGrabber"/> with internal providers registered. 
         /// </summary>
         public static MultiGrabber CreateDefault()
         {
             var multiGrabber = new MultiGrabber();
-            multiGrabber.Register<YouTubeGrabber>();
-            multiGrabber.Register<VimeoGrabber>();
-            multiGrabber.Register<HlsGrabber>();
-            multiGrabber.Register<XnxxGrabber>();
+            foreach (var type in DefaultGrabbers.AllTypes)
+                multiGrabber.Register(new TypeFactory<IGrabber>(type));
             return multiGrabber;
         }
-        #endregion
     }
 }

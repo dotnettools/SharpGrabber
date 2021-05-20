@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -23,7 +24,10 @@ namespace DotNetTools.SharpGrabber.Internal
         /// </summary>
         public static HttpClient CreateClient(Uri uri = null)
         {
-            var client = new HttpClient {BaseAddress = uri};
+            var handler = new HttpClientHandler
+            {
+            };
+            var client = new HttpClient(handler) { BaseAddress = uri };
             client.DefaultRequestHeaders.Add("User-Agent", DefaultUserAgent);
             client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("en-US"));
             return client;

@@ -5,9 +5,9 @@
 
 This project consists of several connected sub-projects:            
 - `SharpGrabber` is a *.NET Standard* library for crawling into top media provider websites such as **YouTube**, **Vimeo** etc. in order to grab information and return direct links of the audio/video files. **HLS** and **M3U8 files** are also supported.
-- `SharpGrabber.Converter` is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files.
+- `SharpGrabber.Converter` is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files. It is also used for merging HLS stream segments.
 - `SharpGrabber.Desktop` A cross-platform desktop application
-which utilizes both mentioned libraries to expose their functionality for desktop end-users.
+which utilizes both mentioned libraries to expose their functionality to desktop end-users.
 
 ### Supported Providers
 The following providers are currently supported with the option
@@ -15,10 +15,13 @@ to easily add more or even override part of grabbing algorithm with your own cod
 
 - YouTube
 - Vimeo
-- Any HLS service and M3U8 playlist
+- Any HLS service (M3U8 playlists)
 
 ### HLS Support
-M3U8 files are now supported - including master playlists. The `SharpGrabber` library can parse and grab information from the playlists. Also, the `SharpGrabber.Converter` library can concatenate the segment files using `ffmpeg` shared libraries.
+M3U8 files are now supported - including master playlists.
+- The `SharpGrabber` library can parse and grab information from the playlists.
+- The `SharpGrabber.Converter` library can concatenate the segment files using `ffmpeg` shared libraries.
+- **AES-128** decryption is supported.
 
 ## Features
 #### SharpGrabber Library
@@ -38,7 +41,7 @@ Download binaries from the <a href="https://github.com/dotnettools/SharpGrabber/
 Include *SharpGrabber* library in your own .NET projects.
 
 ### Install via <a href="https://www.nuget.org/packages/SharpGrabber/">NuGet</a>
-    Install-Package SharpGrabber -Version 1.4.0
+    Install-Package SharpGrabber -Version 1.5.0
     
 ## SharpGrabber Usage Example
 
@@ -56,10 +59,12 @@ Include *SharpGrabber* library in your own .NET projects.
 
 ## SharpGrabber.Desktop
 Requirements of the cross-platform desktop application to run and operate correctly: 
- - .NET Core 2.1 or higher (.NET Framework 4.6.1 or higher)
- - Shared libraries of *ffmpeg* copied into `ffmpeg` directory alongside app executable files for media conversion support.
+ - .NET Core 3.1
+ - **Shared libraries** of *ffmpeg* copied into `ffmpeg` directory alongside app executable files for media conversion support.
    - On Windows, you may download the latest <a href="https://github.com/BtbN/FFmpeg-Builds/releases">BtbN ffmpeg build</a>.
    - On any OS check out the <a href="https://ffmpeg.org/download.html">official website</a>.
+ 
+ Download binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
  
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
@@ -70,7 +75,6 @@ Your contributions are much appreciated!
 
 ## License
 Copyright &copy; 2021 Javid Shoaei<br />
-All Rights Reserved &reg;
 
 This project is licensed under the GNU Lesser General Public License (LGPL) version 3.
 

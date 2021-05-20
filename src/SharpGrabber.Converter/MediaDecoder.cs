@@ -51,22 +51,10 @@ namespace DotNetTools.SharpGrabber.Converter
         private void Open()
         {
             string path = Source.IsFile ? Source.LocalPath : Source.ToString();
-            var avFormatContext = _avFormatContext = ffmpeg.avformat_alloc_context();
+            AVFormatContext* avFormatContext;
             ffmpeg.avformat_open_input(&avFormatContext, path, null, null).ThrowOnError();
             ffmpeg.avformat_find_stream_info(avFormatContext, null).ThrowOnError();
-        }
-
-        private bool ReadFrame(AVPacket* packet)
-        {
-            do
-            {
-                var result = ffmpeg.av_read_frame(_avFormatContext, packet);
-                if (result == ffmpeg.AVERROR_EOF)
-                    return false;
-                result.ThrowOnError();
-            } while (packet->stream_index != _streamIndex);
-
-            return true;
+            _avFormatContext = avFormatContext;
         }
         #endregion
 
@@ -90,7 +78,7 @@ namespace DotNetTools.SharpGrabber.Converter
             CodecId = avCodec->id;
             CodecName = ffmpeg.avcodec_get_name(CodecId);
             FrameSize = new Size(_avCodecContext->width, _avCodecContext->height);
-            AudioFrameSize = _avCodecContext->frame_size; ;
+            AudioFrameSize = _avCodecContext->frame_size;
             PixelFormat = HardwareDevice == AVHWDeviceType.AV_HWDEVICE_TYPE_NONE ? _avCodecContext->pix_fmt : GetHWPixelFormat(HardwareDevice);
             BitRate = _avCodecContext->bit_rate;
             FrameRate = _avCodecContext->framerate;
@@ -124,6 +112,19 @@ namespace DotNetTools.SharpGrabber.Converter
             }
         }
 
+        private bool ReadFrame(AVPacket* packet)
+        {
+            do
+            {
+                var result = ffmpeg.av_read_frame(_avFormatContext, packet);
+                if (result == ffmpeg.AVERROR_EOF)
+                    return false;
+                result.ThrowOnError();
+            } while (packet->stream_index != _streamIndex);
+
+            return true;
+        }
+
         /// <summary>
         /// Tries to read the next packet. Returns NULL on EOF.
         /// </summary>
@@ -147,54 +148,54 @@ namespace DotNetTools.SharpGrabber.Converter
             }
         }
 
-        public MediaFrame ReadFrame(MediaPacket packet)
-        {
-            var frame = ffmpeg.av_frame_alloc();
-            ffmpeg.avcodec_send_packet(_avCodecContext, packet.Pointer).ThrowOnError();
+        //public MediaFrame ReadFrame(MediaPacket packet)
+        //{
+        //    var frame = ffmpeg.av_frame_alloc();
+        //    ffmpeg.avcodec_send_packet(_avCodecContext, packet.Pointer).ThrowOnError();
 
-            while (true)
-            {
-                var result = ffmpeg.avcodec_receive_frame(_avCodecContext, frame).ThrowOnError();
-                if (result == ffmpeg.AVERROR(ffmpeg.EAGAIN))
-                {
-                    ReadFrame(packet.Pointer);
-                    continue;
-                }
-                result.ThrowOnError();
-                break;
-            };
+        //    while (true)
+        //    {
+        //        var result = ffmpeg.avcodec_receive_frame(_avCodecContext, frame).ThrowOnError();
+        //        if (result == ffmpeg.AVERROR(ffmpeg.EAGAIN))
+        //        {
+        //            ReadFrame(packet.Pointer);
+        //            continue;
+        //        }
+        //        result.ThrowOnError();
+        //        break;
+        //    };
 
-            // hardware decode
-            if (HardwareDevice != AVHWDeviceType.AV_HWDEVICE_TYPE_NONE)
-            {
-                var hwframe = ffmpeg.av_frame_alloc();
-                ffmpeg.av_hwframe_transfer_data(hwframe, frame, 0).ThrowOnError();
-                ffmpeg.av_frame_unref(frame);
-                frame = hwframe;
-            }
+        //    // hardware decode
+        //    if (HardwareDevice != AVHWDeviceType.AV_HWDEVICE_TYPE_NONE)
+        //    {
+        //        var hwframe = ffmpeg.av_frame_alloc();
+        //        ffmpeg.av_hwframe_transfer_data(hwframe, frame, 0).ThrowOnError();
+        //        ffmpeg.av_frame_unref(frame);
+        //        frame = hwframe;
+        //    }
 
-            return new MediaFrame(frame);
-        }
+        //    return new MediaFrame(frame);
+        //}
 
-        public MediaFrame ReadFrame()
-        {
-            using var packet = ReadPacket();
-            if (packet == null)
-                return null;
-            return ReadFrame(packet);
-        }
+        //public MediaFrame ReadFrame()
+        //{
+        //    using var packet = ReadPacket();
+        //    if (packet == null)
+        //        return null;
+        //    return ReadFrame(packet);
+        //}
 
-        public bool ReadFrameAndConvert(Action<AVFrame, IntPtr> frameFeed, AVPixelFormat pixelFormat = AVPixelFormat.AV_PIX_FMT_BGR24)
-        {
-            using var frame = ReadFrame();
-            if (frame == null)
-                return false;
+        //public bool ReadFrameAndConvert(Action<AVFrame, IntPtr> frameFeed, AVPixelFormat pixelFormat = AVPixelFormat.AV_PIX_FMT_BGR24)
+        //{
+        //    using var frame = ReadFrame();
+        //    if (frame == null)
+        //        return false;
 
-            using var conf = new VideoFrameConverter(FrameSize, PixelFormat, FrameSize, pixelFormat);
-            var convFrame = conf.Convert(*frame.Pointer);
-            frameFeed.Invoke(convFrame, (IntPtr)convFrame.data[0]);
-            return true;
-        }
+        //    using var conf = new VideoFrameConverter(FrameSize, PixelFormat, FrameSize, pixelFormat);
+        //    var convFrame = conf.Convert(*frame.Pointer);
+        //    frameFeed.Invoke(convFrame, (IntPtr)convFrame.data[0]);
+        //    return true;
+        //}
         #endregion
 
         #region Static Methods

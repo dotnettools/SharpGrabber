@@ -1,4 +1,5 @@
-﻿using DotNetTools.SharpGrabber.Converter;
+﻿using DotNetTools.SharpGrabber;
+using DotNetTools.SharpGrabber.Converter;
 using DotNetTools.SharpGrabber.Media;
 using SharpGrabber.Desktop.ViewModel;
 using System;
@@ -15,13 +16,15 @@ namespace SharpGrabber.Desktop
     public class MediaDownloader
     {
         #region Fields
+        private readonly GrabResult _grabResult;
         private readonly GrabbedMediaViewModel _viewModel;
         private readonly string _targetPath;
         #endregion
 
         #region Constructors
-        public MediaDownloader(GrabbedMediaViewModel grabbedViewModel, string targetPath)
+        public MediaDownloader(GrabbedMediaViewModel grabbedViewModel, string targetPath, GrabResult grabResult)
         {
+            _grabResult = grabResult;
             _viewModel = grabbedViewModel;
             _targetPath = targetPath;
         }
@@ -41,7 +44,8 @@ namespace SharpGrabber.Desktop
             var remainingBytes = totalBytes;
             var lastProgress = double.MinValue;
 
-            using var stream = await response.Content.ReadAsStreamAsync();
+            using var originalStream = await response.Content.ReadAsStreamAsync();
+            using var stream = await _grabResult.WrapStreamAsync(originalStream);
             var buffer = new byte[4096];
             while (true)
             {
