@@ -84,7 +84,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         protected virtual Uri GetYouTubeVideoInfoUri(string videoId)
         {
             var eUrl = $"https://youtube.googleapis.com/v/{videoId}";
-            var videoInfoUriTemplate = "https://youtube.com/get_video_info?video_id={0}&eurl={1}&el=embedded&hl=en";
+            var videoInfoUriTemplate = "https://youtube.com/get_video_info?video_id={0}&eurl={1}&el=embedded&hl=en&html5=1";
 
             return new Uri(string.Format(videoInfoUriTemplate, videoId, Uri.EscapeDataString(eUrl)));
         }

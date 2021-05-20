@@ -32,8 +32,8 @@
         <None Remove="UI\ButtonStyle.xaml" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.0" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.0" />
+        <PackageReference Include="Avalonia" Version="0.10.5" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.5" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Components\LoadingSpinner.xaml">
