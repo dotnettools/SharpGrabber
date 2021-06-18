@@ -46,12 +46,12 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         /// <summary>
         /// Upload date
         /// </summary>
-        public DateTime UploadedAt { get; set; }
+        public DateTime? UploadedAt { get; set; }
 
         /// <summary>
         /// Publish date
         /// </summary>
-        public DateTime PublishedAt { get; set; }
+        public DateTime? PublishedAt { get; set; }
 
         /// <summary>
         /// For some YouTube videos, adaptive streams exist in player response.

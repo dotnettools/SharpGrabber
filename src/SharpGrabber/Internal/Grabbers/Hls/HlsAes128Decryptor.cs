@@ -48,7 +48,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
 
         private async Task<byte[]> DownloadKeyBytes()
         {
-            using var client = HttpHelper.CreateClient();
+            using var client = HttpHelper.GetClient();
             var bytes = await client.GetByteArrayAsync(_key.Uri).ConfigureAwait(false);
             _getKeyBytes.SetResult(bytes);
             return bytes;

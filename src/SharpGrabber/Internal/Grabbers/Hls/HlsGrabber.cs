@@ -28,7 +28,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
 
         public override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options)
         {
-            using var client = HttpHelper.CreateClient(uri);
+            using var client = HttpHelper.GetClient(uri);
             using var response = await client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);

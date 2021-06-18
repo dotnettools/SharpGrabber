@@ -353,8 +353,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 ChannelId = videoDetails.SelectToken("channelId").Value<string>(),
                 ShortDescription = StringHelper.DecodeUriString(videoDetails.SelectToken("shortDescription").Value<string>()),
                 ViewCount = videoDetails.SelectToken("viewCount").Value<long>(),
-                UploadedAt = microformat.SelectToken("..uploadDate").Value<DateTime>(),
-                PublishedAt = microformat.SelectToken("..publishDate").Value<DateTime>(),
+                UploadedAt = microformat?.SelectToken("..uploadDate").Value<DateTime>(),
+                PublishedAt = microformat?.SelectToken("..publishDate").Value<DateTime>(),
             };
 
             // get streaming data
@@ -376,19 +376,22 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         /// </summary>
         protected virtual async Task<YouTubeMetadata> DownloadMetadata(string id, CancellationToken cancellationToken)
         {
-            IDictionary<string, string> rawMetadata;
+            IDictionary<string, string> rawMetadata = null;
             Status.Update(null, "Downloading metadata...", WorkStatusType.DownloadingFile);
 
             // make http client
-            var client = HttpHelper.CreateClient();
+            var client = HttpHelper.GetClient();
 
             // send http request
-            using (var response = await client.GetAsync(GetYouTubeVideoInfoUri(id), cancellationToken))
-            {
-                // decode metadata into rawMetadata
-                var content = await response.Content.ReadAsStringAsync();
-                rawMetadata = YouTubeUtils.ExtractUrlEncodedParamMap(content);
-            }
+            var videoInfoUrl = GetYouTubeVideoInfoUri(id);
+            client.DefaultRequestHeaders.Referrer = new Uri($"https://www.youtube.com/embed/{id}?html5=1");
+            using var response = await client.GetAsync(videoInfoUrl, cancellationToken);
+            if (!response.IsSuccessStatusCode)
+                throw new GrabException($"Failed to get metadata information from {videoInfoUrl}.");
+
+            // decode metadata into rawMetadata
+            var content = await response.Content.ReadAsStringAsync();
+            rawMetadata = YouTubeUtils.ExtractUrlEncodedParamMap(content);
 
             // extract metadata
             var metadata = new YouTubeMetadata
@@ -437,7 +440,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         protected virtual async Task Decipher(YouTubeEmbedPageData embedPageData, YouTubeMetadata metaData, CancellationToken cancellationToken)
         {
             // download base.js
-            var client = HttpHelper.CreateClient();
+            var client = HttpHelper.GetClient();
             using var response = await client.GetAsync(embedPageData.BaseJsUri, cancellationToken);
             var scriptContent = await response.Content.ReadAsStringAsync();
             var script = new YouTubeScript(scriptContent);
@@ -478,7 +481,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             var embedUri = GetYouTubeEmbedUri(id);
 
             // download embed page
-            var client = HttpHelper.CreateClient();
+            var client = HttpHelper.GetClient();
             var embedPageContent = await client.GetStringAsync(embedUri);
 
             // find base.js
@@ -495,7 +498,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         /// </summary>
         protected virtual void AppendImagesToResult(GrabResult result, string id, bool useHttps = true)
         {
-            // We are gonna iterate through all possible image types and add links to every image
+            // We're gonna iterate through all possible image types and add links to every image
             // into result resources. Notice that since these URIs are not checked by sending HTTP
             // requests, there is a rare possibility for some generated links to be invalid and
             // missing from YouTube servers.

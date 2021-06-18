@@ -12,17 +12,15 @@ namespace DotNetTools.SharpGrabber.Internal
     /// </summary>
     internal static class HttpHelper
     {
-        #region Properties
         /// <summary>
         /// Default user agent used for HTTP clients
         /// </summary>
         public static string DefaultUserAgent { get; set; } = "Mozilla/5.0 (Windows NT 5.1; rv:55.0) Gecko/20100101 Firefox/55.0";
-        #endregion
 
         /// <summary>
         /// Creates and configures an <see cref="HttpClient"/>.
         /// </summary>
-        public static HttpClient CreateClient(Uri uri = null)
+        public static HttpClient GetClient(Uri uri = null)
         {
             var handler = new HttpClientHandler
             {

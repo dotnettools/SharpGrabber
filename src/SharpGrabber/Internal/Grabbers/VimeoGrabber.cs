@@ -121,7 +121,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
             // download target page
             Status.Update(null, WorkStatusType.DownloadingPage);
-            var client = HttpHelper.CreateClient(configUri);
+            var client = HttpHelper.GetClient(configUri);
             var response = await client.GetAsync(configUri, cancellationToken);
 
             // check response
