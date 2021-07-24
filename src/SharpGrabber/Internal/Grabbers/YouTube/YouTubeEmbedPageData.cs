@@ -7,11 +7,14 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
     /// </summary>
     public class YouTubeEmbedPageData
     {
-        #region Properties
         /// <summary>
-        /// Link to YouTube base.js script
+        /// Gets or sets the URI to YouTube base.js script.
         /// </summary>
         public Uri BaseJsUri { get; set; }
-        #endregion
+
+        /// <summary>
+        /// Gets or sets the INNERTUBE_API_KEY.
+        /// </summary>
+        public string Key { get; set; }
     }
 }

@@ -12,6 +12,8 @@ namespace DotNetTools.SharpGrabber.Internal
     /// </summary>
     internal static class HttpHelper
     {
+        private static HttpClient _client;
+
         /// <summary>
         /// Default user agent used for HTTP clients
         /// </summary>
@@ -22,13 +24,16 @@ namespace DotNetTools.SharpGrabber.Internal
         /// </summary>
         public static HttpClient GetClient(Uri uri = null)
         {
+            if (_client != null)
+                return _client;
+
             var handler = new HttpClientHandler
             {
             };
             var client = new HttpClient(handler) { BaseAddress = uri };
             client.DefaultRequestHeaders.Add("User-Agent", DefaultUserAgent);
             client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("en-US"));
-            return client;
+            return _client = client;
         }
     }
 }

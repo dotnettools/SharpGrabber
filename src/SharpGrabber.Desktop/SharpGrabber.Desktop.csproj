@@ -4,7 +4,8 @@
         <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
         <StartupObject>SharpGrabber.Desktop.Program</StartupObject>
         <RootNamespace>SharpGrabber.Desktop</RootNamespace>
-        <LangVersion>8.0</LangVersion>
+        <LangVersion>9.0</LangVersion>
+        <ApplicationIcon />
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
         <PlatformTarget>AnyCPU</PlatformTarget>

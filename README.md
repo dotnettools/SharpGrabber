@@ -41,7 +41,7 @@ Download binaries from the <a href="https://github.com/dotnettools/SharpGrabber/
 Include *SharpGrabber* library in your own .NET projects.
 
 ### Install via <a href="https://www.nuget.org/packages/SharpGrabber/">NuGet</a>
-    Install-Package SharpGrabber -Version 1.5.1
+    Install-Package SharpGrabber -Version 1.5.3
     
 ## SharpGrabber Usage Example
 
@@ -51,7 +51,7 @@ Include *SharpGrabber* library in your own .NET projects.
     var result = await grabber.GrabAsync(new Uri("<URL of a YouTube video>"));
     IList<IGrabbed> grabbedResources = result.Resources;
 
-### Automatically detect provider and grab
+### Automatically detect the provider and grab
 
     var grabber = MultiGrabber.CreateDefault();
     var result = await grabber.GrabAsync(new Uri("<Target Link>"));
@@ -69,12 +69,12 @@ Requirements of the cross-platform desktop application to run and operate correc
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
 ## Contribution
-Your contributions are much appreciated!
+You are most welcome to contribute!
 - Support for more media providers such as *DailyMotion*, *Instagram*, *Facebook*, *Twitch* etc.
 - Accelerate downloads in the desktop app (like a download manager)
 
 ## License
-Copyright &copy; 2021 Javid Shoaei<br />
+Copyright &copy; 2021 Javid Shoaei and other contributors<br />
 
 This project is licensed under the GNU Lesser General Public License (LGPL) version 3.
 

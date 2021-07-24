@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
 {
@@ -81,14 +84,65 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         /// <summary>
         /// Creates video info YouTube URI.
         /// </summary>
+        [Obsolete("The get_video_info API no longer works")]
         protected virtual Uri GetYouTubeVideoInfoUri(string videoId)
         {
             var eUrl = $"https://youtube.googleapis.com/v/{videoId}";
-        
+
             var videoInfoUriTemplate = "https://youtube.com/get_video_info?video_id={0}&eurl=https%3A%2F%2Fyoutube.googleapis.com%2Fv%2F{0}&html5=1&c=TVHTML5&cver=6.20180913";
-            //var videoInfoUriTemplate = "https://youtube.com/get_video_info?video_id={0}&ps=default&eurl=unknown&el=embedded&gl=US&hl=en_US&html5=1";
 
             return new Uri(string.Format(videoInfoUriTemplate, videoId, Uri.EscapeDataString(eUrl)));
+        }
+
+        protected virtual Task<HttpResponseMessage> GetYouTubeVideoInfoResponse(HttpClient client, string videoId, string key,
+            CancellationToken cancellationToken)
+        {
+            var uri = new Uri($"https://www.youtube.com/youtubei/v1/player?key={Uri.EscapeDataString(key)}");
+            var body = new
+            {
+                context = new
+                {
+                    client = new
+                    {
+                        hl = "en",
+                        clientName = "WEB",
+                        clientVersion = "2.20210721.00.00",
+                        clientFormFactor = "UNKNOWN_FORM_FACTOR",
+                        clientScreen = "WATCH",
+                        mainAppWebInfo = new
+                        {
+                            graftUrl = $"/watch?v={videoId}",
+                        }
+                    },
+                    user = new
+                    {
+                        lockedSafetyMode = false,
+                    },
+                    request = new
+                    {
+                        useSsl = true,
+                        internalExperimentFlags = Array.Empty<object>(),
+                        consistencyTokenJars = Array.Empty<object>()
+                    }
+                },
+                videoId = videoId,
+                playbackContext = new
+                {
+                    contentPlaybackContext = new
+                    {
+                        vis = 0,
+                        splay = false,
+                        autoCaptionsDefaultOn = false,
+                        autonavState = "STATE_NONE",
+                        html5Preference = "HTML5_PREF_WANTS",
+                        lactMilliseconds = "-1",
+                    }
+                },
+                racyCheckOk = false,
+                contentCheckOk = false
+            };
+            return client.PostAsync(uri, new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, MimeType.Json),
+                cancellationToken);
         }
 
         /// <summary>

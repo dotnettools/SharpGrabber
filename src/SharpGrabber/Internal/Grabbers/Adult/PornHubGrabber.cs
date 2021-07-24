@@ -43,7 +43,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Adult
                 return null;
             uri = MakeStandardUri(viewId);
 
-            using var client = HttpHelper.GetClient();
+            var client = HttpHelper.GetClient();
             // download content
             var response = await client.GetAsync(uri, cancellationToken);
             response.EnsureSuccessStatusCode();

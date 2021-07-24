@@ -22,6 +22,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
     {
         #region Compiled Regular Expressions
         private static readonly Regex BaseJsLocatorRegex = new Regex(@"<script[^<>]+src=""([^""]+base\.js)""", RegexOptions.Compiled | RegexOptions.Multiline);
+        private static readonly Regex InnerTubeApiKeyRegex = new Regex(@"INNERTUBE_API_KEY""\s*:\s*""([^""]+)""", RegexOptions.Compiled | RegexOptions.Multiline);
         private static readonly Regex DecipherFunctionRegex = new Regex(@"\s(\w+)=function\S+split\([^\n\r]+join\(\S+", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
         #endregion
 
@@ -374,20 +375,19 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         /// <summary>
         /// Downloads metadata for the YouTube video with the specified ID.
         /// </summary>
-        protected virtual async Task<YouTubeMetadata> DownloadMetadata(string id, CancellationToken cancellationToken)
+        protected virtual async Task<YouTubeMetadata> DownloadMetadata(string id, YouTubeEmbedPageData embedPageData,
+            CancellationToken cancellationToken)
         {
-            IDictionary<string, string> rawMetadata = null;
+            IDictionary<string, string> rawMetadata;
             Status.Update(null, "Downloading metadata...", WorkStatusType.DownloadingFile);
 
             // make http client
             var client = HttpHelper.GetClient();
 
             // send http request
-            var videoInfoUrl = GetYouTubeVideoInfoUri(id);
-            client.DefaultRequestHeaders.Referrer = new Uri($"https://www.youtube.com/embed/{id}?html5=1");
-            using var response = await client.GetAsync(videoInfoUrl, cancellationToken);
+            using var response = await GetYouTubeVideoInfoResponse(client, id, embedPageData.Key, cancellationToken);
             if (!response.IsSuccessStatusCode)
-                throw new GrabException($"Failed to get metadata information from {videoInfoUrl}.");
+                throw new GrabException($"Failed to get media info.");
 
             // decode metadata into rawMetadata
             var content = await response.Content.ReadAsStringAsync();
@@ -397,13 +397,14 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             var metadata = new YouTubeMetadata
             {
                 FormatList = rawMetadata.ContainsKey("fmt_list") ? rawMetadata["fmt_list"] : null,
-                Status = rawMetadata["status"],
+                Status = rawMetadata.ContainsKey("status") ? rawMetadata["status"] : null,
             };
 
             // extract player response
-            var rawPlayerResponse = rawMetadata["player_response"]
-                                    ?? throw new GrabParseException("Failed to fetch player_response from metadata.");
-            var playerResponse = JToken.Parse(rawPlayerResponse);
+            //var rawPlayerResponse = rawMetadata["player_response"]
+            //                        ?? throw new GrabParseException("Failed to fetch player_response from metadata.");
+            //var playerResponse = JToken.Parse(rawPlayerResponse);
+            var playerResponse = JToken.Parse(content);
             metadata.PlayerResponse = ExtractPlayerResponseMetadata(playerResponse);
 
             // extract muxed streams
@@ -490,6 +491,11 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 throw new GrabParseException("Failed to find base.js script reference.");
             result.BaseJsUri = new Uri(embedUri, match.Groups[1].Value);
 
+            // find inner tube api key
+            match = InnerTubeApiKeyRegex.Match(embedPageContent);
+            if (!match.Success)
+                throw new GrabParseException("Failed to locate INNERTUBE_API_KEY.");
+            result.Key = match.Groups[1].Value;
             return result;
         }
 
@@ -597,7 +603,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             var embedPageData = await DownloadEmbedPage(id);
 
             // download metadata
-            var metaData = await DownloadMetadata(id, cancellationToken);
+            var metaData = await DownloadMetadata(id, embedPageData, cancellationToken);
 
             // update result according to the metadata
             UpdateResult(result, metaData);

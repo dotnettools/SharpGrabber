@@ -5,7 +5,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>SharpGrabber</Title>
         <Description>Grab information and media from YouTube, Vimeo and any HLS service provider (M3U8 playlists). Supports images, thumbnails, video, audio with different formats and qualities. Deciphering and decryption are implemented.</Description>
-        <Copyright>Copyright (C) 2021 Javid Shoaei</Copyright>
+        <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
         <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
         <PackageLicenseUrl></PackageLicenseUrl>
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
@@ -13,10 +13,10 @@
         <Authors>Javid Shoaei</Authors>
         <Product>SharpGrabber</Product>
         <PackageIconUrl></PackageIconUrl>
-        <FileVersion>1.5.2.0</FileVersion>
-        <AssemblyVersion>1.5.2.0</AssemblyVersion>
-        <PackageVersion>1.5.2</PackageVersion>
-        <Version>1.5.2</Version>
+        <FileVersion>1.5.3.0</FileVersion>
+        <AssemblyVersion>1.5.3.0</AssemblyVersion>
+        <PackageVersion>1.5.3</PackageVersion>
+        <Version>1.5.3</Version>
         <RootNamespace>DotNetTools.SharpGrabber</RootNamespace>
         <SignAssembly>false</SignAssembly>
         <DelaySign>false</DelaySign>

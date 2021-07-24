@@ -704,8 +704,8 @@ namespace DotNetTools.SharpGrabber.Internal
 
         private static readonly Dictionary<string, MimeInfo> _mimeMap = new Dictionary<string, MimeInfo>();
 
+        public const string Json = "application/json";
         public const string OctetStream = "application/octet-stream";
-
         public const string General = OctetStream;
 
         static MimeType()

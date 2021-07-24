@@ -15,26 +15,22 @@ namespace SharpGrabber.Desktop
 
     public class MediaDownloader
     {
-        #region Fields
+        private static readonly HttpClient _client = new HttpClient();
         private readonly GrabResult _grabResult;
         private readonly GrabbedMediaViewModel _viewModel;
         private readonly string _targetPath;
-        #endregion
 
-        #region Constructors
         public MediaDownloader(GrabbedMediaViewModel grabbedViewModel, string targetPath, GrabResult grabResult)
         {
             _grabResult = grabResult;
             _viewModel = grabbedViewModel;
             _targetPath = targetPath;
         }
-        #endregion
 
         #region Internal Methods
         private async Task SingleDownload(Uri uri, Stream outputStream, string downloadingText = "Downloading {0}...")
         {
-            using var client = new HttpClient();
-            using var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+            using var response = await _client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
             var totalBytes = response.Content.Headers.ContentLength;
             if (totalBytes == 0)

@@ -23,7 +23,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Adult
             if (!Supports(uri))
                 return null;
 
-            using var client = HttpHelper.GetClient(uri);
+            var client = HttpHelper.GetClient(uri);
             var content = await client.GetStringAsync(uri).ConfigureAwait(false);
 
             var result = new GrabResult(uri);

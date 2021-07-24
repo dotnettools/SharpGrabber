@@ -16,6 +16,7 @@ namespace SharpGrabber.Desktop
 {
     public class StreamDownloader
     {
+        private static readonly HttpClient _client = new HttpClient();
         private readonly GrabResult _grabResult;
         private readonly GrabbedStreamViewModel _viewModel;
         private readonly string _targetPath;
@@ -83,8 +84,7 @@ namespace SharpGrabber.Desktop
         private async Task DownloadAsync(MediaSegment segment, Stream outStream, int totalSegmentCount,
             Reference<long> overallDownloaded, Reference<int> downloadedSegmentCount)
         {
-            using var client = new HttpClient();
-            using var response = await client.GetAsync(segment.Uri, HttpCompletionOption.ResponseHeadersRead);
+            using var response = await _client.GetAsync(segment.Uri, HttpCompletionOption.ResponseHeadersRead);
             using var originalStream = await response.Content.ReadAsStreamAsync();
             using var stream = await _grabResult.WrapStreamAsync(originalStream);
             var contentLength = response.Content.Headers.ContentLength;

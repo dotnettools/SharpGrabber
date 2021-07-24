@@ -22,6 +22,8 @@ namespace SharpGrabber.Desktop
 {
     public class MainWindow : Window
     {
+        private static readonly HttpClient _client = new HttpClient();
+
         #region Fields
         private bool _uiEnabled = true;
         private TextBox tbUrl;
@@ -130,7 +132,7 @@ namespace SharpGrabber.Desktop
                 .Append("Version ").AppendLine(Constants.AppVersion.ToString())
                 .Append("FFMpeg Version: ").Append(IOHelper.FFMpegLoaded ? ffmpeg.av_version_info() : "<Not Loaded>").AppendLine()
                 .AppendLine()
-                .AppendLine("Copyright © 2021 Javid Shoaei (javidsh.ir)");
+                .AppendLine("Copyright © 2021 Javid Shoaei (javidsh.ir) and other contributors");
             ShowMessage("About", sb.ToString());
         }
 
@@ -264,8 +266,7 @@ namespace SharpGrabber.Desktop
                 imgSpinner.IsVisible = true;
                 try
                 {
-                    using var client = new HttpClient();
-                    using var response = await client.GetAsync(thumbnail.ResourceUri);
+                    using var response = await _client.GetAsync(thumbnail.ResourceUri);
                     if (response.IsSuccessStatusCode)
                         using (var stream = await response.Content.ReadAsStreamAsync())
                         {
