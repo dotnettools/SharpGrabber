@@ -8,7 +8,7 @@ namespace DotNetTools.SharpGrabber
     /// Flags for grab options
     /// </summary>
     [Flags]
-    public enum GrabOptionFlag
+    public enum GrabOptionFlags
     {
         None = 0,
 
@@ -33,24 +33,20 @@ namespace DotNetTools.SharpGrabber
     /// </summary>
     public class GrabOptions
     {
-        #region Properties
-        /// <summary>
-        /// Option flags
-        /// </summary>
-        public GrabOptionFlag Flags { get; set; } = GrabOptionFlag.None;
-        #endregion
-
-        #region Constructors
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public GrabOptions()
         {
         }
 
-        public GrabOptions(GrabOptionFlag flag) : this()
+        public GrabOptions(GrabOptionFlags flag) : this()
         {
             Flags = flag;
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-        #endregion
+
+        /// <summary>
+        /// Option flags
+        /// </summary>
+        public GrabOptionFlags Flags { get; set; } = GrabOptionFlags.None;
     }
 }

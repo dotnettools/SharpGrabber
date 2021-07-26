@@ -45,7 +45,17 @@ namespace DotNetTools.SharpGrabber
     /// </summary>
     public class WorkStatus
     {
-        #region Properties
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public WorkStatus()
+        {
+        }
+
+        public WorkStatus(double? progress, string description, WorkStatusType type = WorkStatusType.Other)
+        {
+            Update(progress, description, type);
+        }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         /// <summary>
         /// Work type
         /// </summary>
@@ -61,22 +71,7 @@ namespace DotNetTools.SharpGrabber
         /// Description of the status - e.g. "Downloading target url..."
         /// </summary>
         public string Description { get; set; }
-        #endregion
 
-        #region Constructors
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public WorkStatus()
-        {
-        }
-
-        public WorkStatus(double? progress, string description, WorkStatusType type = WorkStatusType.Other)
-        {
-            Update(progress, description, type);
-        }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-        #endregion
-
-        #region Methods
         /// <summary>
         /// Updates properties of the status with a single call.
         /// </summary>
@@ -95,6 +90,5 @@ namespace DotNetTools.SharpGrabber
             Progress = progress;
             Type = type;
         }
-        #endregion
     }
 }
