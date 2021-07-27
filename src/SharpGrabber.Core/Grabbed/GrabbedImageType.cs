@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotNetTools.SharpGrabber.Media
+namespace DotNetTools.SharpGrabber.Grabbed
 {
     /// <summary>
     /// Defined role of an image grabbed from a page.

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotNetTools.SharpGrabber.Media
+namespace DotNetTools.SharpGrabber.Grabbed
 {
     /// <summary>
     /// Reference to an M3U8 playlist.

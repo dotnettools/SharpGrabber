@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotNetTools.SharpGrabber.Media
+namespace DotNetTools.SharpGrabber.Grabbed
 {
     /// <summary>
     /// <see cref="IGrabbed"/> for media resources, such as audio and video.

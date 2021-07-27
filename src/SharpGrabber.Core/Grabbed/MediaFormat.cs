@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotNetTools.SharpGrabber.Media
+namespace DotNetTools.SharpGrabber.Grabbed
 {
     /// <summary>
     /// Represents format of media e.g. mp4

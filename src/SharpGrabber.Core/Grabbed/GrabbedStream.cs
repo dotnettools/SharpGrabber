@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DotNetTools.SharpGrabber.Media
+namespace DotNetTools.SharpGrabber.Grabbed
 {
     public class GrabbedStream : IGrabbed
     {

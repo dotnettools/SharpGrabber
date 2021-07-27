@@ -13,19 +13,24 @@ namespace DotNetTools.SharpGrabber
         None = 0,
 
         /// <summary>
-        /// Grabber may decipher URIs automatically where necessary.
+        /// The grabber may decipher URIs automatically where necessary.
         /// </summary>
         Decipher = 1,
 
         /// <summary>
-        /// Grabber may grab related images.
+        /// The grabber may grab related images.
         /// </summary>
         GrabImages = 2,
 
         /// <summary>
-        /// Grabber may decrypt the output stream via <see cref="GrabResult.OutputStreamWrapper"/>.
+        /// The grabber may decrypt the output stream via <see cref="GrabResult.OutputStreamWrapper"/>.
         /// </summary>
         Decrypt = 4,
+
+        /// <summary>
+        /// The grabber may grab comments.
+        /// </summary>
+        GrabComments = 8,
     }
 
     /// <summary>

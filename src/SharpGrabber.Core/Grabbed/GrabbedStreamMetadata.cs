@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotNetTools.SharpGrabber.Media
+namespace DotNetTools.SharpGrabber.Grabbed
 {
     /// <summary>
     /// <see cref="IGrabbed"/> for information about HLS master playlist streams. This class represents

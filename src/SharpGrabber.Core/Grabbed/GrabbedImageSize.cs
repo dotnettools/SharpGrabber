@@ -1,4 +1,4 @@
-﻿namespace DotNetTools.SharpGrabber.Media
+﻿namespace DotNetTools.SharpGrabber.Grabbed
 {
     /// <summary>
     /// Stores grabbed image size

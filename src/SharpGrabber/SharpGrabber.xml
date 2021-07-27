@@ -1,0 +1,1470 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SharpGrabber</name>
+    </assembly>
+    <members>
+        <member name="T:DotNetTools.SharpGrabber.BaseGrabber">
+            <summary>
+            Simple abstract implementation for <see cref="T:DotNetTools.SharpGrabber.IGrabber"/>.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.BaseGrabber.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.BaseGrabber.DefaultGrabOptions">
+            <inheritdoc />
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.BaseGrabber.Status">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.BaseGrabber.Supports(System.Uri)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.BaseGrabber.GrabAsync(System.Uri)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.BaseGrabber.GrabAsync(System.Uri,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.BaseGrabber.GrabAsync(System.Uri,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Exceptions.GrabException">
+            <summary>
+            Base and default class for any exception related to the process of grabbing.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Exceptions.GrabParseException">
+            <summary>
+            Base class for grab exceptions that occur when a grabber is trying to parse information on the target page
+            and fails to locate or fetch necessary data from them. 
+            </summary>
+            <remarks>
+            This exception occurs often due to changes on the target server. Therefore, messages for this type of
+            exception are usually technical and not intended to be displayed to final user; use them for diagnosing
+            purposes only.
+            </remarks>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Exceptions.SharpGrabberException">
+            <summary>
+            Base exception class for all SharpGrabber exceptions
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Exceptions.UnsupportedGrabException">
+            <summary>
+            May be thrown when grabbing of a URI is not supported by a grabber or multi-grabber.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.GrabOptionFlag">
+            <summary>
+            Flags for grab options
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.GrabOptionFlag.Decipher">
+            <summary>
+            Grabber may decipher URIs automatically where necessary.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.GrabOptionFlag.GrabImages">
+            <summary>
+            Grabber may grab related images.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.GrabOptionFlag.Decrypt">
+            <summary>
+            Grabber may decrypt the output stream via <see cref="P:DotNetTools.SharpGrabber.GrabResult.OutputStreamWrapper"/>.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.GrabOptions">
+            <summary>
+            Describes options for a grab request.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabOptions.Flags">
+            <summary>
+            Option flags
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.GrabResult">
+            <summary>
+            Result of a grab request - <see cref="T:DotNetTools.SharpGrabber.GrabResult"/> is returned by grabbers containing grabbed resources and
+            information obtained from the page.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabResult.OriginalUri">
+            <inheritdoc />
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabResult.Resources">
+            <summary>
+            List of grabbed resources
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabResult.Title">
+            <summary>
+            Subject of the page
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabResult.Description">
+            <summary>
+            Description of the content
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabResult.CreationDate">
+            <summary>
+            Optional date and time when this content was created
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabResult.Statistics">
+            <summary>
+            Optional statistics grabbed from the page
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabResult.IsSecure">
+            <summary>
+            Whether or not the media is secured. For example, <see cref="P:DotNetTools.SharpGrabber.GrabResult.IsSecure"/> is true if a YouTube video
+            has signature and its download links need to be deciphered.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabResult.OutputStreamWrapper">
+            <summary>
+            Gets or sets the function that accepts an stream and wraps it with other streams if necessary.
+            This value cannot be NULL.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.GrabResult.WrapStreamAsync(System.IO.Stream)">
+            <summary>
+            Accepts an stream and wraps it with other streams if necessary.
+            This method should always be invoked after downloading a media file or segment.
+            </summary>
+            <remarks>
+            The original and the result stream should be disposed by the caller.
+            </remarks>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.GrabStatisticInfo">
+            <summary>
+            Contains statistics of a grabbed page e.g. Total views, comments, likes etc. for a YouTube video.
+            </summary>
+            <remarks>
+            Each property of this class is optional/nullable, as they might not be applicable for different pages or
+            grabbers.
+            </remarks>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabStatisticInfo.Author">
+            <summary>
+            Author name
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabStatisticInfo.ViewCount">
+            <summary>
+            Total views of the page
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.GrabStatisticInfo.Length">
+            <summary>
+            Overall duration of media if available
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Hls.HlsMediaSegment.Title">
+            <summary>
+            Optional title of the segment
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Hls.HlsMediaSegment.Duration">
+            <summary>
+            Duration of the segment
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Hls.HlsMediaSegment.Uri">
+            <summary>
+            URI of the segment file - may be either relative or absolute
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Hls.PlaylistDocument">
+            <summary>
+            Works with M3U8 files.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Hls.PlaylistDocument.Clear">
+            <summary>
+            Clears data of this instance.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Hls.PlaylistDocument.LoadAsync(System.IO.StreamReader)">
+            <summary>
+            Loads the playlist from a stream.
+            </summary>
+            <exception cref="T:DotNetTools.SharpGrabber.Hls.PlaylistDocumentLoadException" />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Hls.PlaylistDocument.LoadAsync(System.IO.Stream)">
+            <summary>
+            Loads the playlist from a stream.
+            </summary>
+            <exception cref="T:DotNetTools.SharpGrabber.Hls.PlaylistDocumentLoadException" />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Hls.PlaylistDocument.LoadAsync(System.String)">
+            <summary>
+            Loads the playlist from a string.
+            </summary>
+            <exception cref="T:DotNetTools.SharpGrabber.Hls.PlaylistDocumentLoadException" />
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Hls.PlaylistToken">
+            <summary>
+            Represents a token read from a M3U8 file by a <see cref="T:DotNetTools.SharpGrabber.Hls.PlaylistTokenizer"/>.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Hls.PlaylistTokenizer">
+            <summary>
+            Tokenizer for M3U8 files
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Hls.PlaylistTokenizer.EndOfStream">
+            <summary>
+            Whether or not the stream has reached its end
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Hls.PlaylistTokenizer.Comparison">
+            <summary>
+            The <see cref="T:System.StringComparison"/> used by the tokenizer
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Hls.PlaylistTokenizer.Read">
+            <summary>
+            Tries to read the next token from the input stream.
+            </summary>
+            <returns>The read token, or NULL if the input stream has reached its end.</returns>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Hls.PlaylistTokenizer.ReadAsync">
+            <summary>
+            Tries to read the next token from the input stream asynchronously.
+            </summary>
+            <returns>The read token, or NULL if the input stream has reached its end.</returns>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Hls.PlaylistTokenType">
+            <summary>
+            Describes type of a <see cref="T:DotNetTools.SharpGrabber.Hls.PlaylistToken"/> read by the <see cref="T:DotNetTools.SharpGrabber.Hls.PlaylistTokenizer"/>.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Hls.PlaylistTokenType.Header">
+            <summary>
+            Indicates the EXTM3U Header.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Hls.PlaylistTokenType.Uri">
+            <summary>
+            Indicates a URI line.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Hls.PlaylistTokenType.Comment">
+            <summary>
+            Indicates a comment line.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Hls.PlaylistTokenType.Tag">
+            <summary>
+            Indicates a tag line.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.IGrabbed">
+            <summary>
+            Represents any grabbed object by an <see cref="T:DotNetTools.SharpGrabber.IGrabber"/> or a <see cref="T:DotNetTools.SharpGrabber.MultiGrabber"/>.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.IGrabbed.OriginalUri">
+            <summary>
+            Link to the original page
+            </summary>
+            <remarks>
+            Value of this property is not necessarily the same as the URI requested by the user; it
+            may be a cleaner link to the original page, either obtained or generated by its grabber.
+            </remarks>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.IGrabbed.ResourceUri">
+            <summary>
+            Link to the resource found.
+            </summary>
+            <remarks>
+            Most grabbers return <see cref="T:DotNetTools.SharpGrabber.IGrabbed"/> objects that refer to exactly one download link.
+            If a grabber does not refer to any URI or refers to multiple URIs, this property should be null.
+            </remarks>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.IGrabber">
+            <summary>
+            Where implemented, can grab useful resources from certain types of URI.
+            Many <see cref="T:DotNetTools.SharpGrabber.IGrabber"/> objects may be registered on a <see cref="T:DotNetTools.SharpGrabber.MultiGrabber"/> allowing usage
+            of all grabbers by a single call.
+            </summary>
+            <remarks>
+            Members of the same instance of <see cref="T:DotNetTools.SharpGrabber.IGrabber"/> object are not expected to be used
+            simultaneously. Status of an active grab is available through <see cref="P:DotNetTools.SharpGrabber.IGrabber.Status"/>.
+            </remarks>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.IGrabber.Name">
+            <summary>
+            Name of the grabber e.g. YouTube
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.IGrabber.Status">
+            <summary>
+            Reports status and grab progress
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.IGrabber.DefaultGrabOptions">
+            <summary>
+            Default grab options for this grabber - if none is specified while invoking <see cref="M:DotNetTools.SharpGrabber.IGrabber.GrabAsync(System.Uri,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)"/>.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.IGrabber.Supports(System.Uri)">
+            <summary>
+            Briefly checks if this grabber supports the specified URI.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.IGrabber.GrabAsync(System.Uri)">
+            <summary>
+            Asynchronously looks up the specified URI and grabs useful resources. In case of unsupported URI, NULL should
+            be returned.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.IGrabber.GrabAsync(System.Uri,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously looks up the specified URI and grabs useful resources. In case of unsupported URI, NULL should
+            be returned.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.IGrabber.GrabAsync(System.Uri,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)">
+            <summary>
+            Asynchronously looks up the specified URI and grabs useful resources regarding the specified <paramref name="options"/>.
+            In case of unsupported URI, NULL should be returned.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.DictionaryHelper">
+            <summary>
+            Contains helper methods for dictionaries.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.DictionaryHelper.GetOrDefault``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1)">
+            <summary>
+            Gets and returns value associated with the specified key in the dictionary. If no entry with the specified
+            key exists, <paramref name="defaultValue"/> is returned.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.Adult.PornHubGrabber">
+            <summary>
+            Represents a PornHub.com grabber.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.Adult.PornHubGrabber.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.Adult.PornHubGrabber.StandardUriFormat">
+            <summary>
+            Will participate in a call to <see cref="M:System.String.Format(System.String,System.Object)"/> with video 'viewkey' as argument.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.Adult.PornHubGrabber.Supports(System.Uri)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.Adult.PornHubGrabber.GrabAsync(System.Uri,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.Adult.PornHubGrabber.CutUsefulPart(System.String)">
+            <summary>
+            Accepts the whole source of target page and returns only the part that contains video player script.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.InstagramGrabber">
+            <summary>
+            Represents an Instagram <see cref="T:DotNetTools.SharpGrabber.IGrabber"/>.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.InstagramGrabber.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.InstagramGrabber.StandardUrlTemplate">
+            <summary>
+            Represents the template of standard Instagram links. This value will be formatted using <see cref="M:System.String.Format(System.String,System.Object[])"/>
+            passing an Instagram post identifier containing alpha-numeric characters.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.InstagramGrabber.MakeStandardInstagramUri(System.String)">
+            <summary>
+            Makes a standard Instagram URL using the given post ID.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.InstagramGrabber.GrabId(System.Uri)">
+            <summary>
+            Extracts post ID from the specified URI.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.InstagramGrabber.CheckResponse(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Validates response of the page request. For example, in the beginning the returned status code is checked.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.InstagramGrabber.ParsePage(System.IO.Stream)">
+            <summary>
+            Parses content of the page and retrieves meta tags with useful information.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.InstagramGrabber.GrabUsingMetadata(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Given the specified <paramref name="metaData"/>, generates proper <see cref="T:DotNetTools.SharpGrabber.GrabResult"/>.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.InstagramGrabber.Supports(System.Uri)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.InstagramGrabber.GrabAsync(System.Uri,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.VimeoGrabber">
+            <summary>
+            Default <see cref="T:DotNetTools.SharpGrabber.IGrabber"/> for Vimeo
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.VimeoGrabber.Name">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.VimeoGrabber.GrabId(System.Uri)">
+            <summary>
+            Extracts post ID from the specified URI.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.VimeoGrabber.CheckResponse(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Validates response of the page request. For example, in the beginning the returned status code is checked.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.VimeoGrabber.GetConfigurationAsync(System.Net.Http.HttpContent)">
+            <summary>
+            This utility method get's the corresponding configuration for this video.
+            </summary>
+            <param name="HttpContent"></param>
+            <returns>Task&lt;Configuration&gt;.</returns>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.VimeoGrabber.GrabUsingConfiguration(DotNetTools.SharpGrabber.Internal.Grabbers.VimeoGrabber.Configuration,System.Uri)">
+            <summary>
+            Given the specified <paramref name="metaData"/>, generates proper <see cref="T:DotNetTools.SharpGrabber.GrabResult"/>.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.VimeoGrabber.Supports(System.Uri)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.VimeoGrabber.GrabAsync(System.Uri,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber">
+            <summary>
+            Default <see cref="T:DotNetTools.SharpGrabber.IGrabber"/> for YouTube
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.UnmangleEntries(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Action{System.String,System.String})">
+            <summary>
+            URL-encoded data are randomly mangled by YouTube. Some entries are merged with other ones separated by comma.
+            This method iterates through the mangled entries and invokes <paramref name="feedCallback"/> for each real
+            independent entry. Finally, <paramref name="feedCallback"/> is called supplied with NULL arguments to enforce
+            a final commit.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.ExtractMuxedStreamsMetadata(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Gets invoked by <see cref="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.DownloadMetadata(System.String,System.Threading.CancellationToken)"/> to extract muxed streams from metadata.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.ExtractAdaptiveFormatsMetadata(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Gets invoked by <see cref="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.DownloadMetadata(System.String,System.Threading.CancellationToken)"/> to extract adaptive_fmts.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.UpdateStreamCipherInfo(DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo,System.String)">
+            <summary>
+            Accepts <paramref name="cipher"/> as a URI-encoded string in the following form:
+            <para>sp=sig&amp;s=wggj6zg7m-...&amp;url=https%3A%2F%2Fr5---sn-5hnekn7k.googlevideo.com%2Fvideoplayback...</para>
+            Extracts its useful encoded parameters and puts them into the specified <paramref name="streamInfo"/>.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.ExtractActualMime(System.String)">
+            <summary>
+            Given the content type, extracts its pure mime type. For instance, accepts 'video/webm;+codecs=vp9' and returns 'video/webm'. 
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.TranslateMuxedStream(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Translates the given JSON object extracted from YouTube to its managed representation.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.TranslateAdaptiveStream(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Translates the given JSON object extracted from YouTube to its managed representation.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.TranslateMuxedStreams(Newtonsoft.Json.Linq.JArray)">
+            <summary>
+            Given the specified JSON array, returns a list of multiplexed streams.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.TranslateAdaptiveStreams(Newtonsoft.Json.Linq.JArray)">
+            <summary>
+            Given the specified JSON array, returns a list of adaptive streams.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.ExtractPlayerResponseMetadata(Newtonsoft.Json.Linq.JToken)">
+            <summary>
+            Given player_response JSON data, returns its .NET representation.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.DownloadMetadata(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Downloads metadata for the YouTube video with the specified ID.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.Decipher(DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeEmbedPageData,DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata,System.Threading.CancellationToken)">
+            <summary>
+            Invoked by <see cref="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.GrabAsync(DotNetTools.SharpGrabber.GrabResult,System.String,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)"/> method when the target video has a signature.
+            This method downloads the necessary script (base.js) and decipher all grabbed links. 
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.DownloadEmbedPage(System.String)">
+            <summary>
+            Downloads video's embed page and extracts useful data.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.AppendImagesToResult(DotNetTools.SharpGrabber.GrabResult,System.String,System.Boolean)">
+            <summary>
+            Generates all possible image URLs of the specified YouTube video.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.UpdateStreamITagInfo(DotNetTools.SharpGrabber.Media.GrabbedMedia,DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo)">
+            <summary>
+            Updates information about the grabbed media according to the given YouTube iTag info.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.AppendStreamToResult(DotNetTools.SharpGrabber.GrabResult,DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo)">
+            <summary>
+            Appends the specified <paramref name="stream"/> to the specified <paramref name="result"/>.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.UpdateResult(DotNetTools.SharpGrabber.GrabResult,DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata)">
+            <summary>
+            Updates <see cref="T:DotNetTools.SharpGrabber.GrabResult"/> according to the information obtained from metadata.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTubeGrabber.GrabAsync(DotNetTools.SharpGrabber.GrabResult,System.String,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeAdaptiveStream">
+            <summary>
+            Represents an adaptive YouTube stream.
+            Information about an adaptive stream is obtained from adaptive_fmts.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeAdaptiveStream.FPS">
+            <summary>
+            Frame per second
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeEmbedPageData">
+            <summary>
+            Contains data obtained from a YouTube embedded page.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeEmbedPageData.BaseJsUri">
+            <summary>
+            Link to YouTube base.js script
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase">
+            <summary>
+            Base class for YouTube <see cref="T:DotNetTools.SharpGrabber.IGrabber"/>s
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.StandardYouTubeImageUrlFormat">
+            <summary>
+            Standard format for YouTube image links which is used with String.Format provided with the following arguments:
+            <list type="bullet">
+            <item>{0} Protocol Schema e.g. https</item>
+            <item>{1} Video ID</item>
+            <item>{2} Image name e.g. hqdefault</item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.StandardYouTubeUrlFormat">
+            <summary>
+            Standard format for YouTube links which is used with String.Format supplied with video ID as the only
+            format argument.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.GetYouTubeId(System.Uri)">
+            <summary>
+            Extracts YouTube video ID from the specified URI.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.GetYouTubeStandardUri(System.String)">
+            <summary>
+            Creates a standard YouTube URI of the specified YouTube video ID.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.GetYouTubeVideoInfoUri(System.String)">
+            <summary>
+            Creates video info YouTube URI.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.GetYouTubeEmbedUri(System.String)">
+            <summary>
+            Creates video's embed page URI.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.GrabAsync(DotNetTools.SharpGrabber.GrabResult,System.String,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)">
+            <summary>
+            This method gets called internally by <see cref="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.GrabAsync(System.Uri,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)"/> after necessary initializations.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.Supports(System.Uri)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.GrabAsync(System.Uri,System.Threading.CancellationToken,DotNetTools.SharpGrabber.GrabOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeGrabberBase.GetYouTubeImageUri(System.String,DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageType,System.Boolean)">
+            <summary>
+            Returns URI for the specified YouTube image.  
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageType">
+            <summary>
+            Represents YouTube image type - such as hq, mq, sd, maxres etc.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageType.Default">
+            <summary>
+            default image
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageType.HighQuality">
+            <summary>
+            hqdefault image
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageType.MediumQuality">
+            <summary>
+            mqdefault image
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageType.StandardQuality">
+            <summary>
+            sddefault image
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageType.MaximumResolution">
+            <summary>
+            maxresdefault image
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageTypeHelper">
+            <summary>
+            Contains helper methods for <see cref="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageType"/>.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageTypeHelper.ToYouTubeString(DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageType)">
+            <summary>
+            Returns representation of this <see cref="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeImageType"/> in YouTube links; such as 'hqdefault'.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata">
+            <summary>
+            Represents metadata of a YouTube video.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata.Status">
+            <summary>
+            status - e.g. ok
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata.FormatList">
+            <summary>
+            fmt_list - e.g. 18/640x360
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata.MuxedStreams">
+            <summary>
+            url_encoded_fmt_stream_map: Multiplexed streams
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata.AdaptiveStreams">
+            <summary>
+            adaptive_fmts: Video-only and audio-only streams
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata.PlayerResponse">
+            <summary>
+            player_response: YouTube player metadata
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata.AllStreams">
+            <summary>
+            Concatenates <see cref="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata.MuxedStreams"/> with <see cref="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMetadata.AdaptiveStreams"/> and returns the result as
+            an enumerable.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeMuxedStream">
+            <summary>
+            Represents a multiplexed YouTube stream.
+            Information about a muxed stream is obtained from url_encoded_fmt_stream_map.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse">
+            <summary>
+            YouTube player response - Obtained from player_response
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.Title">
+            <summary>
+            Video title
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.Length">
+            <summary>
+            Video length
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.ChannelId">
+            <summary>
+            ID of the uploader channel
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.ShortDescription">
+            <summary>
+            Short description of the video
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.AverageRating">
+            <summary>
+            Average rating of the video out of 5
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.ViewCount">
+            <summary>
+            Total number of views
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.Author">
+            <summary>
+            Author of the video
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.UploadedAt">
+            <summary>
+            Upload date
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.PublishedAt">
+            <summary>
+            Publish date
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.AdaptiveStreams">
+            <summary>
+            For some YouTube videos, adaptive streams exist in player response.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubePlayerResponse.MuxedStreams">
+            <summary>
+            For some YouTube videos, muxed streams exist in player response.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript">
+            <summary>
+            Accepts YouTube script source code and parses and executes the code.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.ScopeAddress">
+            <summary>
+            Stores the starting and ending points of a scope. 
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.ScopeAddress.StartPoint">
+            <summary>
+            Start point of function definition including variable name.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.ScopeAddress.EndPoint">
+            <summary>
+            Ending point of the whole function definition
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.FunctionAddress">
+            <summary>
+            Describes useful location points of function code in the script source. 
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.FunctionAddress.EntryPoint">
+            <summary>
+            Entry point of function body.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.LocateScopeBoundary(System.Int32)">
+            <summary>
+            Tries to locate the next open brace and its matching close brace starting from the specified <paramref name="start"/>.
+            Returns NULL if not found.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.LocateFunction(System.String)">
+            <summary>
+            Tries to locate definition for the specified function.
+            </summary>
+            <returns>An instance of <see cref="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.ScopeAddress"/> describing function location or NULL if not found.</returns>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.GetFunctionDefinition(System.String)">
+            <summary>
+            Locates the specified function definition and returns its code.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.GetFunctionBody(System.String)">
+            <summary>
+            Extract function body from the given function definition.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.GetUsedFunctions(System.String)">
+            <summary>
+            Returns an array of every invoked function in the code.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.PrepareDecipherFunctionCall(System.String)">
+            <summary>
+            Extracts and prepares part of the code that are required for the specified function to execute.
+            This method is specialized for YouTube decipher method invocation.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeScript.CallDecipherFunction(System.String,System.String)">
+            <summary>
+            Calls the decipher function with the specified name supplied with the specified signature and returns the string result.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo">
+            <summary>
+            Describes a YouTube stream.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.iTag">
+            <summary>
+            YouTube iTag number
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.Type">
+            <summary>
+            Type grabbed from metadata
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.Mime">
+            <summary>
+            File mime - extracted from <see cref="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.Type"/>
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.Extension">
+            <summary>
+            Optional suggested extension of the file. If this value is NULL, the extension can be implied from <see cref="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.Mime"/>.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.Quality">
+            <summary>
+            Quality of the video e.g. 'medium'
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.QualityLabel">
+            <summary>
+            Name of this quality suggested by YouTube e.g. mp4 720p
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.AudioSampleRate">
+            <summary>
+            Audio Sample Rate e.g. 48000, which stands for 48k (optional, audio only)
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.ContentLength">
+            <summary>
+            Optional content length
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.Url">
+            <summary>
+            Direct URL to the target file
+            If deciphering is enabled, this property will correctly point to the secure resource.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.Signature">
+            <summary>
+            Signature of the video, if any
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.Decipher">
+            <summary>
+            Calculated decipher
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeStreamInfo.FrameSize">
+            <summary>
+            Video frame size (video only)
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTags">
+            <summary>
+            Read-only collection of information about YouTube iTags.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTags.For(System.Int32)">
+            <summary>
+            Fetches <see cref="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo"/> for the specified iTag. Returns NULL if not found.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo">
+            <summary>
+            Info about a YouTube iTag number
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo.iTag">
+            <summary>
+            iTag number
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo.Container">
+            <summary>
+            Container format e.g. mp4, 3gp, hls, webm etc.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo.HasAudio">
+            <summary>
+            Contains audio?
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo.HasVideo">
+            <summary>
+            Contains video?
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo.VideoResolution">
+            <summary>
+            Video resolution e.g. 480p, 1080p, 2160p60
+            Only applicable to video containers - NULL otherwise
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo.BitRate">
+            <summary>
+            Bit rate e.g. 48 represents 48k - strictly audio only, not applicable to mux containers
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo.BitRateString">
+            <summary>
+            Represents <see cref="P:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo.BitRate"/> in string format.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo.#ctor(System.Int32,System.String,System.Boolean,System.Boolean,System.String,System.Nullable{System.Int32})">
+            <summary>
+            Creates a read-only instance of <see cref="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeTagInfo"/> with the specified properties.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeUtils">
+            <summary>
+            Provides helper methods for usage in YouTube module.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeUtils.ExtractUrlEncodedParamList(System.String)">
+            <summary>
+            Extracts a URL encoded string into a list of key value pairs.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.Grabbers.YouTube.YouTubeUtils.ExtractUrlEncodedParamMap(System.String,System.Boolean)">
+            <summary>
+            Extracts a URL encoded string into a map.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.HttpHelper">
+            <summary>
+            Contains helper methods related to HTTP clients.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Internal.HttpHelper.DefaultUserAgent">
+            <summary>
+            Default user agent used for HTTP clients
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.HttpHelper.CreateClient(System.Uri)">
+            <summary>
+            Creates and configures an <see cref="T:System.Net.Http.HttpClient"/>.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.IFactory`1">
+            <summary>
+            Represents a factory of <typeparamref name="T"/>.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.IFactory`1.Create">
+            <summary>
+            Creates a new instance of <typeparamref name="T"/>.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.JsonHelper.TryParseJson``1(System.String,``0@)">
+            <remarks>
+            Adopted from https://stackoverflow.com/a/51428508/492352 with minor modifications
+            </remarks>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.MimeHelper">
+            <summary>
+            Contains mime-related helper methods.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.MimeType.FindMime(System.String)">
+            <summary>
+            Tries to find <see cref="T:DotNetTools.SharpGrabber.Internal.MimeInfo"/> for the specified mime. Returns null if not found.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.StringHelper.DecodeUriString(System.String)">
+            <summary>
+            Same as <see cref="M:System.Uri.UnescapeDataString(System.String)"/> but also converts plus to space.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.TypeFactory`2">
+            <summary>
+            A simple implementation for <see cref="T:DotNetTools.SharpGrabber.Internal.IFactory`1"/> that makes instances of
+            <typeparamref name="TImplementationType"/>.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Internal.TypeFactory`1">
+            <summary>
+            A simple implementation for <see cref="T:DotNetTools.SharpGrabber.Internal.IFactory`1"/> that makes instances of <see cref="P:DotNetTools.SharpGrabber.Internal.TypeFactory`1.ImplementationType"/>.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Internal.TypeFactory`1.Create">
+            <inheritdoc />
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.IResolvable`1">
+            <summary>
+            Represents a value that is lazy loaded.
+            </summary>
+            <remarks>Implementations are expected to be thread-safe.</remarks>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.IResolvable`1.IsResolved">
+            <summary>
+            Indicates whether or not the value is resolved.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.IResolvable`1.ResolveAsync">
+            <summary>
+            Asynchronously resolves the value if it is not already resolved.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.BaseResolvable`1">
+            <remarks>
+            Methods of this class are thread-safe.
+            </remarks>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.BaseResolvable`1.InternalResolve">
+            <summary>
+            This method gets invoked when the value is being resolved for the first time.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.BaseResolvable`1.IsResolved">
+            <inheritdoc />
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.BaseResolvable`1.ResolveAsync">
+            <inheritdoc />
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Media.GrabbedImage">
+            <summary>
+            Represents grabbed images
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedImage.OriginalUri">
+            <inheritdoc />
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedImage.ResourceUri">
+            <inheritdoc />
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedImage.Type">
+            <summary>
+            Type of the grabbed image e.g. thumbnail, frame etc.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedImage.FrameTime">
+            <summary>
+            Time of the frame - if <see cref="P:DotNetTools.SharpGrabber.Media.GrabbedImage.Type"/> is <see cref="F:DotNetTools.SharpGrabber.Media.GrabbedImageType.Frame"/>
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedImage.Size">
+            <summary>
+            Size of the image - if available
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Media.GrabbedImageSize">
+            <summary>
+            Stores grabbed image size
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Media.GrabbedImageType">
+            <summary>
+            Defined role of an image grabbed from a page.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Media.GrabbedImageType.Primary">
+            <summary>
+            Indicates that the image is one of the main images (or the only image) of the target media.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Media.GrabbedImageType.Thumbnail">
+            <summary>
+            Indicates that the image is a thumbnail.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Media.GrabbedImageType.Frame">
+            <summary>
+            Indicates that the image is a frame of a video. Using this image type requires specification of 
+            the exact time of the frame.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Media.GrabbedImageType.Preview">
+            <summary>
+            Indicates that the image is a preview of the media.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Media.GrabbedMedia">
+            <summary>
+            <see cref="T:DotNetTools.SharpGrabber.IGrabbed"/> for media resources, such as audio and video.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.OriginalUri">
+            <summary>
+            Original URI - A value of NULL indicates inheritance from <see cref="T:DotNetTools.SharpGrabber.GrabResult"/>.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.ResourceUri">
+            <inheritdoc />
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.FormatId">
+            <summary>
+            Optional unique identifier of this format - For YouTube media, this value would be the same as iTag integer number.
+            </summary>
+            <remarks>
+            If specified, this value should be unique amongst all other grabbed media.
+            </remarks>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.Format">
+            <summary>
+            Contains information about mime type and extension of the media.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.Channels">
+            <summary>
+            Defines if this grabbed media contains either audio and/or video channels.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.Title">
+            <summary>
+            Full title obtained from source. A value of NULL indicates inheritance from <see cref="T:DotNetTools.SharpGrabber.GrabResult"/>.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.Length">
+            <summary>
+            Duration of the media (optional)
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.ContentLength">
+            <summary>
+            Content length (File size) of the target URI (optional)
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.Container">
+            <summary>
+            Media container name e.g. mp4 (optional)
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.Resolution">
+            <summary>
+            Media resolution in string format e.g. 720p (optional)
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.BitRateString">
+            <summary>
+            Media bit rate in string format e.g. 48k (optional)
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedMedia.FormatTitle">
+            <summary>
+            Suggested name that best describes this media format e.g. MP4 1080p
+            <para>Can be optionally set by <see cref="T:DotNetTools.SharpGrabber.IGrabber"/>s.</para>
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedStream.Length">
+            <summary>
+            Total duration of the stream
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedStream.Segments">
+            <summary>
+            Segments of the stream
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Media.GrabbedStreamMetadata">
+            <summary>
+            <see cref="T:DotNetTools.SharpGrabber.IGrabbed"/> for information about HLS master playlist streams. This class represents
+            a stream, which refers to an M3U8 playlist containing the actual media files.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedStreamMetadata.Name">
+            <summary>
+            Optional name for the stream
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedStreamMetadata.Resolution">
+            <summary>
+            Optional resolution of the stream
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedStreamMetadata.Bandwidth">
+            <summary>
+            Bandwidth - or 0 if unknown
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedStreamMetadata.StreamFormat">
+            <summary>
+            Format of the stream file
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedStreamMetadata.OutputFormat">
+            <summary>
+            Expected format of the output media
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.GrabbedStreamMetadata.Stream">
+            <summary>
+            Resolves the stream associated with current metadata.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Media.GrabbedStreamReference">
+            <summary>
+            Reference to an M3U8 playlist.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Media.MediaChannels">
+            <summary>
+            Represents stream channels of a media file - audio, video, or both.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Media.MediaChannels.None">
+            <summary>
+            No channel (not for practical purposes)
+            </summary>
+            <remarks>
+            No <see cref="T:DotNetTools.SharpGrabber.IGrabber"/> is supposed to return a media with no channels.
+            <see cref="F:DotNetTools.SharpGrabber.Media.MediaChannels.None"/> is there to make flags valid and it might be useful for the user.
+            </remarks>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Media.MediaChannels.Video">
+            <summary>
+            Video channel
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Media.MediaChannels.Audio">
+            <summary>
+            Audio channel
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.Media.MediaChannels.Both">
+            <summary>
+            Audio and video channels
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Media.MediaChannelsHelper">
+            <summary>
+            Contains helper methods for <see cref="T:DotNetTools.SharpGrabber.Media.MediaChannels"/>.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Media.MediaChannelsHelper.HasAudio(DotNetTools.SharpGrabber.Media.MediaChannels)">
+            <summary>
+            Whether or not an audio channel is available.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Media.MediaChannelsHelper.HasVideo(DotNetTools.SharpGrabber.Media.MediaChannels)">
+            <summary>
+            Whether or not a video channel is available.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Media.MediaFormat">
+            <summary>
+            Represents format of media e.g. mp4
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.MediaFormat.Mime">
+            <summary>
+            Mime of the media e.g. video/mp4, image/jpeg
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.MediaFormat.Extension">
+            <summary>
+            Suggested extension for the file e.g. mp4, mp3 etc.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Media.MediaSegment">
+            <summary>
+            Represents a single segment of a <see cref="T:DotNetTools.SharpGrabber.Media.GrabbedStream"/>.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.MediaSegment.Title">
+            <summary>
+            Optional title
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.MediaSegment.Uri">
+            <summary>
+            Absolute URI of the media segment
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Media.MediaSegment.Duration">
+            <summary>
+            Optional duration of the segment
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.MultiGrabber">
+            <summary>
+            Grabs from various sources using grabbers registered on it.
+            Members of this class are thread-safe and can be used simultaneously.
+            </summary>
+            <remarks>
+            A multi-grabber can grab from several URIs simultaneously because it creates grabbers using registered factories.
+            </remarks>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.MultiGrabber.Make(DotNetTools.SharpGrabber.Internal.IFactory{DotNetTools.SharpGrabber.IGrabber})">
+            <summary>
+            Creates a grabber instance using the specified factory.
+            May be overriden to modify grabber creation behavior. By default, it uses parameterless constructors.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.MultiGrabber.Register(DotNetTools.SharpGrabber.Internal.IFactory{DotNetTools.SharpGrabber.IGrabber})">
+            <summary>
+            Registers the specified <see cref="T:DotNetTools.SharpGrabber.IGrabber"/> factory.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.MultiGrabber.Register``1">
+            <summary>
+            Registers a simple factory for the specified <typeparamref name="TGrabber"/>.
+            The registered factory creates instances of the specified type using its parameterless constructor.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.MultiGrabber.Unregister(DotNetTools.SharpGrabber.Internal.IFactory{DotNetTools.SharpGrabber.IGrabber})">
+            <summary>
+            Unregisters the specified factory if previously registered.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.MultiGrabber.GetGrabbers(System.Uri)">
+            <summary>
+            Tries to find all compatible grabbers with the specified URI.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.MultiGrabber.Grab(System.Uri)">
+            <summary>
+            Transparently grabs information from the specified URI using the registered grabbers.
+            </summary>
+            <remarks>
+            This method will return the <see cref="T:DotNetTools.SharpGrabber.GrabResult"/> of the very first successful grab while suppressing exceptions
+            thrown by unsuccessful grab attempts. Throws the last exception thrown by the grabber tried last.
+            <para>Status of the grab is unavailable when using this method because it might automatically make use of multiple
+            compatible grabbers. To have status of the grab, use <see cref="M:DotNetTools.SharpGrabber.MultiGrabber.GetGrabbers(System.Uri)"/> and grab manually instead.</para>
+            </remarks>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.MultiGrabber.CreateDefault">
+            <summary>
+            Creates an instance of <see cref="T:DotNetTools.SharpGrabber.MultiGrabber"/> with internal providers registered. 
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.Size">
+            <summary>
+            Describes size of a rectangle - width, and height.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Size.Width">
+            <summary>
+            Size width
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.Size.Height">
+            <summary>
+            Size height
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.Size.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.StreamWrappingDelegate">
+            <summary>
+            Accepts an stream and wraps it with other streams if and when necessary.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.WorkStatusType">
+            <summary>
+            Represents common work status types.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.WorkStatusType.Initiating">
+            <summary>
+            The work has just started
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.WorkStatusType.DownloadingPage">
+            <summary>
+            The grabber is downloading a page - usually the original uri.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.WorkStatusType.DownloadingFile">
+            <summary>
+            The grabber is downloading a file.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.WorkStatusType.ResolvingUri">
+            <summary>
+            The grabber is resolving one or more URIs.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.WorkStatusType.Decrypting">
+            <summary>
+            The grabber is decrypting/deciphering one or more URIs.
+            </summary>
+        </member>
+        <member name="F:DotNetTools.SharpGrabber.WorkStatusType.Other">
+            <summary>
+            Indicates that type of the status is uncommon and a description is provided.
+            </summary>
+        </member>
+        <member name="T:DotNetTools.SharpGrabber.WorkStatus">
+            <summary>
+            Provides status of a task.
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.WorkStatus.Type">
+            <summary>
+            Work type
+            </summary>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.WorkStatus.Progress">
+            <summary>
+            Work progress
+            </summary>
+            <remarks>If work progress is undetermined, value of this property must be NULL.</remarks>
+        </member>
+        <member name="P:DotNetTools.SharpGrabber.WorkStatus.Description">
+            <summary>
+            Description of the status - e.g. "Downloading target url..."
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.WorkStatus.Update(System.Nullable{System.Double},System.String,DotNetTools.SharpGrabber.WorkStatusType)">
+            <summary>
+            Updates properties of the status with a single call.
+            </summary>
+        </member>
+        <member name="M:DotNetTools.SharpGrabber.WorkStatus.Update(System.Nullable{System.Double},DotNetTools.SharpGrabber.WorkStatusType)">
+            <summary>
+            Updates properties of the status with a single call.
+            </summary>
+        </member>
+    </members>
+</doc>
