@@ -1,4 +1,5 @@
-﻿using DotNetTools.SharpGrabber.Exceptions;
+﻿using DotNetTools.SharpGrabber;
+using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Internal.Grabbers.Hls;
 using DotNetTools.SharpGrabber.Media;
 using HtmlAgilityPack;
@@ -10,15 +11,16 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers.Adult
+namespace DotNetTools.SharpGrabber.Adult
 {
-    public class XnxxGrabber : BaseGrabber
+    public class XnxxGrabber : GrabberBase
     {
         private static readonly Regex HostRegex = new Regex(@"^(https?://)?(www\.)?xnxx.com/video-([^/]+)/", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public override string Name { get; } = "XNXX";
 
-        public override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options)
+        protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
+            IProgress<double> progress)
         {
             if (!Supports(uri))
                 return null;

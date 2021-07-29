@@ -11,13 +11,14 @@ using DotNetTools.SharpGrabber.Media;
 using System.Linq;
 using System.Collections.Generic;
 using DotNetTools.SharpGrabber.Hls;
+using DotNetTools.SharpGrabber.Grabbed;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers.Adult
+namespace DotNetTools.SharpGrabber.Adult
 {
     /// <summary>
     /// Represents a PornHub.com grabber.
     /// </summary>
-    public class PornHubGrabber : BaseGrabber
+    public class PornHubGrabber : GrabberBase
     {
         private static readonly Regex UrlMatcher = new Regex(@"^(https?://)?(www\.)?pornhub\.com/([^/]+)viewkey=(\w+).*$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex FlashVarsFinder = new Regex(@"((var|let)\s+(flashvars[\w_]+)(.|[\r\n])+)", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -35,7 +36,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Adult
         public override bool Supports(Uri uri) => GetViewId(uri) != null;
 
         /// <inheritdoc />
-        public override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options)
+        protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
+            IProgress<double> progress)
         {
             // grab view id
             var viewId = GetViewId(uri);

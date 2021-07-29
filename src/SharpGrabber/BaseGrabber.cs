@@ -16,7 +16,7 @@ namespace DotNetTools.SharpGrabber
 
         /// <inheritdoc />
         public GrabOptions DefaultGrabOptions { get; } 
-            = new GrabOptions(GrabOptionFlag.Decipher | GrabOptionFlag.GrabImages | GrabOptionFlag.Decrypt);
+            = new GrabOptions(GrabOptionsFlags.Decipher | GrabOptionsFlags.GrabImages | GrabOptionsFlags.Decrypt);
 
         /// <inheritdoc />
         public WorkStatus Status { get; } = new WorkStatus();

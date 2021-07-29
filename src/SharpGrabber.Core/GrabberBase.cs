@@ -17,9 +17,15 @@ namespace DotNetTools.SharpGrabber
 
         public abstract bool Supports(Uri uri);
 
-        public Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
+        public async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
         {
-            return InternalGrabAsync(uri, cancellationToken, options ?? DefaultGrabOptions, progress ?? new Progress<double>());
+            progress.Report(0);
+            var result = await InternalGrabAsync(uri,
+                cancellationToken,
+                options ?? DefaultGrabOptions,
+                progress ?? new Progress<double>()).ConfigureAwait(false);
+            progress.Report(1);
+            return result;
         }
 
         /// <summary>

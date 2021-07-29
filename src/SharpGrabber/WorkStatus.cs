@@ -45,7 +45,7 @@ namespace DotNetTools.SharpGrabber
     /// </summary>
     public class WorkStatus
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
         public WorkStatus()
         {
         }
@@ -54,7 +54,7 @@ namespace DotNetTools.SharpGrabber
         {
             Update(progress, description, type);
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 
         /// <summary>
         /// Work type

@@ -3,9 +3,14 @@
     /// <summary>
     /// Describes size of a rectangle - width, and height.
     /// </summary>
-    public class Size
+    public class RectSize
     {
-        #region Properties
+        public RectSize(int width, int height)
+        {
+            Width = width;
+            Height = height;
+        }
+
         /// <summary>
         /// Size width
         /// </summary>
@@ -15,24 +20,11 @@
         /// Size height
         /// </summary>
         public int Height { get; }
-        #endregion
 
-        #region Constructor
-
-        public Size(int width, int height)
-        {
-            Width = width;
-            Height = height;
-        }
-
-        #endregion
-
-        #region Methods
         /// <inheritdoc />
         public override string ToString()
         {
             return $"{Width}x{Height}";
         }
-        #endregion
     }
 }

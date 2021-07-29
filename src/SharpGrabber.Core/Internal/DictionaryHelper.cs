@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotNetTools.SharpGrabber.Internal
+namespace DotNetTools.SharpGrabber
 {
     /// <summary>
     /// Contains helper methods for dictionaries.

@@ -1,4 +1,4 @@
-﻿namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
+﻿namespace DotNetTools.SharpGrabber.YouTube.YouTube
 {
     /// <summary>
     /// Represents a multiplexed YouTube stream.

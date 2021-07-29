@@ -35,11 +35,6 @@ namespace DotNetTools.SharpGrabber
 
         public DateTime? CreationDate { get; set; }
 
-        /// <summary>
-        /// Optional statistics grabbed from the page
-        /// </summary>
-        public GrabStatisticInfo Statistics { get; set; }
-
         public bool IsSecure { get; set; }
 
         /// <summary>

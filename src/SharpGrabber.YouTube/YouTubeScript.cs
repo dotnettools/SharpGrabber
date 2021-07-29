@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using DotNetTools.SharpGrabber.Exceptions;
 using Jint;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
+namespace DotNetTools.SharpGrabber.YouTube.YouTube
 {
     /// <summary>
     /// Accepts YouTube script source code and parses and executes the code.
@@ -48,13 +48,13 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         #endregion
 
         #region Constructor
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
         public YouTubeScript(string scriptSource)
         {
             _source = scriptSource;
             _engine = new Engine();
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         #endregion
 
         #region Internal Methods

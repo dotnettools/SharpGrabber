@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
+namespace DotNetTools.SharpGrabber.YouTube.YouTube
 {
     /// <summary>
     /// Contains data obtained from a YouTube embedded page.

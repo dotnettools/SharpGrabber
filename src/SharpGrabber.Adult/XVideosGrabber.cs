@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers.Adult
+namespace DotNetTools.SharpGrabber.Adult
 {
     public class XVideosGrabber : XnxxGrabber
     {

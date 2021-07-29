@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
+namespace DotNetTools.SharpGrabber.YouTube.YouTube
 {
     /// <summary>
     /// YouTube player response - Obtained from player_response

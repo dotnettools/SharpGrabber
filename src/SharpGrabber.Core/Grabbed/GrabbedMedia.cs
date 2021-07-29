@@ -74,7 +74,7 @@ namespace DotNetTools.SharpGrabber.Grabbed
         #endregion
 
         #region Constructors
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
         public GrabbedMedia(Uri resourceUri, Uri originalUri, MediaFormat format, MediaChannels channels)
         {
             OriginalUri = originalUri;
@@ -82,7 +82,7 @@ namespace DotNetTools.SharpGrabber.Grabbed
             Format = format;
             Channels = channels;
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         #endregion
     }
 }

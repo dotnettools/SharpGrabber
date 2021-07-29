@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>DotNetTools.SharpGrabber.YouTube</RootNamespace>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Authors>Javid Shoaei</Authors>
+        <Company>github.com/dotnettools</Company>
+        <Description>Adds support for grabbing information and high quality media from YouTube. Supports images, thumbnails, video, audio with different formats and qualities with the capability to decipher when necessary.</Description>
+        <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageIconUrl />
+        <LangVersion>9</LangVersion>
+        <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
+        <PackageTags>youtube,media,audio,video,deciphering,highquality,download,grab,scrape</PackageTags>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Jint" Version="2.11.58" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SharpGrabber.Core\SharpGrabber.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\assets\icon.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
+</Project>

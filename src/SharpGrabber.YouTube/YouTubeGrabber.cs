@@ -8,12 +8,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.Exceptions;
-using DotNetTools.SharpGrabber.Internal.Grabbers.YouTube;
+using DotNetTools.SharpGrabber.YouTube.YouTube;
 using DotNetTools.SharpGrabber.Media;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers
+namespace DotNetTools.SharpGrabber.YouTube
 {
     /// <summary>
     /// Default <see cref="IGrabber"/> for YouTube
@@ -597,7 +597,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
 
         #region Grab Method
         /// <inheritdoc />
-        protected override async Task GrabAsync(GrabResult result, string id, CancellationToken cancellationToken, GrabOptions options)
+        protected override async Task GrabAsync(GrabResult result, string id, CancellationToken cancellationToken, GrabOptions options,
+            IProgress<double> progress)
         {
             // extract base.js script
             var embedPageData = await DownloadEmbedPage(id);
@@ -612,11 +613,11 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             result.IsSecure = metaData.AllStreams.Any(stream => !string.IsNullOrEmpty(stream.Signature));
 
             // should we decipher the signature?
-            if (result.IsSecure && options.Flags.HasFlag(GrabOptionFlag.Decipher))
+            if (result.IsSecure && options.Flags.HasFlag(GrabOptionFlags.Decipher))
                 await Decipher(embedPageData, metaData, cancellationToken);
 
             // append images to the result
-            if (options.Flags.HasFlag(GrabOptionFlag.GrabImages))
+            if (options.Flags.HasFlag(GrabOptionFlags.GrabImages))
                 AppendImagesToResult(result, id);
 
             // append muxed streams to result

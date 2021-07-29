@@ -7,12 +7,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
+namespace DotNetTools.SharpGrabber.YouTube.YouTube
 {
     /// <summary>
     /// Base class for YouTube <see cref="IGrabber"/>s
     /// </summary>
-    public abstract class YouTubeGrabberBase : BaseGrabber
+    public abstract class YouTubeGrabberBase : GrabberBase
     {
         #region Constants
         /// <summary>
@@ -151,9 +151,10 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         protected virtual Uri GetYouTubeEmbedUri(string videoId) => new Uri($"https://youtube.com/embed/{videoId}");
 
         /// <summary>
-        /// This method gets called internally by <see cref="GrabAsync(Uri, CancellationToken, GrabOptions)"/> after necessary initializations.
+        /// This method gets called internally by <see cref="InternalGrabAsync"/> after necessary initializations.
         /// </summary>
-        protected abstract Task GrabAsync(GrabResult result, string id, CancellationToken cancellationToken, GrabOptions options);
+        protected abstract Task GrabAsync(GrabResult result, string id, CancellationToken cancellationToken, GrabOptions options,
+            IProgress<double> progress);
         #endregion
 
         #region Methods
@@ -161,7 +162,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
         public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GetYouTubeId(uri));
 
         /// <inheritdoc />
-        public sealed override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options)
+        protected sealed override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
+            IProgress<double> progress)
         {
             // get YouTube ID
             var id = GetYouTubeId(uri);
@@ -175,7 +177,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
             var result = new GrabResult(originalUri);
 
             // grab using the internal grab method
-            await GrabAsync(result, id, cancellationToken, options);
+            await GrabAsync(result, id, cancellationToken, options, progress).ConfigureAwait(false);
 
             return result;
         }

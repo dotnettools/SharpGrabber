@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers.YouTube
+namespace DotNetTools.SharpGrabber.YouTube.YouTube
 {
     /// <summary>
     /// Represents YouTube image type - such as hq, mq, sd, maxres etc.

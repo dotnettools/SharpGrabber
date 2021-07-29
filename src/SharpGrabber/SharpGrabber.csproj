@@ -4,19 +4,19 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>SharpGrabber</Title>
-        <Description>Grab information and media from YouTube, Vimeo and any HLS service provider (M3U8 playlists). Supports images, thumbnails, video, audio with different formats and qualities. Deciphering and decryption are implemented.</Description>
+        <Description>Core library for grabbing information and media from various sources.</Description>
         <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
         <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
         <PackageLicenseUrl></PackageLicenseUrl>
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
-        <PackageTags>youtube,instagram,vimeo,hls,m3u8,download,grab,media,audio,video,aes-128</PackageTags>
+        <PackageTags>download,grab,media,audio,video,scrape</PackageTags>
         <Authors>Javid Shoaei</Authors>
         <Product>SharpGrabber</Product>
         <PackageIconUrl></PackageIconUrl>
-        <FileVersion>1.5.3.0</FileVersion>
-        <AssemblyVersion>1.5.3.0</AssemblyVersion>
+        <FileVersion>2.0.0.0</FileVersion>
+        <AssemblyVersion>2.0.0.0</AssemblyVersion>
         <PackageVersion>1.5.3</PackageVersion>
-        <Version>1.5.3</Version>
+        <Version>2.0.0</Version>
         <RootNamespace>DotNetTools.SharpGrabber</RootNamespace>
         <SignAssembly>false</SignAssembly>
         <DelaySign>false</DelaySign>
@@ -24,6 +24,7 @@
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageIcon>icon.png</PackageIcon>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Company>https://github.com/dotnettools</Company>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -49,6 +50,10 @@
             <Pack>True</Pack>
             <PackagePath></PackagePath>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Internal\Grabbers\Adult\" />
     </ItemGroup>
 
 </Project>

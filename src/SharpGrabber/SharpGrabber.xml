@@ -61,17 +61,17 @@
             Flags for grab options
             </summary>
         </member>
-        <member name="F:DotNetTools.SharpGrabber.GrabOptionFlag.Decipher">
+        <member name="F:DotNetTools.SharpGrabber.GrabOptionsFlags.Decipher">
             <summary>
             Grabber may decipher URIs automatically where necessary.
             </summary>
         </member>
-        <member name="F:DotNetTools.SharpGrabber.GrabOptionFlag.GrabImages">
+        <member name="F:DotNetTools.SharpGrabber.GrabOptionsFlags.GrabImages">
             <summary>
             Grabber may grab related images.
             </summary>
         </member>
-        <member name="F:DotNetTools.SharpGrabber.GrabOptionFlag.Decrypt">
+        <member name="F:DotNetTools.SharpGrabber.GrabOptionsFlags.Decrypt">
             <summary>
             Grabber may decrypt the output stream via <see cref="P:DotNetTools.SharpGrabber.GrabResult.OutputStreamWrapper"/>.
             </summary>

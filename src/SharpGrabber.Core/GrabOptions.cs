@@ -38,7 +38,7 @@ namespace DotNetTools.SharpGrabber
     /// </summary>
     public class GrabOptions
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
         public GrabOptions()
         {
         }
@@ -47,7 +47,7 @@ namespace DotNetTools.SharpGrabber
         {
             Flags = flag;
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 
         /// <summary>
         /// Option flags

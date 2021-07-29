@@ -9,14 +9,14 @@ namespace DotNetTools.SharpGrabber.Grabbed
     /// </summary>
     public class GrabbedImage : IGrabbed
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
         public GrabbedImage(GrabbedImageType type, Uri originalUri, Uri resourceUri)
         {
             Type = type;
             OriginalUri = originalUri;
             ResourceUri = resourceUri;
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 
         /// <inheritdoc />
         public Uri OriginalUri { get; }

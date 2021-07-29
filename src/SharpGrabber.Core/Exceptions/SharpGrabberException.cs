@@ -10,7 +10,7 @@ namespace DotNetTools.SharpGrabber.Exceptions
     /// </summary>
     public class SharpGrabberException : Exception
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
         public SharpGrabberException()
         {
         }
@@ -26,6 +26,6 @@ namespace DotNetTools.SharpGrabber.Exceptions
         protected SharpGrabberException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
     }
 }

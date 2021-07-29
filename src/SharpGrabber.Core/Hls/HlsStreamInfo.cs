@@ -6,7 +6,7 @@ namespace DotNetTools.SharpGrabber.Hls
 {
     public class HlsStreamInfo
     {
-        public HlsStreamInfo(Uri uri, int programId, int bandwidth, Size resolution, string name)
+        public HlsStreamInfo(Uri uri, int programId, int bandwidth, RectSize resolution, string name)
         {
             ProgramId = programId;
             Bandwidth = bandwidth;
@@ -17,7 +17,7 @@ namespace DotNetTools.SharpGrabber.Hls
 
         public int ProgramId { get; }
         public int Bandwidth { get; }
-        public Size Resolution { get; }
+        public RectSize Resolution { get; }
         public string Name { get; }
         public Uri Uri { get; }
     }

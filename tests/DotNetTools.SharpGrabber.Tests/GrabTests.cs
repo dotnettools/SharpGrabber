@@ -1,4 +1,4 @@
-using DotNetTools.SharpGrabber.Internal.Grabbers;
+using DotNetTools.SharpGrabber.YouTube;
 using DotNetTools.SharpGrabber.Media;
 using System;
 using Xunit;

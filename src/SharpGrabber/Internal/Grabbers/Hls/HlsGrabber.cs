@@ -58,7 +58,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
 
             // make result
             var result = new GrabResult(uri, grabs);
-            if (options.Flags.HasFlag(GrabOptionFlag.Decrypt) && doc.Key != null)
+            if (options.Flags.HasFlag(GrabOptionsFlags.Decrypt) && doc.Key != null)
                 UpdateDecryptionMethod(result, doc.Key);
             return Task.FromResult(result);
         }
