@@ -6,7 +6,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Authors>Javid Shoaei</Authors>
         <Company>github.com/dotnettools</Company>
-        <Description>Adds support for grabbing video from Instagram.</Description>
+        <Description>Adds support for grabbing videos from Instagram.</Description>
         <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
@@ -16,6 +16,7 @@
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
         <PackageTags>instagram,video,download,grab,scrape</PackageTags>
         <NoWarn>1701;1702;1591</NoWarn>
+        <Version>0.1</Version>
     </PropertyGroup>
 
     <ItemGroup>
