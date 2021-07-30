@@ -26,6 +26,8 @@ namespace DotNetTools.SharpGrabber.Vimeo
         {
         }
 
+        public override string StringId { get; } = "vimeo.com";
+
         public override string Name { get; } = "Vimeo";
 
         #region Methods

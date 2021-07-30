@@ -46,6 +46,8 @@ namespace DotNetTools.SharpGrabber.YouTube.YouTube
         #endregion
 
         #region Properties
+        public override string StringId { get; } = "youtube.com";
+
         /// <inheritdoc />
         public override string Name { get; } = "YouTube";
 

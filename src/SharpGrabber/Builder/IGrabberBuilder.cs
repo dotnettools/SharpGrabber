@@ -8,7 +8,7 @@ namespace DotNetTools.SharpGrabber
     public interface IGrabberBuilder
     {
         /// <summary>
-        /// Makes the grabber use the specified <paramref name="services"/>.
+        /// Configures the grabber to use the specified <paramref name="services"/>.
         /// </summary>
         IGrabberBuilder UseServices(IGrabberServices services);
 
@@ -26,6 +26,20 @@ namespace DotNetTools.SharpGrabber
         /// Builds the final grabber.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown when the configuration of the builder is invalid.</exception>
-        IGrabber Build();
+        IMultiGrabber Build();
+    }
+
+    /// <summary>
+    /// Provides extension methods for <see cref="IGrabberBuilder"/>.
+    /// </summary>
+    public static class GrabberBuilderExtensions
+    {
+        /// <summary>
+        /// Configures the grabber to use the default services.
+        /// </summary>
+        public static IGrabberBuilder UseDefaultServices(this IGrabberBuilder builder)
+        {
+            return builder.UseServices(GrabberServices.Default);
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace SharpGrabber.Desktop
     {
         public static readonly string AppName = "SharpGrabber [Desktop]";
 
-        public static readonly Version AppVersion = Version.Parse("2.1");
+        public static readonly Version AppVersion = Version.Parse("3.0");
 
         public static readonly string AppFullName = $"{AppName} {AppVersion}";
     }

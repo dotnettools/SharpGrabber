@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using DotNetTools.SharpGrabber.Instagram;
+using DotNetTools.SharpGrabber.Hls;
 
 namespace DotNetTools.SharpGrabber
 {
     /// <summary>
     /// Provides extension methods for <see cref="IGrabberBuilder"/>.
     /// </summary>
-    public static class InstagramGrabberBuilderExtensions
+    public static class HlsGrabberBuilderExtensions
     {
         /// <summary>
-        /// Includes Instagram grabber.
+        /// Includes HLS grabber.
         /// </summary>
-        public static IGrabberBuilder AddInstagram(this IGrabberBuilder builder)
-            => builder.Add<InstagramGrabber>();
+        public static IGrabberBuilder AddHls(this IGrabberBuilder builder)
+            => builder.Add<HlsGrabber>();
     }
 }

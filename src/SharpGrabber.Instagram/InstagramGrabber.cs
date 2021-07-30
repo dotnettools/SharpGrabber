@@ -32,6 +32,7 @@ namespace DotNetTools.SharpGrabber.Instagram
         #endregion
 
         #region Properties
+        public override string StringId { get; } = "instagram.com";
 
         /// <inheritdoc />
         public override string Name { get; } = "Instagram";

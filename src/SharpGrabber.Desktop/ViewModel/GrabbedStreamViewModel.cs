@@ -1,4 +1,6 @@
-﻿namespace SharpGrabber.Desktop.ViewModel
+﻿using DotNetTools.SharpGrabber.Grabbed;
+
+namespace SharpGrabber.Desktop.ViewModel
 {
     public class GrabbedStreamViewModel : BaseViewModel
     {

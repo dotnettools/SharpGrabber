@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetTools.SharpGrabber.Grabbed;
 
 namespace SharpGrabber.Desktop.ViewModel
 {

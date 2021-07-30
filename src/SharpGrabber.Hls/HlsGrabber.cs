@@ -20,6 +20,8 @@ namespace DotNetTools.SharpGrabber.Hls
         {
         }
 
+        public override string StringId { get; } = "hls";
+
         public override string Name { get; } = "M3U8";
 
         public override bool Supports(Uri uri)

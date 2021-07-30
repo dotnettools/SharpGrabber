@@ -1,5 +1,6 @@
 ﻿using DotNetTools.SharpGrabber;
 using DotNetTools.SharpGrabber.Converter;
+using DotNetTools.SharpGrabber.Grabbed;
 using SharpGrabber.Desktop.ViewModel;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +28,7 @@ namespace SharpGrabber.Desktop
         {
             // init
             var segmentFiles = new List<string>();
-            var stream = await _viewModel.Stream.Stream.ResolveAsync();
+            var stream = await _viewModel.Stream.Stream.Value;
             _viewModel.IsDownloading = true;
             _viewModel.DownloadStatus = "Initializing...";
             _viewModel.DownloadPercent = 0;

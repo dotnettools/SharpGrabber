@@ -14,9 +14,11 @@ namespace DotNetTools.SharpGrabber
             Services = services;
         }
 
+        public abstract string StringId { get; }
+
         public abstract string Name { get; }
 
-        public virtual GrabOptions DefaultGrabOptions { get; } = new GrabOptions(GrabOptionFlags.None);
+        public virtual GrabOptions DefaultGrabOptions { get; } = new GrabOptions(GrabOptionFlags.All);
 
         public IGrabberServices Services { get; }
 
@@ -27,7 +29,7 @@ namespace DotNetTools.SharpGrabber
             progress.Report(0);
             options ??= DefaultGrabOptions;
 
-            var result = await GrabAsync(uri,
+            var result = await InternalGrabAsync(uri,
                 cancellationToken,
                 options,
                 progress ?? new Progress<double>()).ConfigureAwait(false);

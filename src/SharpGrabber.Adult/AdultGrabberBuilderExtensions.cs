@@ -1,4 +1,6 @@
-﻿namespace DotNetTools.SharpGrabber.Adult
+﻿using DotNetTools.SharpGrabber.Adult;
+
+namespace DotNetTools.SharpGrabber
 {
     /// <summary>
     /// Provides extension methods for <see cref="IGrabberBuilder"/>.

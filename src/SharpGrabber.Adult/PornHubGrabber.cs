@@ -27,6 +27,8 @@ namespace DotNetTools.SharpGrabber.Adult
         {
         }
 
+        public override string StringId { get; } = "pornhub.com";
+
         /// <inheritdoc />
         public override string Name { get; } = "PornHub";
 

@@ -22,6 +22,8 @@ namespace DotNetTools.SharpGrabber.Adult
         }
 
 
+        public override string StringId { get; } = "xnxx.com";
+
         public override string Name { get; } = "XNXX";
 
         protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,

@@ -26,7 +26,7 @@ namespace DotNetTools.SharpGrabber
 
         public IGrabberBuilder Add<T>() where T : IGrabber
         {
-            var grabber = (IGrabber)Activator.CreateInstance<T>();
+            var grabber = (IGrabber)Activator.CreateInstance(typeof(T), _services);
             return Add(grabber);
         }
 
@@ -36,7 +36,7 @@ namespace DotNetTools.SharpGrabber
             return this;
         }
 
-        public IGrabber Build()
+        public IMultiGrabber Build()
         {
             if (_services == null)
                 throw new InvalidOperationException($"An instance of {nameof(IGrabberServices)} must be set.");

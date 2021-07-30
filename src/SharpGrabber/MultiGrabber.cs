@@ -10,7 +10,7 @@ namespace DotNetTools.SharpGrabber
     /// <summary>
     /// Grabs from various sources using grabbers registered on it.
     /// </summary>
-    internal class MultiGrabber : IGrabber
+    internal class MultiGrabber : IMultiGrabber
     {
         private readonly IList<IGrabber> _grabbers;
 
@@ -20,6 +20,8 @@ namespace DotNetTools.SharpGrabber
             _grabbers = grabbers.ToArray();
             Name = string.Join(", ", grabbers.Select(g => g.Name));
         }
+
+        public string StringId { get; } = null;
 
         public string Name { get; }
 
@@ -55,5 +57,8 @@ namespace DotNetTools.SharpGrabber
 
             throw lastException;
         }
+
+        public IEnumerable<IGrabber> GetRegisteredGrabbers()
+            => _grabbers.AsEnumerable();
     }
 }

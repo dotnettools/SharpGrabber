@@ -15,6 +15,13 @@ namespace DotNetTools.SharpGrabber
     public interface IGrabber
     {
         /// <summary>
+        /// Gets the unique string identifier associated with this grabber.
+        /// If the grabber is not associated with a specific source, or is not unique, NULL
+        /// would be returned.
+        /// </summary>
+        string StringId { get; }
+
+        /// <summary>
         /// Gets the name of the grabber e.g. YouTube.
         /// </summary>
         string Name { get; }
@@ -23,11 +30,6 @@ namespace DotNetTools.SharpGrabber
         /// Gets the default grab options for this grabber.
         /// </summary>
         GrabOptions DefaultGrabOptions { get; }
-
-        /// <summary>
-        /// Gets the reference to the grabber services.
-        /// </summary>
-        IGrabberServices Services { get; }
 
         /// <summary>
         /// Briefly checks if this grabber supports the specified URI.

@@ -11,6 +11,8 @@ namespace DotNetTools.SharpGrabber.Adult
         {
         }
 
+        public override string StringId { get; } = "xvideos.com";
+
         public override string Name { get; } = "xvideos";
 
         public override bool Supports(Uri uri)

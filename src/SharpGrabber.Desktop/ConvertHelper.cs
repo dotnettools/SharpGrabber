@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetTools.SharpGrabber.Converter;
+using DotNetTools.SharpGrabber.Grabbed;
 using SharpGrabber.Desktop.ViewModel;
 
 namespace SharpGrabber.Desktop
 {
     public static class ConvertHelper
     {
-        private static readonly Dictionary<string, HashSet<string>> ContainerMimeSupport = new Dictionary<string, HashSet<string>>(StringComparer.InvariantCultureIgnoreCase) {
-            { "mp4",  new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) { "video/mp4", "audio/mp4" } },
+        private static readonly Dictionary<string, HashSet<string>> ContainerMimeSupport = new(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "mp4", new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) { "video/mp4", "audio/mp4" } },
             { "webm", new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) { "video/webm", "audio/webm" } }
         };
 

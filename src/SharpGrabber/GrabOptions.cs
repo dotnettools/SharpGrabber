@@ -29,6 +29,11 @@ namespace DotNetTools.SharpGrabber
         /// The grabber may grab comments.
         /// </summary>
         GrabComments = 8,
+
+        /// <summary>
+        /// Hungry for grabbing!
+        /// </summary>
+        All = Decipher | GrabImages | Decrypt | GrabComments,
     }
 
     /// <summary>
