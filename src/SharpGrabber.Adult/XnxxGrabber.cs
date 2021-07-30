@@ -1,4 +1,5 @@
-﻿using DotNetTools.SharpGrabber.Exceptions;
+﻿using DotNetTools.SharpGrabber.Adult.Internal;
+using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Grabbed;
 using DotNetTools.SharpGrabber.Hls;
 using HtmlAgilityPack;
@@ -56,10 +57,10 @@ namespace DotNetTools.SharpGrabber.Adult
             if (string.IsNullOrEmpty(hls))
                 throw new GrabParseException("Could not locate the HLS playlist file.");
             var hlsUri = new Uri(hls);
-            var hlsGrabber = new HlsGrabber();
+            var hlsGrabber = new HlsGrabber(Services);
             var hlsGrabResult = await hlsGrabber.GrabAsync(hlsUri, cancellationToken, options).ConfigureAwait(false);
             foreach (var resource in hlsGrabResult.Resources)
-                result.Resources.Add(resource);
+                resources.Add(resource);
 
             return result;
         }

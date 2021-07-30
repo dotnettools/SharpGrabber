@@ -5,7 +5,7 @@ namespace DotNetTools.SharpGrabber.Adult
 {
     public class XVideosGrabber : XnxxGrabber
     {
-        private static readonly Regex HostRegex = new Regex(@"^(https?://)?(www\.)?xvideos.com/video([^/]+)/", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex HostRegex = new(@"^(https?://)?(www\.)?xvideos.com/video([^/]+)/", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public XVideosGrabber(IGrabberServices services) : base(services)
         {

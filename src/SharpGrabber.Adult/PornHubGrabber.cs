@@ -10,6 +10,7 @@ using System.Linq;
 using System.Collections.Generic;
 using DotNetTools.SharpGrabber.Hls;
 using DotNetTools.SharpGrabber.Grabbed;
+using DotNetTools.SharpGrabber.Internal;
 
 namespace DotNetTools.SharpGrabber.Adult
 {
@@ -74,8 +75,9 @@ namespace DotNetTools.SharpGrabber.Adult
                 qualityItemsVariableName);
 
             // generate result
-            var result = new GrabResult(uri);
-            Grab(result, flashVars, qualityItems, options);
+            var resources = new List<IGrabbed>();
+            var result = new GrabResult(uri, resources);
+            Grab(result, resources, flashVars, qualityItems, options);
             return result;
         }
 
@@ -112,21 +114,22 @@ namespace DotNetTools.SharpGrabber.Adult
 
         private static readonly MediaFormat DefaultMediaFormat = new MediaFormat("video/mp4", "mp4");
 
-        protected virtual void Grab(GrabResult result, JObject flashVars, JArray qualityItemVars, GrabOptions options)
+        protected virtual void Grab(GrabResult result, List<IGrabbed> resources, JObject flashVars, JArray qualityItemVars, GrabOptions options)
         {
             var grabbed = new Dictionary<int, GrabbedMedia>();
 
-            if (options.Flags.HasFlag(GrabOptionFlag.GrabImages))
+            if (options.Flags.HasFlag(GrabOptionFlags.GrabImages))
             {
                 var image_url = new Uri(result.OriginalUri, flashVars.SelectToken("$.image_url").Value<string>());
-                result.Resources.Add(new GrabbedImage(GrabbedImageType.Primary, null, image_url));
+                resources.Add(new GrabbedImage(GrabbedImageType.Primary, null, image_url));
             }
 
             result.Title = flashVars.SelectToken("$.video_title").Value<string>();
-            result.Statistics = new GrabStatisticInfo
+
+            resources.Add(new GrabbedInfo
             {
                 Length = TimeSpan.FromSeconds(flashVars.SelectToken("$.video_duration").Value<int>())
-            };
+            });
 
             if (qualityItemVars != null && qualityItemVars.Count > 0)
             {
@@ -174,7 +177,7 @@ namespace DotNetTools.SharpGrabber.Adult
                             Resolution = resol,
                             PlaylistType = playlistType,
                         };
-                        result.Resources.Add(sr);
+                        resources.Add(sr);
                         break;
                     default:
                         continue;
@@ -182,7 +185,7 @@ namespace DotNetTools.SharpGrabber.Adult
             }
 
             foreach (var g in grabbed.OrderByDescending(m => m.Key))
-                result.Resources.Add(g.Value);
+                resources.Add(g.Value);
         }
 
         /// <summary>

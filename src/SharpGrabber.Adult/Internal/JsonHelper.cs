@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace DotNetTools.SharpGrabber.Internal
+namespace DotNetTools.SharpGrabber.Adult.Internal
 {
-    public static class JsonHelper
+    internal static class JsonHelper
     {
         /// <remarks>
         /// Adopted from https://stackoverflow.com/a/51428508/492352 with minor modifications
