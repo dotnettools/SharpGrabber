@@ -78,8 +78,6 @@ namespace SharpGrabber.Desktop
                 .AddXnxx()
                 .AddXVideos()
                 .Build();
-            var result = await _grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=LTseTg48568"));
-            var info = result.Resource<GrabbedInfo>();
 
             InitializeComponent();
             basicInfo.IsVisible = resourceContainer.IsVisible = false;

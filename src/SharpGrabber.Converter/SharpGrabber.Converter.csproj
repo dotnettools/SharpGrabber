@@ -4,6 +4,15 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>8</LangVersion>
         <RootNamespace>DotNetTools.SharpGrabber.Converter</RootNamespace>
+        <Authors>Javid Shoaei</Authors>
+        <Company>github.com/dotnettools</Company>
+        <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
+        <PackageTags>hls,exm3u,m3u8,media,audio,video,download,grab,scrape</PackageTags>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageIconUrl />
+        <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -16,6 +25,17 @@
 
     <ItemGroup>
         <PackageReference Include="FFmpeg.AutoGen" Version="4.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\..\assets\icon.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
+      <None Include="..\..\LICENSE">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
     </ItemGroup>
 
 </Project>
