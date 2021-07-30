@@ -1,6 +1,7 @@
 ﻿using DotNetTools.SharpGrabber.Exceptions;
+using DotNetTools.SharpGrabber.Grabbed;
 using DotNetTools.SharpGrabber.Hls;
-using DotNetTools.SharpGrabber.Media;
+using DotNetTools.SharpGrabber.Hls.Internal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,14 +11,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
+namespace DotNetTools.SharpGrabber.Hls
 {
-    public class HlsGrabber : BaseGrabber
+    public class HlsGrabber : GrabberBase
     {
         private const string MpegUrlContentType = "application/x-mpegurl";
         private const string M3u8Extension = ".m3u8";
         private static readonly MediaFormat PlaylistFormat = new MediaFormat("application/x-mpegURL", "m3u8");
         private static readonly MediaFormat OutputFormat = new MediaFormat("video/MP2T", "ts");
+
+        public HlsGrabber(IGrabberServices services) : base(services)
+        {
+        }
 
         public override string Name { get; } = "M3U8";
 
@@ -26,9 +31,10 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
             return uri.AbsolutePath.EndsWith(M3u8Extension, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        public override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options)
+        protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
+            IProgress<double> progress)
         {
-            var client = HttpHelper.GetClient(uri);
+            var client = Services.GetClient();
             using var response = await client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
@@ -57,8 +63,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
                 grabs = null;
 
             // make result
-            var result = new GrabResult(uri, grabs);
-            if (options.Flags.HasFlag(GrabOptionsFlags.Decrypt) && doc.Key != null)
+            var result = new GrabResult(uri, new ListWrapper<IGrabbed>(grabs));
+            if (options.Flags.HasFlag(GrabOptionFlags.Decrypt) && doc.Key != null)
                 UpdateDecryptionMethod(result, doc.Key);
             return Task.FromResult(result);
         }
@@ -68,7 +74,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
             switch (key.Method)
             {
                 case HlsKeyMethod.Aes128:
-                    var decryptor = new HlsAes128Decryptor(key);
+                    var decryptor = new HlsAes128Decryptor(key, Services);
                     result.OutputStreamWrapper = decryptor.WrapStreamAsync;
                     break;
 
@@ -86,8 +92,9 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
             foreach (var stream in doc.Streams)
             {
                 var uri = new Uri(originalUri, stream.Uri);
+                var resolvableStream = new ResolvableStream(uri, stream, Services);
                 var g = new GrabbedStreamMetadata(originalUri, uri, stream.Name,
-                    stream.Resolution, stream.Bandwidth, PlaylistFormat, OutputFormat, new ResolvableStream(uri, stream));
+                    stream.Resolution, stream.Bandwidth, PlaylistFormat, OutputFormat, new Lazy<Task<GrabbedStream>>(resolvableStream.Resolve));
                 list.Add(g);
             }
             return list.OrderByDescending(s => s.Resolution.Height).ToList<IGrabbed>();
@@ -107,21 +114,24 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
             }
 
             var g = new GrabbedStream(originalUri, originalUri, totalDuration, segments);
+            var resolvableStream = new ResolvableStream(g);
             list.Add(new GrabbedStreamMetadata(originalUri, originalUri, "Media", null, 0, PlaylistFormat, OutputFormat,
-                new ResolvableStream(g)));
+                new Lazy<Task<GrabbedStream>>(resolvableStream.Resolve)));
             return list;
         }
 
-        private class ResolvableStream : BaseResolvable<GrabbedStream>
+        private class ResolvableStream
         {
             private readonly Uri _uri;
             private readonly HlsStreamInfo _stream;
             private readonly GrabbedStream _resolved;
+            private readonly IGrabberServices _services;
 
-            public ResolvableStream(Uri uri, HlsStreamInfo stream)
+            public ResolvableStream(Uri uri, HlsStreamInfo stream, IGrabberServices services)
             {
                 _uri = uri;
                 _stream = stream;
+                _services = services;
             }
 
             public ResolvableStream(GrabbedStream resolved)
@@ -129,14 +139,14 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
                 _resolved = resolved;
             }
 
-            protected override async Task<GrabbedStream> InternalResolve()
+            public async Task<GrabbedStream> Resolve()
             {
                 if (_resolved != null)
                     return _resolved;
 
-                var grabber = new HlsGrabber();
+                var grabber = new HlsGrabber(_services);
                 var result = await grabber.GrabAsync(_uri).ConfigureAwait(false);
-                return await result.Resources.OfType<GrabbedStreamMetadata>().Single().Stream.ResolveAsync();
+                return await result.Resources.OfType<GrabbedStreamMetadata>().Single().Stream.Value.ConfigureAwait(false);
             }
         }
     }

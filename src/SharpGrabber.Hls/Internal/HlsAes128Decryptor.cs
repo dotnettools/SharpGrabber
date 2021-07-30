@@ -1,5 +1,4 @@
-﻿using DotNetTools.SharpGrabber.Hls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -7,15 +6,17 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
+namespace DotNetTools.SharpGrabber.Hls.Internal
 {
     internal class HlsAes128Decryptor
     {
+        private readonly IGrabberServices _services;
         private readonly HlsKey _key;
         private TaskCompletionSource<byte[]> _getKeyBytes;
 
-        public HlsAes128Decryptor(HlsKey key)
+        public HlsAes128Decryptor(HlsKey key, IGrabberServices services)
         {
+            _services = services;
             _key = key;
         }
 
@@ -48,7 +49,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers.Hls
 
         private async Task<byte[]> DownloadKeyBytes()
         {
-            var client = HttpHelper.GetClient();
+            var client = _services.GetClient();
             var bytes = await client.GetByteArrayAsync(_key.Uri).ConfigureAwait(false);
             _getKeyBytes.SetResult(bytes);
             return bytes;

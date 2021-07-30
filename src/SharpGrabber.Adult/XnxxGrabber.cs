@@ -1,7 +1,7 @@
 ﻿using DotNetTools.SharpGrabber;
 using DotNetTools.SharpGrabber.Exceptions;
-using DotNetTools.SharpGrabber.Internal.Grabbers.Hls;
-using DotNetTools.SharpGrabber.Media;
+using DotNetTools.SharpGrabber.Grabbed;
+using DotNetTools.SharpGrabber.Hls;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 using System;
@@ -16,35 +16,43 @@ namespace DotNetTools.SharpGrabber.Adult
     public class XnxxGrabber : GrabberBase
     {
         private static readonly Regex HostRegex = new Regex(@"^(https?://)?(www\.)?xnxx.com/video-([^/]+)/", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex VideoVarNameRegex = new Regex(@"var\s+(\w+)\s+=\s+new\s+HTML5Player", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        private static readonly string VideoParamRegexString = @"{0}\.(set)?(\w+)\(([^\(\)]+)\)";
+
+        public XnxxGrabber(IGrabberServices services) : base(services)
+        {
+        }
+
 
         public override string Name { get; } = "XNXX";
 
-        protected override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
+        protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
             IProgress<double> progress)
         {
             if (!Supports(uri))
                 return null;
 
-            var client = HttpHelper.GetClient(uri);
+            var client = Services.GetClient();
             var content = await client.GetStringAsync(uri).ConfigureAwait(false);
 
-            var result = new GrabResult(uri);
+            var resources = new List<IGrabbed>();
+            var result = new GrabResult(uri, resources);
             var paramMap = ParsePage(content, result);
 
             // grab info
             result.Title = paramMap.GetOrDefault("title")?.ToString();
-            result.Statistics = new GrabStatisticInfo
+            resources.Add(new GrabbedInfo
             {
                 Length = TimeSpan.FromSeconds(Convert.ToDouble(paramMap.GetOrDefault("duration"))),
-            };
+            });
 
             // grab images
             var img = (paramMap.GetOrDefault("image") ?? paramMap.GetOrDefault("ThumbUrl169") ?? paramMap.GetOrDefault("ThumbUrl")) as string;
             if (Uri.TryCreate(img, UriKind.Absolute, out var imgUri))
-                result.Resources.Add(new GrabbedImage(GrabbedImageType.Thumbnail, uri, imgUri));
+                resources.Add(new GrabbedImage(GrabbedImageType.Thumbnail, uri, imgUri));
             img = (paramMap.GetOrDefault("ThumbSlideBig") ?? paramMap.GetOrDefault("ThumbSlide")) as string;
             if (Uri.TryCreate(img, UriKind.Absolute, out imgUri))
-                result.Resources.Add(new GrabbedImage(GrabbedImageType.Preview, uri, imgUri));
+                resources.Add(new GrabbedImage(GrabbedImageType.Preview, uri, imgUri));
 
             // grab resources
             var hls = paramMap["VideoHLS"] as string;
@@ -71,9 +79,6 @@ namespace DotNetTools.SharpGrabber.Adult
                 return match.Groups[3].Value;
             return null;
         }
-
-        private static readonly Regex VideoVarNameRegex = new Regex(@"var\s+(\w+)\s+=\s+new\s+HTML5Player", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-        private static readonly string VideoParamRegexString = @"{0}\.(set)?(\w+)\(([^\(\)]+)\)";
 
         private IDictionary<string, object> ParsePage(string content, GrabResult result)
         {

@@ -52,8 +52,4 @@
         </None>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Internal\Grabbers\Adult\" />
-    </ItemGroup>
-
 </Project>

@@ -12,12 +12,6 @@ namespace DotNetTools.SharpGrabber
     {
         private StreamWrappingDelegate _streamWrappingDelegate = stream => Task.FromResult(stream);
 
-        public GrabResult(Uri originalUri)
-        {
-            Resources = new List<IGrabbed>();
-            OriginalUri = originalUri;
-        }
-
         public GrabResult(Uri originalUri, IReadOnlyList<IGrabbed> grabbedList)
         {
             Resources = grabbedList;

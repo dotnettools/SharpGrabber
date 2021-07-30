@@ -7,7 +7,6 @@ using Jint;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using DotNetTools.SharpGrabber.Exceptions;
-using DotNetTools.SharpGrabber.Media;
 using System.Linq;
 using System.Collections.Generic;
 using DotNetTools.SharpGrabber.Hls;
@@ -24,6 +23,10 @@ namespace DotNetTools.SharpGrabber.Adult
         private static readonly Regex FlashVarsFinder = new Regex(@"((var|let)\s+(flashvars[\w_]+)(.|[\r\n])+)", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex QualityItemsVarFinder = new Regex(@"((var|let)\s+(qualityItems[\w_]+)(.|[\r\n])+)", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+        public PornHubGrabber(IGrabberServices services) : base(services)
+        {
+        }
+
         /// <inheritdoc />
         public override string Name { get; } = "PornHub";
 
@@ -36,7 +39,7 @@ namespace DotNetTools.SharpGrabber.Adult
         public override bool Supports(Uri uri) => GetViewId(uri) != null;
 
         /// <inheritdoc />
-        protected override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
+        protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
             IProgress<double> progress)
         {
             // grab view id
@@ -45,7 +48,7 @@ namespace DotNetTools.SharpGrabber.Adult
                 return null;
             uri = MakeStandardUri(viewId);
 
-            var client = HttpHelper.GetClient();
+            var client = Services.GetClient();
             // download content
             var response = await client.GetAsync(uri, cancellationToken);
             response.EnsureSuccessStatusCode();
