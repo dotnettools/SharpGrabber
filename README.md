@@ -88,6 +88,10 @@ Requirements of the cross-platform desktop application to run and operate correc
  
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
+## Upgrade From 1.x to 2.x
+ATTENTION! There are breaking changes since v2.0 that requires you to update your code.
+The good news is no functionality has been removed, so with a minor refactoring, you should be good to go!
+
 ## Contribution
 You are most welcome to contribute!
 - Support for more media providers such as *DailyMotion*, *Instagram*, *Facebook*, *Twitch* etc.
