@@ -46,7 +46,7 @@ This package also supports `AES-128` decryption.
     Install-Package SharpGrabber.Adult -Version 1.0
 
 ## Quick Start
-### 1. Start with Building a Grabber
+### 1. Start with building a Grabber
 
     var grabber = GrabberBuilder.New()
         .UseDefaultServices()
