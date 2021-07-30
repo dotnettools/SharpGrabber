@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
@@ -19,7 +19,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
+        <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\assets\icon.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
     </ItemGroup>
 
 </Project>
