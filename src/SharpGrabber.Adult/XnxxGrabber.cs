@@ -1,12 +1,9 @@
-﻿using DotNetTools.SharpGrabber;
-using DotNetTools.SharpGrabber.Exceptions;
+﻿using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Grabbed;
 using DotNetTools.SharpGrabber.Hls;
 using HtmlAgilityPack;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;

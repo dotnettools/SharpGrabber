@@ -1,4 +1,3 @@
-using DotNetTools.SharpGrabber.Media;
 using System;
 using Xunit;
 

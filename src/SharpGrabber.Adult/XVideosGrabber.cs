@@ -1,20 +1,15 @@
-﻿using DotNetTools.SharpGrabber.Exceptions;
-using DotNetTools.SharpGrabber.Internal.Grabbers.Hls;
-using DotNetTools.SharpGrabber.Media;
-using HtmlAgilityPack;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.Adult
 {
     public class XVideosGrabber : XnxxGrabber
     {
         private static readonly Regex HostRegex = new Regex(@"^(https?://)?(www\.)?xvideos.com/video([^/]+)/", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public XVideosGrabber(IGrabberServices services) : base(services)
+        {
+        }
 
         public override string Name { get; } = "xvideos";
 

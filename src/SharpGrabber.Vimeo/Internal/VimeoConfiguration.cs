@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DotNetTools.SharpGrabber.Vimeo.Internal
+﻿namespace DotNetTools.SharpGrabber.Vimeo.Internal
 {
     public class VimeoConfiguration
     {

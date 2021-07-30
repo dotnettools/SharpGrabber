@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -10,7 +8,6 @@ using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Grabbed;
 using DotNetTools.SharpGrabber.YouTube.YouTube;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DotNetTools.SharpGrabber.YouTube

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DotNetTools.SharpGrabber.Vimeo
+﻿namespace DotNetTools.SharpGrabber.Vimeo
 {
     /// <summary>
     /// Provides extension methods for <see cref="IGrabberBuilder"/>.

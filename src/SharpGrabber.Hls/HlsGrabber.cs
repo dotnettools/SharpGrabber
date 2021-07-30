@@ -1,13 +1,9 @@
 ﻿using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Grabbed;
-using DotNetTools.SharpGrabber.Hls;
 using DotNetTools.SharpGrabber.Hls.Internal;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.Converter;
-using DotNetTools.SharpGrabber.Media;
 using SharpGrabber.Desktop.ViewModel;
 
 namespace SharpGrabber.Desktop

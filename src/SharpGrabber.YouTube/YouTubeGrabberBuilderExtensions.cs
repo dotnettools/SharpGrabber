@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DotNetTools.SharpGrabber.YouTube
+﻿namespace DotNetTools.SharpGrabber.YouTube
 {
     /// <summary>
     /// Provides extension methods for <see cref="IGrabberBuilder"/>.

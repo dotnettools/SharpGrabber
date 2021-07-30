@@ -5,8 +5,6 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using DotNetTools.SharpGrabber;
-using DotNetTools.SharpGrabber.Converter;
-using DotNetTools.SharpGrabber.Media;
 using FFmpeg.AutoGen;
 using SharpGrabber.Desktop.Components;
 using SharpGrabber.Desktop.ViewModel;
