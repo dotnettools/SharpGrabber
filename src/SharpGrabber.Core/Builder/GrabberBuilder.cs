@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DotNetTools.SharpGrabber
 {
     public class GrabberBuilder : IGrabberBuilder
     {
         private readonly HashSet<IGrabber> _grabbers = new();
+        private IGrabberServices _services;
 
         private GrabberBuilder()
         {
@@ -30,7 +30,18 @@ namespace DotNetTools.SharpGrabber
             return Add(grabber);
         }
 
+        public IGrabberBuilder UseServices(IGrabberServices services)
+        {
+            _services = services;
+            return this;
+        }
+
         public IGrabber Build()
-            => new MultiGrabber(_grabbers);
+        {
+            if (_services == null)
+                throw new InvalidOperationException($"An instance of {nameof(IGrabberServices)} must be set.");
+
+            return new MultiGrabber(_grabbers, _services);
+        }
     }
 }

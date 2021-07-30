@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DotNetTools.SharpGrabber.Internal
+namespace DotNetTools.SharpGrabber
 {
-    internal class MimeInfo : IComparable
+    public class MimeInfo : IComparable
     {
         public string Name, Mime;
 

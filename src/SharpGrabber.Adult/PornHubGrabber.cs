@@ -36,7 +36,7 @@ namespace DotNetTools.SharpGrabber.Adult
         public override bool Supports(Uri uri) => GetViewId(uri) != null;
 
         /// <inheritdoc />
-        protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
+        protected override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
             IProgress<double> progress)
         {
             // grab view id

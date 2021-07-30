@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.Exceptions;
@@ -16,8 +14,9 @@ namespace DotNetTools.SharpGrabber
     {
         private readonly IList<IGrabber> _grabbers;
 
-        public MultiGrabber(IEnumerable<IGrabber> grabbers)
+        public MultiGrabber(IEnumerable<IGrabber> grabbers, IGrabberServices services)
         {
+            Services = services;
             _grabbers = grabbers.ToArray();
             Name = string.Join(", ", grabbers.Select(g => g.Name));
         }
@@ -25,6 +24,8 @@ namespace DotNetTools.SharpGrabber
         public string Name { get; }
 
         public GrabOptions DefaultGrabOptions => null;
+
+        public IGrabberServices Services { get; }
 
         public bool Supports(Uri uri)
             => _grabbers.Any(g => g.Supports(uri));

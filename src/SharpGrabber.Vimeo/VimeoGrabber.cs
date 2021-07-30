@@ -1,6 +1,6 @@
 ﻿using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Grabbed;
-using DotNetTools.SharpGrabber.Media;
+using DotNetTools.SharpGrabber.Vimeo.Internal;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,11 +16,15 @@ namespace DotNetTools.SharpGrabber.Vimeo
     /// <summary>
     /// Default <see cref="IGrabber"/> for Vimeo
     /// </summary>
-    public class VimeoGrabber : GrabberBase
+    public partial class VimeoGrabber : GrabberBase
     {
         private readonly Regex _idPattern =
             new Regex(@"^https?://(www\.|player\.)?vimeo\.com/(video/)?([0-9]+)",
                 RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+        public VimeoGrabber(IGrabberServices services) : base(services)
+        {
+        }
 
         public override string Name { get; } = "Vimeo";
 
@@ -38,7 +42,7 @@ namespace DotNetTools.SharpGrabber.Vimeo
             var configUri = new Uri($"https://player.vimeo.com/video/{id}/config");
 
             // download target page
-            var client = HttpHelper.GetClient(configUri);
+            var client = Services.GetClient();
             var response = await client.GetAsync(configUri, cancellationToken);
 
             // check response
@@ -78,10 +82,10 @@ namespace DotNetTools.SharpGrabber.Vimeo
         /// <summary>
         /// This utility method get's the corresponding configuration for this video.
         /// </summary>
-        private static async Task<Configuration> GetConfigurationAsync(HttpContent content)
+        private static async Task<VimeoConfiguration> GetConfigurationAsync(HttpContent content)
         {
             var result = await content.ReadAsStringAsync();
-            var configuration = JsonConvert.DeserializeObject<Configuration>(result);
+            var configuration = JsonConvert.DeserializeObject<VimeoConfiguration>(result);
 
             return configuration;
         }
@@ -89,7 +93,7 @@ namespace DotNetTools.SharpGrabber.Vimeo
         /// <summary>
         /// Given the specified <paramref name="configuration"/>, generates proper <see cref="GrabResult"/>.
         /// </summary>
-        protected virtual GrabResult GrabUsingConfiguration(Configuration configuration, Uri originalUri)
+        protected virtual GrabResult GrabUsingConfiguration(VimeoConfiguration configuration, Uri originalUri)
         {
             var grabList = new List<IGrabbed>();
 
@@ -111,7 +115,7 @@ namespace DotNetTools.SharpGrabber.Vimeo
 
             foreach (var progressive in configuration.Request.Files.Progressive)
             {
-                var format = new MediaFormat(progressive.Mime, MimeHelper.ExtractMimeExtension(progressive.Mime));
+                var format = new MediaFormat(progressive.Mime, Services.Mime.ExtractMimeExtension(progressive.Mime));
                 var vid = new GrabbedMedia(new Uri(progressive.Url), null, format, MediaChannels.Both)
                 {
                     Resolution = progressive.Quality
@@ -124,37 +128,6 @@ namespace DotNetTools.SharpGrabber.Vimeo
                 Title = configuration.Video?.Title
             };
             return result;
-        }
-        #endregion
-
-        #region Private Classes
-        public class Configuration
-        {
-            public Request Request { get; set; }
-            public VideoInfo Video { get; set; }
-        }
-
-        public class Request
-        {
-            public File Files { get; set; }
-        }
-
-        public class File
-        {
-            public IEnumerable<Progressive> Progressive { get; set; }
-        }
-
-        public class VideoInfo
-        {
-            public string Title { get; set; }
-            public Dictionary<string, string> Thumbs { get; set; }
-        }
-
-        public class Progressive
-        {
-            public string Mime { get; set; }
-            public string Url { get; set; }
-            public string Quality { get; set; }
         }
         #endregion
     }

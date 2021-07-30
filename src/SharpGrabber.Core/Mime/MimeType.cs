@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNetTools.SharpGrabber.Internal
+namespace DotNetTools.SharpGrabber
 {
-    internal static class MimeType
+    public static class MimeType
     {
         // Mime list - ordered by Mime
         #region Mime List

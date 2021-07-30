@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,6 +23,11 @@ namespace DotNetTools.SharpGrabber
         /// Gets the default grab options for this grabber.
         /// </summary>
         GrabOptions DefaultGrabOptions { get; }
+
+        /// <summary>
+        /// Gets the reference to the grabber services.
+        /// </summary>
+        IGrabberServices Services { get; }
 
         /// <summary>
         /// Briefly checks if this grabber supports the specified URI.

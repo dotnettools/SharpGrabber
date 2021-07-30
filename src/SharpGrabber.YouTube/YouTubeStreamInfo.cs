@@ -65,6 +65,6 @@
         /// <summary>
         /// Video frame size (video only)
         /// </summary>
-        public Size FrameSize { get; set; }
+        public RectSize FrameSize { get; set; }
     }
 }

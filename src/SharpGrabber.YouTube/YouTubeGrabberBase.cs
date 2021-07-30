@@ -39,6 +39,12 @@ namespace DotNetTools.SharpGrabber.YouTube.YouTube
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
         #endregion
 
+        #region Constructors
+        protected YouTubeGrabberBase(IGrabberServices services) : base(services)
+        {
+        }
+        #endregion
+
         #region Properties
         /// <inheritdoc />
         public override string Name { get; } = "YouTube";
@@ -151,9 +157,10 @@ namespace DotNetTools.SharpGrabber.YouTube.YouTube
         protected virtual Uri GetYouTubeEmbedUri(string videoId) => new Uri($"https://youtube.com/embed/{videoId}");
 
         /// <summary>
-        /// This method gets called internally by <see cref="InternalGrabAsync"/> after necessary initializations.
+        /// This method gets called internally by <see cref="GrabAsync"/> after necessary initializations.
         /// </summary>
-        protected abstract Task GrabAsync(GrabResult result, string id, CancellationToken cancellationToken, GrabOptions options,
+        protected abstract Task GrabAsync(GrabResult result, IList<IGrabbed> resources,
+            string id, CancellationToken cancellationToken, GrabOptions options,
             IProgress<double> progress);
         #endregion
 
@@ -174,10 +181,11 @@ namespace DotNetTools.SharpGrabber.YouTube.YouTube
             var originalUri = GetYouTubeStandardUri(id);
 
             // prepare result
-            var result = new GrabResult(originalUri);
+            var resources = new List<IGrabbed>();
+            var result = new GrabResult(originalUri, resources);
 
             // grab using the internal grab method
-            await GrabAsync(result, id, cancellationToken, options, progress).ConfigureAwait(false);
+            await GrabAsync(result, resources, id, cancellationToken, options, progress).ConfigureAwait(false);
 
             return result;
         }

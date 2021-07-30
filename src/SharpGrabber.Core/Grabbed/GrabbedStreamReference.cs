@@ -1,7 +1,5 @@
 ﻿using DotNetTools.SharpGrabber.Hls;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DotNetTools.SharpGrabber.Grabbed
 {

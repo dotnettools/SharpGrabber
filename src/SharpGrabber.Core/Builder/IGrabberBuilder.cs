@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DotNetTools.SharpGrabber
 {
@@ -9,6 +7,11 @@ namespace DotNetTools.SharpGrabber
     /// </summary>
     public interface IGrabberBuilder
     {
+        /// <summary>
+        /// Makes the grabber use the specified <paramref name="services"/>.
+        /// </summary>
+        IGrabberBuilder UseServices(IGrabberServices services);
+
         /// <summary>
         /// Includes a grabber.
         /// </summary>
@@ -22,6 +25,7 @@ namespace DotNetTools.SharpGrabber
         /// <summary>
         /// Builds the final grabber.
         /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when the configuration of the builder is invalid.</exception>
         IGrabber Build();
     }
 }

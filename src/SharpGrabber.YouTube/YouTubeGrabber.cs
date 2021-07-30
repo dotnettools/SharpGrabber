@@ -8,8 +8,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.Exceptions;
+using DotNetTools.SharpGrabber.Grabbed;
 using DotNetTools.SharpGrabber.YouTube.YouTube;
-using DotNetTools.SharpGrabber.Media;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -24,6 +24,12 @@ namespace DotNetTools.SharpGrabber.YouTube
         private static readonly Regex BaseJsLocatorRegex = new Regex(@"<script[^<>]+src=""([^""]+base\.js)""", RegexOptions.Compiled | RegexOptions.Multiline);
         private static readonly Regex InnerTubeApiKeyRegex = new Regex(@"INNERTUBE_API_KEY""\s*:\s*""([^""]+)""", RegexOptions.Compiled | RegexOptions.Multiline);
         private static readonly Regex DecipherFunctionRegex = new Regex(@"\s(\w+)=function\S+split\([^\n\r]+join\(\S+", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        #endregion
+
+        #region Constructors
+        public YouTubeGrabber(IGrabberServices services) : base(services)
+        {
+        }
         #endregion
 
         #region Internal Methods => Metadata
@@ -202,7 +208,7 @@ namespace DotNetTools.SharpGrabber.YouTube
                         var match = sizeRegex.Match(value);
                         if (!match.Success)
                             throw new GrabParseException($"Failed to parse stream size: {value}.");
-                        draft.FrameSize = new Size(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                        draft.FrameSize = new RectSize(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
                         break;
 
                     case "url":
@@ -264,7 +270,7 @@ namespace DotNetTools.SharpGrabber.YouTube
                 QualityLabel = input.Value<string>("qualityLabel"),
                 Url = input.Value<string>("url"),
                 FrameSize = input.ContainsKey("width") && input.ContainsKey("height")
-                    ? new Size(input.Value<int>("width"), input.Value<int>("height"))
+                    ? new RectSize(input.Value<int>("width"), input.Value<int>("height"))
                     : null
             };
             result.Mime = ExtractActualMime(result.Type);
@@ -296,7 +302,7 @@ namespace DotNetTools.SharpGrabber.YouTube
                 QualityLabel = input.Value<string>("qualityLabel"),
                 Url = input.Value<string>("url"),
                 FrameSize = input.ContainsKey("width") && input.ContainsKey("height")
-                    ? new Size(input.Value<int>("width"), input.Value<int>("height"))
+                    ? new RectSize(input.Value<int>("width"), input.Value<int>("height"))
                     : null
             };
             result.Mime = ExtractActualMime(result.Type);
@@ -379,10 +385,9 @@ namespace DotNetTools.SharpGrabber.YouTube
             CancellationToken cancellationToken)
         {
             IDictionary<string, string> rawMetadata;
-            Status.Update(null, "Downloading metadata...", WorkStatusType.DownloadingFile);
 
             // make http client
-            var client = HttpHelper.GetClient();
+            var client = Services.GetClient();
 
             // send http request
             using var response = await GetYouTubeVideoInfoResponse(client, id, embedPageData.Key, cancellationToken);
@@ -441,7 +446,7 @@ namespace DotNetTools.SharpGrabber.YouTube
         protected virtual async Task Decipher(YouTubeEmbedPageData embedPageData, YouTubeMetadata metaData, CancellationToken cancellationToken)
         {
             // download base.js
-            var client = HttpHelper.GetClient();
+            var client = Services.GetClient();
             using var response = await client.GetAsync(embedPageData.BaseJsUri, cancellationToken);
             var scriptContent = await response.Content.ReadAsStringAsync();
             var script = new YouTubeScript(scriptContent);
@@ -482,7 +487,7 @@ namespace DotNetTools.SharpGrabber.YouTube
             var embedUri = GetYouTubeEmbedUri(id);
 
             // download embed page
-            var client = HttpHelper.GetClient();
+            var client = Services.GetClient();
             var embedPageContent = await client.GetStringAsync(embedUri);
 
             // find base.js
@@ -502,7 +507,7 @@ namespace DotNetTools.SharpGrabber.YouTube
         /// <summary>
         /// Generates all possible image URLs of the specified YouTube video.
         /// </summary>
-        protected virtual void AppendImagesToResult(GrabResult result, string id, bool useHttps = true)
+        protected virtual void AppendImagesToResult(IList<IGrabbed> resources, string id, bool useHttps = true)
         {
             // We're gonna iterate through all possible image types and add links to every image
             // into result resources. Notice that since these URIs are not checked by sending HTTP
@@ -514,7 +519,7 @@ namespace DotNetTools.SharpGrabber.YouTube
             {
                 var uri = GetYouTubeImageUri(id, imageType, useHttps);
                 var img = new GrabbedImage(GrabbedImageType.Primary, null, uri);
-                result.Resources.Add(img);
+                resources.Add(img);
             }
         }
 
@@ -540,9 +545,9 @@ namespace DotNetTools.SharpGrabber.YouTube
         }
 
         /// <summary>
-        /// Appends the specified <paramref name="stream"/> to the specified <paramref name="result"/>.
+        /// Appends the specified <paramref name="stream"/> to the specified <paramref name="resources"/>.
         /// </summary>
-        protected virtual void AppendStreamToResult(GrabResult result, YouTubeStreamInfo stream)
+        protected virtual void AppendStreamToResult(IList<IGrabbed> resources, YouTubeStreamInfo stream)
         {
             MediaChannels channels;
 
@@ -569,7 +574,7 @@ namespace DotNetTools.SharpGrabber.YouTube
 
             var format = new MediaFormat(stream.Mime, extension);
             var grabbed = new GrabbedMedia(new Uri(stream.Url), null, format, channels);
-            result.Resources.Add(grabbed);
+            resources.Add(grabbed);
 
             // update grabbed media iTag info
             if (itagInfo != null)
@@ -579,26 +584,26 @@ namespace DotNetTools.SharpGrabber.YouTube
         /// <summary>
         /// Updates <see cref="GrabResult"/> according to the information obtained from metadata.
         /// </summary>
-        private void UpdateResult(GrabResult result, YouTubeMetadata md)
+        private void UpdateResultWithMetadata(GrabResult result, IList<IGrabbed> resources, YouTubeMetadata md)
         {
             var response = md.PlayerResponse;
             result.Title = response.Title;
             result.CreationDate = response.UploadedAt;
             result.Description = response.ShortDescription;
 
-            result.Statistics = new GrabStatisticInfo
+            resources.Add(new GrabbedInfo
             {
                 Author = response.Author,
                 Length = response.Length,
                 ViewCount = response.ViewCount
-            };
+            });
         }
         #endregion
 
         #region Grab Method
         /// <inheritdoc />
-        protected override async Task GrabAsync(GrabResult result, string id, CancellationToken cancellationToken, GrabOptions options,
-            IProgress<double> progress)
+        protected override async Task GrabAsync(GrabResult result, IList<IGrabbed> resources, string id,
+            CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
         {
             // extract base.js script
             var embedPageData = await DownloadEmbedPage(id);
@@ -607,7 +612,7 @@ namespace DotNetTools.SharpGrabber.YouTube
             var metaData = await DownloadMetadata(id, embedPageData, cancellationToken);
 
             // update result according to the metadata
-            UpdateResult(result, metaData);
+            UpdateResultWithMetadata(result, resources, metaData);
 
             // are there any encrypted streams?
             result.IsSecure = metaData.AllStreams.Any(stream => !string.IsNullOrEmpty(stream.Signature));
@@ -618,15 +623,15 @@ namespace DotNetTools.SharpGrabber.YouTube
 
             // append images to the result
             if (options.Flags.HasFlag(GrabOptionFlags.GrabImages))
-                AppendImagesToResult(result, id);
+                AppendImagesToResult(resources, id);
 
             // append muxed streams to result
             foreach (var stream in metaData.MuxedStreams)
-                AppendStreamToResult(result, stream);
+                AppendStreamToResult(resources, stream);
 
             // append adaptive streams to result
             foreach (var stream in metaData.AdaptiveStreams)
-                AppendStreamToResult(result, stream);
+                AppendStreamToResult(resources, stream);
         }
         #endregion
     }
