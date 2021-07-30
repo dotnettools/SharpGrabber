@@ -6,13 +6,15 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetTools.SharpGrabber.Exceptions;
+using DotNetTools.SharpGrabber.Grabbed;
 
-namespace DotNetTools.SharpGrabber.Internal.Grabbers
+namespace DotNetTools.SharpGrabber.Instagram
 {
     /// <summary>
     /// Represents an Instagram <see cref="IGrabber"/>.
     /// </summary>
-    public class InstagramGrabber : BaseGrabber
+    public class InstagramGrabber : GrabberBase
     {
         #region Fields
 
@@ -21,7 +23,12 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
                 RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         private readonly Regex _graphqlScriptRegex = new Regex(@"<script[^<>]+>([^<>]+)graphql([^<>]+)</script>");
+        #endregion
 
+        #region Constructors
+        public InstagramGrabber(IGrabberServices services) : base(services)
+        {
+        }
         #endregion
 
         #region Properties
@@ -30,7 +37,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         public override string Name { get; } = "Instagram";
 
         /// <summary>
-        /// Represents the template of standard Instagram links. This value will be formatted using <see cref="String.Format(string, object[])"/>
+        /// Represents the template of standard Instagram links. This value will be formatted using <see cref="string.Format(string, object[])"/>
         /// passing an Instagram post identifier containing alpha-numeric characters.
         /// </summary>
         public virtual string StandardUrlTemplate { get; set; } = "https://www.instagram.com/p/{0}/";
@@ -117,7 +124,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             // grab video
             if (!string.IsNullOrEmpty(video))
             {
-                var format = new MediaFormat(video_type, MimeHelper.ExtractMimeExtension(video_type));
+                var format = new MediaFormat(video_type, Services.Mime.ExtractMimeExtension(video_type));
                 var vid = new GrabbedMedia(new Uri(video), null, format, MediaChannels.Both);
                 grabList.Add(vid);
             }
@@ -139,8 +146,8 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
         public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GrabId(uri));
 
         /// <inheritdoc />
-        public override async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken,
-            GrabOptions options)
+        protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken,
+            GrabOptions options, IProgress<double> progress)
         {
             // init
             var id = GrabId(uri);
@@ -151,8 +158,7 @@ namespace DotNetTools.SharpGrabber.Internal.Grabbers
             uri = MakeStandardInstagramUri(id);
 
             // download target page
-            Status.Update(null, WorkStatusType.DownloadingPage);
-            var client = HttpHelper.GetClient(uri);
+            var client = Services.GetClient();
             var response = await client.GetAsync(uri, cancellationToken);
 
             // check response

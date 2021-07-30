@@ -66,7 +66,6 @@
         <ProjectReference Include="..\SharpGrabber.Converter\SharpGrabber.Converter.csproj" />
         <ProjectReference Include="..\SharpGrabber.Vimeo\SharpGrabber.Vimeo.csproj" />
         <ProjectReference Include="..\SharpGrabber.YouTube\SharpGrabber.YouTube.csproj" />
-        <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Components\StreamReferenceView.xaml.cs">

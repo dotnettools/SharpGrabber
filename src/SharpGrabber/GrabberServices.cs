@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using DotNetTools.SharpGrabber.Internal;
 
 namespace DotNetTools.SharpGrabber
 {
@@ -26,7 +27,10 @@ namespace DotNetTools.SharpGrabber
                 lock (typeof(GrabberBase))
                 {
                     if (_globalHttpClient == null)
-                        _globalHttpClient = new HttpClient();
+                    {
+                        var defaultProvider = new DefaultGlobalHttpProvider();
+                        _globalHttpClient = defaultProvider.GetClient();
+                    }
                 }
             return _globalHttpClient;
         }

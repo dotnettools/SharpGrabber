@@ -1,3 +1,4 @@
+using DotNetTools.SharpGrabber.Instagram;
 using DotNetTools.SharpGrabber.YouTube;
 using System;
 using Xunit;

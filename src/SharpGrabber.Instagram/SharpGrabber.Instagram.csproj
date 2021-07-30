@@ -1,12 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <RootNamespace>DotNetTools.SharpGrabber</RootNamespace>
+        <RootNamespace>DotNetTools.SharpGrabber.Instagram</RootNamespace>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Authors>Javid Shoaei</Authors>
         <Company>github.com/dotnettools</Company>
-        <Description>Core library for grabbing information and media from supported sources</Description>
+        <Description>Adds support for grabbing video from Instagram.</Description>
         <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
@@ -14,10 +14,12 @@
         <PackageIconUrl />
         <LangVersion>9</LangVersion>
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
-        <PackageTags>media,audio,video,download,grab,scrape,spider</PackageTags>
+        <PackageTags>instagram,video,download,grab,scrape</PackageTags>
         <NoWarn>1701;1702;1591</NoWarn>
-        <Version>2.0.0</Version>
-        <PackageId>SharpGrabber</PackageId>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
+    </ItemGroup>
 
 </Project>

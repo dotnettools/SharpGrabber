@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents common work status types.
     /// </summary>
-    public enum WorkStatusType
+    internal enum WorkStatusType
     {
         /// <summary>
         /// The work has just started
@@ -39,7 +39,7 @@
     /// <summary>
     /// Provides status of a task.
     /// </summary>
-    public class WorkStatus
+    internal class WorkStatus
     {
 
         public WorkStatus()

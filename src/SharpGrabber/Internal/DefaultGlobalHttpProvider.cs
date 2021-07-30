@@ -7,10 +7,8 @@ namespace DotNetTools.SharpGrabber.Internal
     /// <summary>
     /// Contains helper methods related to HTTP clients.
     /// </summary>
-    internal static class HttpHelper
+    internal class DefaultGlobalHttpProvider
     {
-        private static HttpClient _client;
-
         /// <summary>
         /// Default user agent used for HTTP clients
         /// </summary>
@@ -19,18 +17,15 @@ namespace DotNetTools.SharpGrabber.Internal
         /// <summary>
         /// Creates and configures an <see cref="HttpClient"/>.
         /// </summary>
-        public static HttpClient GetClient(Uri uri = null)
+        public HttpClient GetClient()
         {
-            if (_client != null)
-                return _client;
-
             var handler = new HttpClientHandler
             {
             };
-            var client = new HttpClient(handler) { BaseAddress = uri };
+            var client = new HttpClient(handler);
             client.DefaultRequestHeaders.Add("User-Agent", DefaultUserAgent);
             client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("en-US"));
-            return _client = client;
+            return client;
         }
     }
 }
