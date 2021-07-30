@@ -14,6 +14,12 @@ The `SharpGrabber` package defines abstractions only. The actual grabbers have t
 ### <a href="https://www.nuget.org/packages/SharpGrabber/">SharpGrabber</a> - Core Package
     Install-Package SharpGrabber -Version 2.0
 
+### <a href="https://www.nuget.org/packages/SharpGrabber/">SharpGrabber.Converter</a>
+It's an optional package to work with media files. Using this package, you can easily concatenate video segments, or mux audio and video channels.
+It uses `ffmpeg` shared libraries underneath.
+
+    Install-Package SharpGrabber.Converter -Version 1.0
+
 ### <a href="https://www.nuget.org/packages/SharpGrabber.YouTube/">YouTube</a>
 Adds support to download high-quality videos from YouTube, even if they are served as separate video and audio files only.
 The high-quality output is possible thanks to the `SharpGrabber.Converter` library.
@@ -35,8 +41,7 @@ This package also supports `AES-128` decryption.
 
     Install-Package SharpGrabber.Hls -Version 0.1
 
-### <a href="https://www.nuget.org/packages/SharpGrabber.Adult/">Adult</a>
-This package adds support to grab from `PornHub`, `xnxx`, and `xvideos`.
+### <a href="https://www.nuget.org/packages/SharpGrabber.Adult/">Adult</a> - `PornHub`, `xnxx`, and `xvideos`
 
     Install-Package SharpGrabber.Adult -Version 1.0
 
@@ -63,7 +68,7 @@ What grabbers you can "add" depends on what packages you've installed. In this e
     var videos = result.Resources<GrabbedMedia>();
 
 ## Not a Programmer? Just an end-user?
-No worries! Why don't you install the `SharpGrabber.Desktop` application?
+No worries! Why don't you download the `SharpGrabber.Desktop` application?
 - It uses every package mentioned above and supports all of the mentioned providers!
 - Displays information and downloads videos, audios, images etc.
 - Merges YouTube separated audio and video streams into complete media files. It can join HLS segments as well!
@@ -75,7 +80,7 @@ Requirements of the cross-platform desktop application to run and operate correc
    - On Windows, you may download the latest <a href="https://github.com/BtbN/FFmpeg-Builds/releases">BtbN ffmpeg build</a>.
    - On any OS check out the <a href="https://ffmpeg.org/download.html">official website</a>.
  
- Download binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
+ Download the latest binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
  
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
