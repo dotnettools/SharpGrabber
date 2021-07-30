@@ -1,4 +1,5 @@
-﻿using DotNetTools.SharpGrabber.YouTube;
+﻿using System;
+using DotNetTools.SharpGrabber.YouTube;
 
 namespace DotNetTools.SharpGrabber
 {

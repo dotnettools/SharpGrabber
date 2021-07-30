@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SharpGrabber.Desktop
@@ -300,7 +301,7 @@ namespace SharpGrabber.Desktop
                 throw new Exception("Please enter a valid URL.");
 
             // try grab
-            var result = await _grabber.GrabAsync(uri);
+            var result = await _grabber.GrabAsync(uri, CancellationToken.None, new GrabOptions(GrabOptionFlags.All));
 
             // apply grab result
             _ = LoadGrabResult(result);

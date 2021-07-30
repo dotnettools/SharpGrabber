@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNetTools.SharpGrabber
 {
+    /// <summary>
+    /// Configures and builds a <see cref="IMultiGrabber"/>.
+    /// </summary>
     public class GrabberBuilder : IGrabberBuilder
     {
-        private readonly HashSet<IGrabber> _grabbers = new();
+        private readonly Dictionary<Type, IGrabber> _grabbers = new();
         private IGrabberServices _services;
 
         private GrabberBuilder()
@@ -20,7 +24,10 @@ namespace DotNetTools.SharpGrabber
 
         public IGrabberBuilder Add(IGrabber grabber)
         {
-            _grabbers.Add(grabber);
+            var t = grabber.GetType();
+            if (_grabbers.ContainsKey(t))
+                throw new InvalidOperationException($"The grabber is already included: {t}");
+            _grabbers.Add(t, grabber);
             return this;
         }
 
@@ -41,7 +48,7 @@ namespace DotNetTools.SharpGrabber
             if (_services == null)
                 throw new InvalidOperationException($"An instance of {nameof(IGrabberServices)} must be set.");
 
-            return new MultiGrabber(_grabbers, _services);
+            return new MultiGrabber(_grabbers.Values, _services);
         }
     }
 }

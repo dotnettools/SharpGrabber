@@ -18,7 +18,7 @@ namespace DotNetTools.SharpGrabber
         IGrabberBuilder Add(IGrabber grabber);
 
         /// <summary>
-        /// Includes a grabber by instantiating its type with parameterless constructor.
+        /// Includes a grabber by instantiating its type.
         /// </summary>
         IGrabberBuilder Add<T>() where T : IGrabber;
 
