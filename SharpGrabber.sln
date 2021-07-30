@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber", "src\SharpGrabber\SharpGrabber.csproj", "{F2CB23B0-E878-4CDE-9F29-C3B8E915125B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.Tests", "tests\DotNetTools.SharpGrabber.Tests\SharpGrabber.Tests.csproj", "{B597E685-3509-435E-B11A-BC5A151051CE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.Converter", "src\SharpGrabber.Converter\SharpGrabber.Converter.csproj", "{C0A29188-D1FA-4F00-A77A-D1B17FD992FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.Desktop", "src\SharpGrabber.Desktop\SharpGrabber.Desktop.csproj", "{F57085EC-1886-4671-A8B2-7EAAA4EE1871}"
@@ -16,20 +12,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber", "src\SharpGrabber\SharpGrabber.csproj", "{6B71DD70-F4F7-4FCC-B960-F7F6C2E74E32}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.YouTube", "src\SharpGrabber.YouTube\SharpGrabber.YouTube.csproj", "{DB73EACF-5AF6-4B02-B4C5-F37F9ED25B9C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.Vimeo", "src\SharpGrabber.Vimeo\SharpGrabber.Vimeo.csproj", "{83BD31E7-4A6E-4A67-9A48-4D02D9B22DD1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.Adult", "src\SharpGrabber.Adult\SharpGrabber.Adult.csproj", "{04904FBD-1329-4F26-8B7D-77BAE4BB1F92}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.Hls", "src\SharpGrabber.Hls\SharpGrabber.Hls.csproj", "{81969819-B51C-4773-8D56-3B5F553445EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.Instagram", "src\SharpGrabber.Instagram\SharpGrabber.Instagram.csproj", "{094B729B-9871-4A2C-9228-9AAEE66F135D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F2CB23B0-E878-4CDE-9F29-C3B8E915125B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2CB23B0-E878-4CDE-9F29-C3B8E915125B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2CB23B0-E878-4CDE-9F29-C3B8E915125B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2CB23B0-E878-4CDE-9F29-C3B8E915125B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B597E685-3509-435E-B11A-BC5A151051CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B597E685-3509-435E-B11A-BC5A151051CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B597E685-3509-435E-B11A-BC5A151051CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B597E685-3509-435E-B11A-BC5A151051CE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C0A29188-D1FA-4F00-A77A-D1B17FD992FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C0A29188-D1FA-4F00-A77A-D1B17FD992FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0A29188-D1FA-4F00-A77A-D1B17FD992FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,6 +38,30 @@ Global
 		{F57085EC-1886-4671-A8B2-7EAAA4EE1871}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F57085EC-1886-4671-A8B2-7EAAA4EE1871}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F57085EC-1886-4671-A8B2-7EAAA4EE1871}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B71DD70-F4F7-4FCC-B960-F7F6C2E74E32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B71DD70-F4F7-4FCC-B960-F7F6C2E74E32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B71DD70-F4F7-4FCC-B960-F7F6C2E74E32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B71DD70-F4F7-4FCC-B960-F7F6C2E74E32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB73EACF-5AF6-4B02-B4C5-F37F9ED25B9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB73EACF-5AF6-4B02-B4C5-F37F9ED25B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB73EACF-5AF6-4B02-B4C5-F37F9ED25B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB73EACF-5AF6-4B02-B4C5-F37F9ED25B9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83BD31E7-4A6E-4A67-9A48-4D02D9B22DD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83BD31E7-4A6E-4A67-9A48-4D02D9B22DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83BD31E7-4A6E-4A67-9A48-4D02D9B22DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83BD31E7-4A6E-4A67-9A48-4D02D9B22DD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04904FBD-1329-4F26-8B7D-77BAE4BB1F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04904FBD-1329-4F26-8B7D-77BAE4BB1F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04904FBD-1329-4F26-8B7D-77BAE4BB1F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04904FBD-1329-4F26-8B7D-77BAE4BB1F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81969819-B51C-4773-8D56-3B5F553445EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81969819-B51C-4773-8D56-3B5F553445EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81969819-B51C-4773-8D56-3B5F553445EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81969819-B51C-4773-8D56-3B5F553445EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{094B729B-9871-4A2C-9228-9AAEE66F135D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{094B729B-9871-4A2C-9228-9AAEE66F135D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{094B729B-9871-4A2C-9228-9AAEE66F135D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{094B729B-9871-4A2C-9228-9AAEE66F135D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DotNetTools.SharpGrabber.Exceptions
 {
@@ -9,7 +7,7 @@ namespace DotNetTools.SharpGrabber.Exceptions
     /// </summary>
     public class UnsupportedGrabException : GrabException
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
         public UnsupportedGrabException() : this("The specified URI is not supported for grabbing.")
         {
         }
@@ -21,6 +19,6 @@ namespace DotNetTools.SharpGrabber.Exceptions
         public UnsupportedGrabException(string message, Exception innerException) : base(message, innerException)
         {
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
     }
 }

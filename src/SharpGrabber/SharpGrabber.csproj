@@ -2,43 +2,23 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Title>SharpGrabber</Title>
-        <Description>Grab information and media from YouTube, Vimeo and any HLS service provider (M3U8 playlists). Supports images, thumbnails, video, audio with different formats and qualities. Deciphering and decryption are implemented.</Description>
-        <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
-        <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
-        <PackageLicenseUrl></PackageLicenseUrl>
-        <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
-        <PackageTags>youtube,instagram,vimeo,hls,m3u8,download,grab,media,audio,video,aes-128</PackageTags>
-        <Authors>Javid Shoaei</Authors>
-        <Product>SharpGrabber</Product>
-        <PackageIconUrl></PackageIconUrl>
-        <FileVersion>1.5.3.0</FileVersion>
-        <AssemblyVersion>1.5.3.0</AssemblyVersion>
-        <PackageVersion>1.5.3</PackageVersion>
-        <Version>1.5.3</Version>
         <RootNamespace>DotNetTools.SharpGrabber</RootNamespace>
-        <SignAssembly>false</SignAssembly>
-        <DelaySign>false</DelaySign>
-        <LangVersion>8.0</LangVersion>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <PackageIcon>icon.png</PackageIcon>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Authors>Javid Shoaei</Authors>
+        <Company>github.com/dotnettools</Company>
+        <Description>Core library for grabbing information and media from supported sources</Description>
+        <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageIconUrl />
+        <LangVersion>9</LangVersion>
+        <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
+        <PackageTags>media,audio,video,download,grab,scrape,spider</PackageTags>
+        <NoWarn>1701;1702;1591</NoWarn>
+        <Version>2.0.0</Version>
+        <PackageId>SharpGrabber</PackageId>
     </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <NoWarn>1701;1702;1591</NoWarn>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <NoWarn>1701;1702;1591</NoWarn>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="HtmlAgilityPack" Version="1.11.34" />
-        <PackageReference Include="Jint" Version="2.11.58" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    </ItemGroup>
 
     <ItemGroup>
         <None Include="..\..\assets\icon.png">
@@ -50,5 +30,4 @@
             <PackagePath></PackagePath>
         </None>
     </ItemGroup>
-
 </Project>

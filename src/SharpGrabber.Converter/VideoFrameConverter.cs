@@ -1,9 +1,7 @@
 ﻿using FFmpeg.AutoGen;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace DotNetTools.SharpGrabber.Converter
 {

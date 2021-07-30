@@ -1,8 +1,5 @@
-﻿using DotNetTools.SharpGrabber.Media;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System;
+using DotNetTools.SharpGrabber.Grabbed;
 
 namespace SharpGrabber.Desktop.ViewModel
 {

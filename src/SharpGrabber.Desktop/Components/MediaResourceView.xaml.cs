@@ -1,8 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using DotNetTools.SharpGrabber.Media;
-using SharpGrabber.Desktop;
+using DotNetTools.SharpGrabber.Grabbed;
 using SharpGrabber.Desktop.UI;
 using SharpGrabber.Desktop.ViewModel;
 using System;

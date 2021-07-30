@@ -63,8 +63,12 @@
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\SharpGrabber.Adult\SharpGrabber.Adult.csproj" />
         <ProjectReference Include="..\SharpGrabber.Converter\SharpGrabber.Converter.csproj" />
-        <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
+        <ProjectReference Include="..\SharpGrabber.Hls\SharpGrabber.Hls.csproj" />
+        <ProjectReference Include="..\SharpGrabber.Instagram\SharpGrabber.Instagram.csproj" />
+        <ProjectReference Include="..\SharpGrabber.Vimeo\SharpGrabber.Vimeo.csproj" />
+        <ProjectReference Include="..\SharpGrabber.YouTube\SharpGrabber.YouTube.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Components\StreamReferenceView.xaml.cs">

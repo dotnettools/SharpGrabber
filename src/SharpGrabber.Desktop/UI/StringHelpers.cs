@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SharpGrabber.Desktop.UI
+﻿namespace SharpGrabber.Desktop.UI
 {
     public static class StringHelpers
     {

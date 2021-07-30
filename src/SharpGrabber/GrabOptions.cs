@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DotNetTools.SharpGrabber
 {
@@ -8,24 +6,34 @@ namespace DotNetTools.SharpGrabber
     /// Flags for grab options
     /// </summary>
     [Flags]
-    public enum GrabOptionFlag
+    public enum GrabOptionFlags
     {
         None = 0,
 
         /// <summary>
-        /// Grabber may decipher URIs automatically where necessary.
+        /// The grabber may decipher URIs automatically where necessary.
         /// </summary>
         Decipher = 1,
 
         /// <summary>
-        /// Grabber may grab related images.
+        /// The grabber may grab related images.
         /// </summary>
         GrabImages = 2,
 
         /// <summary>
-        /// Grabber may decrypt the output stream via <see cref="GrabResult.OutputStreamWrapper"/>.
+        /// The grabber may decrypt the output stream via <see cref="GrabResult.OutputStreamWrapper"/>.
         /// </summary>
         Decrypt = 4,
+
+        /// <summary>
+        /// The grabber may grab comments.
+        /// </summary>
+        GrabComments = 8,
+
+        /// <summary>
+        /// Hungry for grabbing!
+        /// </summary>
+        All = Decipher | GrabImages | Decrypt | GrabComments,
     }
 
     /// <summary>
@@ -33,24 +41,20 @@ namespace DotNetTools.SharpGrabber
     /// </summary>
     public class GrabOptions
     {
-        #region Properties
-        /// <summary>
-        /// Option flags
-        /// </summary>
-        public GrabOptionFlag Flags { get; set; } = GrabOptionFlag.None;
-        #endregion
 
-        #region Constructors
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public GrabOptions()
         {
         }
 
-        public GrabOptions(GrabOptionFlag flag) : this()
+        public GrabOptions(GrabOptionFlags flag) : this()
         {
             Flags = flag;
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-        #endregion
+
+
+        /// <summary>
+        /// Option flags
+        /// </summary>
+        public GrabOptionFlags Flags { get; set; } = GrabOptionFlags.None;
     }
 }

@@ -1,72 +1,96 @@
 ﻿# SharpGrabber
 <img src="./assets/icon.png" alt="SharpGrabber" width="64"/>
 
-*⭐ Please support us by starring the project if you find it useful.*
+**⭐ Please give a star, it'll only take a second!**
 
-This project consists of several connected sub-projects:            
-- `SharpGrabber` is a *.NET Standard* library for crawling into top media provider websites such as **YouTube**, **Vimeo** etc. in order to grab information and return direct links of the audio/video files. **HLS** and **M3U8 files** are also supported.
+This repository contains multiple related projects:
+- `SharpGrabber` is a *.NET Standard* library for scraping top media providers and grabbing high quality video, audio and information.
 - `SharpGrabber.Converter` is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files. It is also used for merging HLS stream segments.
-- `SharpGrabber.Desktop` A cross-platform desktop application
-which utilizes both mentioned libraries to expose their functionality to desktop end-users.
+- `SharpGrabber.Desktop` A cross-platform desktop application which utilizes both mentioned libraries to expose their functionality to desktop end-users.
 
-### Supported Providers
-The following providers are currently supported with the option
-to easily add more or even override part of grabbing algorithm with your own code.
+## Installation
+The `SharpGrabber` package defines abstractions only. The actual grabbers have their own packages and should be installed separately.
 
-- YouTube
-- Vimeo
-- Any HLS service (M3U8 playlists)
+### <a href="https://www.nuget.org/packages/SharpGrabber/">SharpGrabber</a> - Core Package
+    Install-Package SharpGrabber -Version 2.0
 
-### HLS Support
-M3U8 files are now supported - including master playlists.
-- The `SharpGrabber` library can parse and grab information from the playlists.
-- The `SharpGrabber.Converter` library can concatenate the segment files using `ffmpeg` shared libraries.
-- **AES-128** decryption is supported.
+### <a href="https://www.nuget.org/packages/SharpGrabber/">SharpGrabber.Converter</a>
+It's an optional package to work with media files. Using this package, you can easily concatenate video segments, or mux audio and video channels.
+It uses `ffmpeg` shared libraries underneath.
 
-## Features
-#### SharpGrabber Library
-- Grabs useful information about media such as length, title, author and many more.
-- Deciphers secure *YouTube* videos optionally.
-- Extracts direct links to all available qualities.
-- Extracts images and thumbnails.
-- Supports *asynchronous* operations.
+    Install-Package SharpGrabber.Converter -Version 1.0
 
-#### SharpGrabber.Desktop Application
-- Displays information obtained by the `SharpGrabber` library and downloads the resolved direct links.
-- Uses `SharpGrabber.Converter` to merge YouTube separated audio and video streams into complete media files.
+### <a href="https://www.nuget.org/packages/SharpGrabber.YouTube/">YouTube</a>
+Adds support to download high-quality videos from YouTube, even if they are served as separate video and audio files only.
+The high-quality output is possible thanks to the `SharpGrabber.Converter` library.
 
-Download binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
+    Install-Package SharpGrabber.YouTube -Version 1.0
 
-## SharpGrabber Installation
-Include *SharpGrabber* library in your own .NET projects.
+### <a href="https://www.nuget.org/packages/SharpGrabber.Vimeo/">Vimeo</a>
+    Install-Package SharpGrabber.Vimeo -Version 1.0
 
-### Install via <a href="https://www.nuget.org/packages/SharpGrabber/">NuGet</a>
-    Install-Package SharpGrabber -Version 1.5.3
+### <a href="https://www.nuget.org/packages/SharpGrabber.Instagram/">Instagram</a>
+Warning: This grabber is not guaranteed to work, it's reported to work for some users though.
+
+    Install-Package SharpGrabber.Instagram -Version 0.1
+
+### <a href="https://www.nuget.org/packages/SharpGrabber.Hls/">HLS - M3U8 playlists</a>
+This package adds the capability to parse M3U8 playlist files - including master playlists - and download video segments.
+With the help of the `SharpGrabber.Converter` package, segments may be joined together.
+This package also supports `AES-128` decryption.
+
+    Install-Package SharpGrabber.Hls -Version 0.1
+
+### <a href="https://www.nuget.org/packages/SharpGrabber.Adult/">Adult</a> - `PornHub`, `xnxx`, and `xvideos`
+
+    Install-Package SharpGrabber.Adult -Version 1.0
+
+## Quick Start
+### 1. Start with building a Grabber
+
+    var grabber = GrabberBuilder.New()
+        .UseDefaultServices()
+        .AddYouTube()
+        .AddVimeo()
+        .Build();
     
-## SharpGrabber Usage Example
+This will result in the creation of a "multi-grabber".
 
-### Download specifically from a provider
+What grabbers you can "add" depends on what packages you've installed. In this example, we have installed YouTube and Vimeo packages.
 
-    var grabber = new YouTubeGrabber();
-    var result = await grabber.GrabAsync(new Uri("<URL of a YouTube video>"));
-    IList<IGrabbed> grabbedResources = result.Resources;
+### 2. Grab from a URI
 
-### Automatically detect the provider and grab
+    var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=LTseTg48568"));
 
-    var grabber = MultiGrabber.CreateDefault();
-    var result = await grabber.GrabAsync(new Uri("<Target Link>"));
-    IList<IGrabbed> grabbedResources = result.Resources;
+No matter what website the URI refers to, the multi-grabber will detect the provider and put the right grabber to use.
+
+### 3. Process the Result
+
+    var info = result.Resource<GrabbedInfo>();
+    Console.WriteLine("Time Length: {0}", info.Length);
+    var images = result.Resources<GrabbedImage>();
+    var videos = result.Resources<GrabbedMedia>();
+
+## Not a Programmer? Just an end-user?
+No worries! Why don't you download the `SharpGrabber.Desktop` application?
+- It uses every package mentioned above and supports all of the mentioned providers!
+- Displays information and downloads videos, audios, images etc.
+- Merges YouTube separated audio and video streams into complete media files. It can join HLS segments as well!
 
 ## SharpGrabber.Desktop
 Requirements of the cross-platform desktop application to run and operate correctly: 
  - .NET Core 3.1
- - **Shared libraries** of *ffmpeg* copied into `ffmpeg` directory alongside app executable files for media conversion support.
+ - **Shared libraries** of *ffmpeg* copied into `ffmpeg` directory alongside app executable files for media manipulation support.
    - On Windows, you may download the latest <a href="https://github.com/BtbN/FFmpeg-Builds/releases">BtbN ffmpeg build</a>.
    - On any OS check out the <a href="https://ffmpeg.org/download.html">official website</a>.
  
- Download binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
+ Download the latest binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
  
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
+
+## Upgrade From 1.x to 2.x
+ATTENTION! There are breaking changes since v2.0 that requires you to update your code.
+The good news is no functionality has been removed, so with a minor refactoring, you should be good to go!
 
 ## Contribution
 You are most welcome to contribute!

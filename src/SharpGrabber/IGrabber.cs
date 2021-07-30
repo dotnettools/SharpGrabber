@@ -1,58 +1,87 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber
 {
     /// <summary>
-    /// Where implemented, can grab useful resources from certain types of URI.
-    /// Many <see cref="IGrabber"/> objects may be registered on a <see cref="MultiGrabber"/> allowing usage
-    /// of all grabbers by a single call.
+    /// Grabs useful resources from certain URLs which may refer to a certain website,
+    /// or files with specific types.
     /// </summary>
     /// <remarks>
-    /// Members of the same instance of <see cref="IGrabber"/> object are not expected to be used
-    /// simultaneously. Status of an active grab is available through <see cref="IGrabber.Status"/>.
+    /// An instance of this type is thread-safe and its members can be accessed simultaneously.
     /// </remarks>
     public interface IGrabber
     {
         /// <summary>
-        /// Name of the grabber e.g. YouTube
+        /// Gets the unique string identifier associated with this grabber.
+        /// If the grabber is not associated with a specific source, or is not unique, NULL
+        /// would be returned.
+        /// </summary>
+        string StringId { get; }
+
+        /// <summary>
+        /// Gets the name of the grabber e.g. YouTube.
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// Reports status and grab progress
-        /// </summary>
-        WorkStatus Status { get; }
-
-        /// <summary>
-        /// Default grab options for this grabber - if none is specified while invoking <see cref="IGrabber.GrabAsync(Uri, CancellationToken, GrabOptions)"/>.
+        /// Gets the default grab options for this grabber.
         /// </summary>
         GrabOptions DefaultGrabOptions { get; }
-        
+
         /// <summary>
         /// Briefly checks if this grabber supports the specified URI.
         /// </summary>
         bool Supports(Uri uri);
 
         /// <summary>
-        /// Asynchronously looks up the specified URI and grabs useful resources. In case of unsupported URI, NULL should
-        /// be returned.
+        /// Asynchronously looks up the specified URI and grabs useful resources regarding the specified <paramref name="options"/>,
+        /// optionally reporting <paramref name="progress"/>.
+        /// In case of unsupported URI, NULL should be returned.
         /// </summary>
-        Task<GrabResult> GrabAsync(Uri uri);
-        
+        /// <param name="uri">The target URI</param>
+        /// <param name="cancellationToken">The cancellation token that may cancel the grab operation</param>
+        /// <param name="options">Grab options, or NULL if not necessary</param>
+        /// <param name="progress">The object for progress report, or NULL if not necessary</param>
+        Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress);
+    }
+
+    /// <summary>
+    /// Provides extension methods for <see cref="IGrabber"/>.
+    /// </summary>
+    public static class GrabberExtensions
+    {
         /// <summary>
         /// Asynchronously looks up the specified URI and grabs useful resources. In case of unsupported URI, NULL should
         /// be returned.
         /// </summary>
-        Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<GrabResult> GrabAsync(this IGrabber grabber, Uri uri)
+        {
+            return grabber.GrabAsync(uri, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Asynchronously looks up the specified URI and grabs useful resources. In case of unsupported URI, NULL should
+        /// be returned.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<GrabResult> GrabAsync(this IGrabber grabber, Uri uri, CancellationToken cancellationToken)
+        {
+            return grabber.GrabAsync(uri, cancellationToken, grabber.DefaultGrabOptions);
+        }
 
         /// <summary>
         /// Asynchronously looks up the specified URI and grabs useful resources regarding the specified <paramref name="options"/>.
         /// In case of unsupported URI, NULL should be returned.
         /// </summary>
-        Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<GrabResult> GrabAsync(this IGrabber grabber, Uri uri, CancellationToken cancellationToken, GrabOptions options)
+        {
+            return grabber.GrabAsync(uri, cancellationToken, options, null);
+        }
+
     }
 }

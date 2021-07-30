@@ -5,8 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using DotNetTools.SharpGrabber;
-using DotNetTools.SharpGrabber.Converter;
-using DotNetTools.SharpGrabber.Media;
+using DotNetTools.SharpGrabber.Grabbed;
 using FFmpeg.AutoGen;
 using SharpGrabber.Desktop.Components;
 using SharpGrabber.Desktop.ViewModel;
@@ -16,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SharpGrabber.Desktop
@@ -25,6 +25,7 @@ namespace SharpGrabber.Desktop
         private static readonly HttpClient _client = new HttpClient();
 
         #region Fields
+        private readonly IMultiGrabber _grabber;
         private bool _uiEnabled = true;
         private TextBox tbUrl;
         private TextBlock tbPlaceholder, txtGrab, tbGrabbers;
@@ -66,6 +67,19 @@ namespace SharpGrabber.Desktop
         public MainWindow()
         {
             Initialized += MainWindow_Initialized;
+
+            _grabber = GrabberBuilder.New()
+                .UseDefaultServices()
+                .AddYouTube()
+                .AddInstagram()
+                .AddVimeo()
+                .AddHls()
+                .AddPornHub()
+                .AddXnxx()
+                .AddXVideos()
+                .Build();
+            var result = await _grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=LTseTg48568"));
+            var info = result.Resource<GrabbedInfo>();
 
             InitializeComponent();
             basicInfo.IsVisible = resourceContainer.IsVisible = false;
@@ -197,7 +211,7 @@ namespace SharpGrabber.Desktop
             }
         }
 
-        private void LoadMedia(IList<IGrabbed> allGrabbedResources)
+        private void LoadMedia(IEnumerable<IGrabbed> allGrabbedResources)
         {
             // init
             var medias = allGrabbedResources.OfType<GrabbedMedia>().ToList();
@@ -245,9 +259,10 @@ namespace SharpGrabber.Desktop
             // basic info
             var metadata = new List<KeyValuePair<string, string>>();
             txtMediaTitle.Text = result.Title;
-            metadata.Add(new KeyValuePair<string, string>("Length", result.Statistics?.Length?.ToString()));
-            metadata.Add(new KeyValuePair<string, string>("Author", result.Statistics?.Author));
-            metadata.Add(new KeyValuePair<string, string>("Views", result.Statistics?.ViewCount?.ToString("N0")));
+            var info = result.Resource<GrabbedInfo>();
+            metadata.Add(new KeyValuePair<string, string>("Length", info?.Length?.ToString()));
+            metadata.Add(new KeyValuePair<string, string>("Author", info?.Author));
+            metadata.Add(new KeyValuePair<string, string>("Views", info?.ViewCount?.ToString("N0")));
             metadata.Add(new KeyValuePair<string, string>("Creation Date", result.CreationDate?.ToShortDateString()));
             DisplayMetadataInfo(metadata);
 
@@ -284,13 +299,11 @@ namespace SharpGrabber.Desktop
         private async Task Grab(string uriText)
         {
             // parse uri
-            Uri uri;
-            if (!Uri.TryCreate(uriText, UriKind.Absolute, out uri))
+            if (!Uri.TryCreate(uriText, UriKind.Absolute, out var uri))
                 throw new Exception("Please enter a valid URL.");
 
             // try grab
-            var client = MultiGrabber.CreateDefault();
-            var result = await client.Grab(uri);
+            var result = await _grabber.GrabAsync(uri, CancellationToken.None, new GrabOptions(GrabOptionFlags.All));
 
             // apply grab result
             _ = LoadGrabResult(result);
@@ -301,7 +314,7 @@ namespace SharpGrabber.Desktop
             IsUIEnabled = false;
             try
             {
-                var images = CurrentGrab?.Resources.Where(r => r is GrabbedImage).ToArray();
+                var images = CurrentGrab?.Resources<GrabbedImage>().ToArray();
                 if (images == null || images.Length == 0)
                     return;
 
@@ -348,10 +361,9 @@ namespace SharpGrabber.Desktop
         private void TbGrabbers_Click(object sender, RoutedEventArgs e)
         {
             var sb = new StringBuilder();
-            foreach (var t in DefaultGrabbers.AllTypes)
+            foreach (var g in _grabber.GetRegisteredGrabbers())
             {
-                var g = Activator.CreateInstance(t) as IGrabber;
-                sb.AppendLine(g.Name);
+                sb.AppendLine(g.Name + (string.IsNullOrEmpty(g.StringId) ? null : $" ({g.StringId})"));
             }
             ShowMessage("Registered Grabbers", sb.ToString());
         }

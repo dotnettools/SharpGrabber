@@ -1,5 +1,5 @@
-using DotNetTools.SharpGrabber.Internal.Grabbers;
-using DotNetTools.SharpGrabber.Media;
+using DotNetTools.SharpGrabber.Instagram;
+using DotNetTools.SharpGrabber.YouTube;
 using System;
 using Xunit;
 

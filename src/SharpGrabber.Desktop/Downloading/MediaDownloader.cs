@@ -1,13 +1,8 @@
 ﻿using DotNetTools.SharpGrabber;
-using DotNetTools.SharpGrabber.Converter;
-using DotNetTools.SharpGrabber.Media;
 using SharpGrabber.Desktop.ViewModel;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SharpGrabber.Desktop

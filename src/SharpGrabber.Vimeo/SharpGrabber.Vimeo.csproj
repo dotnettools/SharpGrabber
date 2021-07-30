@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>DotNetTools.SharpGrabber.Vimeo</RootNamespace>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Authors>indecDavid</Authors>
+        <Company>github.com/dotnettools</Company>
+        <Description>Adds support for grabbing information and media from Vimeo.</Description>
+        <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageIconUrl />
+        <LangVersion>9</LangVersion>
+        <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
+        <PackageTags>vimeo,media,audio,video,download,grab,scrape</PackageTags>
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\assets\icon.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+</Project>

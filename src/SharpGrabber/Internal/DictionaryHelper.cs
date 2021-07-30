@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace DotNetTools.SharpGrabber.Internal
+namespace DotNetTools.SharpGrabber
 {
     /// <summary>
     /// Contains helper methods for dictionaries.
     /// </summary>
-    internal static class DictionaryHelper
+    public static class DictionaryHelper
     {
         /// <summary>
         /// Gets and returns value associated with the specified key in the dictionary. If no entry with the specified
