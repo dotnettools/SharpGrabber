@@ -1,7 +1,7 @@
 ﻿# SharpGrabber
 <img src="./assets/icon.png" alt="SharpGrabber" width="64"/>
 
-**⭐ Please give a star, it'll only take a second!**
+**⭐ Please give a star if you find this project useful!**
 
 This repository contains multiple related projects:
 - `SharpGrabber` is a *.NET Standard* library for scraping top media providers and grabbing high quality video, audio and information.
