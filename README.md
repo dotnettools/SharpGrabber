@@ -54,11 +54,15 @@ This package also supports `AES-128` decryption.
         .AddVimeo()
         .Build();
     
+This will result in the creation of a "multi-grabber".
+
 What grabbers you can "add" depends on what packages you've installed. In this example, we have installed YouTube and Vimeo packages.
 
 ### 2. Grab from a URI
 
     var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=LTseTg48568"));
+
+No matter what website the URI refers to, the multi-grabber will detect the provider and put the right grabber to use.
 
 ### 3. Process the Result
 
