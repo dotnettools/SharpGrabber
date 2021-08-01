@@ -1,5 +1,9 @@
-﻿# SharpGrabber
-<img src="./assets/icon.png" alt="SharpGrabber" width="64"/>
+<img src="./assets/icon.png" alt="SharpGrabber" width="64" />
+
+# SharpGrabber
+
+![GitHub](https://img.shields.io/github/license/dotnettools/SharpGrabber)
+![Nuget](https://img.shields.io/nuget/dt/SharpGrabber)
 
 **⭐ Please give a star if you find this project useful!**
 
