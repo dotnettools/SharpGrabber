@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace DotNetTools.SharpGrabber.YouTube.YouTube
+namespace DotNetTools.SharpGrabber.YouTube
 {
     /// <summary>
     /// Represents metadata of a YouTube video.

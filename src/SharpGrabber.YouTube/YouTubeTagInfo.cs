@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNetTools.SharpGrabber.YouTube.YouTube
+namespace DotNetTools.SharpGrabber.YouTube
 {
     /// <summary>
     /// Read-only collection of information about YouTube iTags.

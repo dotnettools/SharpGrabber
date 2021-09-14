@@ -7,7 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Grabbed;
-using DotNetTools.SharpGrabber.YouTube.YouTube;
+using DotNetTools.SharpGrabber.YouTube;
+using Jint.Parser;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DotNetTools.SharpGrabber.YouTube
@@ -18,9 +20,10 @@ namespace DotNetTools.SharpGrabber.YouTube
     public class YouTubeGrabber : YouTubeGrabberBase
     {
         #region Compiled Regular Expressions
-        private static readonly Regex BaseJsLocatorRegex = new Regex(@"<script[^<>]+src=""([^""]+base\.js)""", RegexOptions.Compiled | RegexOptions.Multiline);
-        private static readonly Regex InnerTubeApiKeyRegex = new Regex(@"INNERTUBE_API_KEY""\s*:\s*""([^""]+)""", RegexOptions.Compiled | RegexOptions.Multiline);
-        private static readonly Regex DecipherFunctionRegex = new Regex(@"\s(\w+)=function\S+split\([^\n\r]+join\(\S+", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        private static readonly Regex BaseJsLocatorRegex = new(@"<script[^<>]+src=""([^""]+base\.js)""", RegexOptions.Compiled | RegexOptions.Multiline);
+        private static readonly Regex InnerTubeApiKeyRegex = new(@"INNERTUBE_API_KEY""\s*:\s*""([^""]+)""", RegexOptions.Compiled | RegexOptions.Multiline);
+        private static readonly Regex DecipherFunctionRegex = new(@"\s(\w+)=function\S+split\([^\n\r]+join\(\S+", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        private static readonly Regex HtmlPlayerResponseRegex = new(@"<script[^<>]+>\s*var\s+ytInitialPlayerResponse\s*=\s*([^<>]+)\s*;var[^<>]+</script>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
         #endregion
 
         #region Constructors
@@ -378,22 +381,25 @@ namespace DotNetTools.SharpGrabber.YouTube
         /// <summary>
         /// Downloads metadata for the YouTube video with the specified ID.
         /// </summary>
-        protected virtual async Task<YouTubeMetadata> DownloadMetadata(string id, YouTubeEmbedPageData embedPageData,
+        protected virtual async Task<YouTubeMetadata> DownloadMetadata(string id, YouTubeWatchPageData pageData,
             CancellationToken cancellationToken)
         {
-            IDictionary<string, string> rawMetadata;
-
             // make http client
             var client = Services.GetClient();
 
             // send http request
-            using var response = await GetYouTubeVideoInfoResponse(client, id, embedPageData.Key, cancellationToken);
+            using var response = await GetYouTubeVideoInfoResponse(client, id, pageData.Key, cancellationToken);
             if (!response.IsSuccessStatusCode)
                 throw new GrabException($"Failed to get media info.");
 
             // decode metadata into rawMetadata
             var content = await response.Content.ReadAsStringAsync();
-            rawMetadata = YouTubeUtils.ExtractUrlEncodedParamMap(content);
+            return ExtractMetadata(content);
+        }
+
+        protected virtual YouTubeMetadata ExtractMetadata(string rawContent)
+        {
+            IDictionary<string, string> rawMetadata = YouTubeUtils.ExtractUrlEncodedParamMap(rawContent);
 
             // extract metadata
             var metadata = new YouTubeMetadata
@@ -406,7 +412,7 @@ namespace DotNetTools.SharpGrabber.YouTube
             //var rawPlayerResponse = rawMetadata["player_response"]
             //                        ?? throw new GrabParseException("Failed to fetch player_response from metadata.");
             //var playerResponse = JToken.Parse(rawPlayerResponse);
-            var playerResponse = JToken.Parse(content);
+            var playerResponse = JToken.Parse(rawContent);
             metadata.PlayerResponse = ExtractPlayerResponseMetadata(playerResponse);
 
             // extract muxed streams
@@ -440,11 +446,11 @@ namespace DotNetTools.SharpGrabber.YouTube
         /// Invoked by <see cref="GrabAsync"/> method when the target video has a signature.
         /// This method downloads the necessary script (base.js) and decipher all grabbed links. 
         /// </summary>
-        protected virtual async Task Decipher(YouTubeEmbedPageData embedPageData, YouTubeMetadata metaData, CancellationToken cancellationToken)
+        protected virtual async Task Decipher(Uri baseJsUri, YouTubeMetadata metaData, CancellationToken cancellationToken)
         {
             // download base.js
             var client = Services.GetClient();
-            using var response = await client.GetAsync(embedPageData.BaseJsUri, cancellationToken);
+            using var response = await client.GetAsync(baseJsUri, cancellationToken);
             var scriptContent = await response.Content.ReadAsStringAsync();
             var script = new YouTubeScript(scriptContent);
 
@@ -474,30 +480,77 @@ namespace DotNetTools.SharpGrabber.YouTube
 
         #region Internal Methods
         /// <summary>
+        /// Downloads video's watch page and extracts useful data.
+        /// </summary>
+        /// <returns>Page data, or NULL in case of failure.</returns>
+        protected virtual async Task<YouTubeWatchPageData> DownloadWatchPage(string videoId)
+        {
+            // download watch page
+            var client = Services.GetClient();
+            var uri = GetYouTubeStandardUri(videoId);
+            using var response = await client.GetAsync(uri).ConfigureAwait(false);
+
+            return await TryExtractWatchPageDataAsync(response, uri).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Downloads video's embed page and extracts useful data.
         /// </summary>
-        protected virtual async Task<YouTubeEmbedPageData> DownloadEmbedPage(string id)
+        /// <returns>Page data, or NULL in case of failure.</returns>
+        protected virtual async Task<YouTubeWatchPageData> DownloadEmbedPage(string id)
         {
-            var result = new YouTubeEmbedPageData();
-
-            // get embed uri
-            var embedUri = GetYouTubeEmbedUri(id);
-
             // download embed page
             var client = Services.GetClient();
-            var embedPageContent = await client.GetStringAsync(embedUri);
+            var embedUri = GetYouTubeEmbedUri(id);
+            using var response = await client.GetAsync(embedUri).ConfigureAwait(false);
+
+            return await TryExtractWatchPageDataAsync(response, embedUri).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Extracts watch/embed page data from HTTP response, if possible.
+        /// </summary>
+        /// <returns>Page data, or NULL in case of failure.</returns>
+        protected virtual async Task<YouTubeWatchPageData> TryExtractWatchPageDataAsync(System.Net.Http.HttpResponseMessage response, Uri baseUri)
+        {
+            if (!response.IsSuccessStatusCode)
+                return null;
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            try
+            {
+                return ExtractWatchPageData(content, baseUri);
+            }
+            catch (GrabParseException)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Extracts watch/embed page data from HTML content.
+        /// </summary>
+        protected virtual YouTubeWatchPageData ExtractWatchPageData(string htmlContent, Uri baseUri)
+        {
+            var result = new YouTubeWatchPageData();
 
             // find base.js
-            var match = BaseJsLocatorRegex.Match(embedPageContent);
+            var match = BaseJsLocatorRegex.Match(htmlContent);
             if (!match.Success)
                 throw new GrabParseException("Failed to find base.js script reference.");
-            result.BaseJsUri = new Uri(embedUri, match.Groups[1].Value);
+            result.BaseJsUri = new Uri(baseUri, match.Groups[1].Value);
 
             // find inner tube api key
-            match = InnerTubeApiKeyRegex.Match(embedPageContent);
+            match = InnerTubeApiKeyRegex.Match(htmlContent);
             if (!match.Success)
                 throw new GrabParseException("Failed to locate INNERTUBE_API_KEY.");
             result.Key = match.Groups[1].Value;
+
+            // get player response
+            match = HtmlPlayerResponseRegex.Match(htmlContent);
+            if (!match.Success)
+                throw new GrabParseException("Could not extract the player response from the page.");
+            result.RawPlayerResponse = match.Groups[1].Value;
             return result;
         }
 
@@ -597,38 +650,72 @@ namespace DotNetTools.SharpGrabber.YouTube
         }
         #endregion
 
-        #region Grab Method
+        #region Grab Methods
         /// <inheritdoc />
-        protected override async Task GrabAsync(GrabResult result, IList<IGrabbed> resources, string id,
+        protected override async Task GrabAsync(GrabResult result, IList<IGrabbed> resources, string videoId,
             CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
         {
             // extract base.js script
-            var embedPageData = await DownloadEmbedPage(id);
-
-            // download metadata
-            var metaData = await DownloadMetadata(id, embedPageData, cancellationToken);
+            var data = await GrabPageAsync(videoId, cancellationToken).ConfigureAwait(false);
+            var watchPageData = data.Page;
+            var metadata = data.Metadata;
 
             // update result according to the metadata
-            UpdateResultWithMetadata(result, resources, metaData);
+            UpdateResultWithMetadata(result, resources, metadata);
 
             // are there any encrypted streams?
-            result.IsSecure = metaData.AllStreams.Any(stream => !string.IsNullOrEmpty(stream.Signature));
+            result.IsSecure = metadata.AllStreams.Any(stream => !string.IsNullOrEmpty(stream.Signature));
 
             // should we decipher the signature?
             if (result.IsSecure && options.Flags.HasFlag(GrabOptionFlags.Decipher))
-                await Decipher(embedPageData, metaData, cancellationToken);
+                await Decipher(watchPageData.BaseJsUri, metadata, cancellationToken);
 
             // append images to the result
             if (options.Flags.HasFlag(GrabOptionFlags.GrabImages))
-                AppendImagesToResult(resources, id);
+                AppendImagesToResult(resources, videoId);
 
             // append muxed streams to result
-            foreach (var stream in metaData.MuxedStreams)
+            foreach (var stream in metadata.MuxedStreams)
                 AppendStreamToResult(resources, stream);
 
             // append adaptive streams to result
-            foreach (var stream in metaData.AdaptiveStreams)
+            foreach (var stream in metadata.AdaptiveStreams)
                 AppendStreamToResult(resources, stream);
+        }
+
+        protected async Task<YouTubePageInfo> GrabPageAsync(string videoId, CancellationToken cancellationToken)
+        {
+            var page = new YouTubePageInfo();
+
+            var success = await GrabUsingWatchMethod(page, videoId, cancellationToken).ConfigureAwait(false);
+            success = success || await GrabUsingEmbedMethod(page, videoId, cancellationToken).ConfigureAwait(false);
+
+            if (!success)
+                throw new GrabParseException("Failed to extract information from neither embed nor watch pages.");
+
+
+            return page;
+        }
+
+        protected virtual async Task<bool> GrabUsingWatchMethod(YouTubePageInfo result, string videoId, CancellationToken cancellationToken)
+        {
+            var page = await DownloadWatchPage(videoId).ConfigureAwait(false);
+            if (page == null)
+                return false;
+            result.Page = page;
+            result.Metadata = ExtractMetadata(page.RawPlayerResponse);
+            return true;
+        }
+
+        protected virtual async Task<bool> GrabUsingEmbedMethod(YouTubePageInfo result, string videoId, CancellationToken cancellationToken)
+        {
+            var page = await DownloadEmbedPage(videoId).ConfigureAwait(false);
+            if (page == null)
+                return false;
+            var metadata = await DownloadMetadata(videoId, page, cancellationToken).ConfigureAwait(false);
+            result.Page = page;
+            result.Metadata = metadata;
+            return true;
         }
         #endregion
     }

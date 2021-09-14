@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using DotNetTools.SharpGrabber.Exceptions;
 using Jint;
 
-namespace DotNetTools.SharpGrabber.YouTube.YouTube
+namespace DotNetTools.SharpGrabber.YouTube
 {
     /// <summary>
     /// Accepts YouTube script source code and parses and executes the code.

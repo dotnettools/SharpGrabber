@@ -15,6 +15,7 @@
         <LangVersion>9</LangVersion>
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
         <PackageTags>youtube,media,audio,video,deciphering,highquality,download,grab,scrape</PackageTags>
+        <Version>1.1.0</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

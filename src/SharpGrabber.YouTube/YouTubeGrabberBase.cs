@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace DotNetTools.SharpGrabber.YouTube.YouTube
+namespace DotNetTools.SharpGrabber.YouTube
 {
     /// <summary>
     /// Base class for YouTube <see cref="IGrabber"/>s
@@ -55,7 +55,7 @@ namespace DotNetTools.SharpGrabber.YouTube.YouTube
         /// Standard format for YouTube links which is used with String.Format supplied with video ID as the only
         /// format argument.
         /// </summary>
-        public string StandardYouTubeUrlFormat { get; set; } = "https://www.youtube.com/watch?v={0}&hl=en_US";
+        public string StandardYouTubeUrlFormat { get; set; } = "https://www.youtube.com/watch?v={0}&bpctr=9999999999&hl=en_US";
         #endregion
 
         #region Internal Methods
@@ -102,6 +102,9 @@ namespace DotNetTools.SharpGrabber.YouTube.YouTube
             return new Uri(string.Format(videoInfoUriTemplate, videoId, Uri.EscapeDataString(eUrl)));
         }
 
+        /// <summary>
+        /// Gets youtubei player data to get the information.
+        /// </summary>
         protected virtual Task<HttpResponseMessage> GetYouTubeVideoInfoResponse(HttpClient client, string videoId, string key,
             CancellationToken cancellationToken)
         {

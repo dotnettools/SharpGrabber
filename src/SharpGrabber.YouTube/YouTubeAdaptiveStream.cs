@@ -1,4 +1,4 @@
-﻿namespace DotNetTools.SharpGrabber.YouTube.YouTube
+﻿namespace DotNetTools.SharpGrabber.YouTube
 {
     /// <summary>
     /// Represents an adaptive YouTube stream.

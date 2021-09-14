@@ -57,9 +57,8 @@ namespace SharpGrabber.Desktop
             }
             finally
             {
-                foreach (var path in segmentFiles)
-                    if (File.Exists(path))
-                        File.Delete(path);
+                foreach (var path in segmentFiles.Where(File.Exists))
+                    File.Delete(path);
                 _viewModel.IsDownloading = false;
             }
         }
@@ -91,7 +90,9 @@ namespace SharpGrabber.Desktop
                 return;
             }
 
-            var avgSegmentSize = downloadedSegmentCount > 0 ? overallDownloaded / (double)downloadedSegmentCount : contentLength.Value;
+            var avgSegmentSize = downloadedSegmentCount > 0
+                ? overallDownloaded / (double) downloadedSegmentCount
+                : contentLength.Value;
             var downloaded = 0L;
             var totalBytes = avgSegmentSize * totalSegmentCount;
 
