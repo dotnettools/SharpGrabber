@@ -105,9 +105,10 @@ Requirements of the cross-platform desktop application to run and operate correc
    - On any OS check out the <a href="https://ffmpeg.org/download.html">official website</a>.
  
  Download the latest binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
- 
-<img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 </details>
+    
+<img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
+
 
 ## Contribution
 You are most welcome to contribute!
