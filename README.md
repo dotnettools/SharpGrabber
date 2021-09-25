@@ -40,7 +40,7 @@ The high-quality output is possible thanks to the `SharpGrabber.Converter` libra
     Install-Package SharpGrabber.Vimeo -Version 1.0
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.Instagram/">Instagram</a>
-Warning: This grabber is not guaranteed to work, it's reported to work for some users though.
+Warning: This grabber is not guaranteed to work. It works only for clients that Instagram allows anonymous access to public content.
 
     Install-Package SharpGrabber.Instagram -Version 0.1
 
