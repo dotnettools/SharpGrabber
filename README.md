@@ -2,8 +2,8 @@
 
 # SharpGrabber
 
-![GitHub](https://img.shields.io/github/license/dotnettools/SharpGrabber)
-![Nuget](https://img.shields.io/nuget/dt/SharpGrabber)
+[![GitHub](https://img.shields.io/github/license/dotnettools/SharpGrabber)](https://github.com/dotnettools/SharpGrabber/blob/master/LICENSE)
+[![NuGet download count](https://img.shields.io/nuget/dt/SharpGrabber)](https://www.nuget.org/packages/SharpGrabber)
 
 **⭐ Please give a star if you find this project useful!**
 
