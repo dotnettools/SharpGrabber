@@ -16,7 +16,7 @@ This repository contains multiple related projects:
 The `SharpGrabber` package defines abstractions only. The actual grabbers have their own packages and should be installed separately.
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber/">SharpGrabber</a> - Core Package
-    Install-Package SharpGrabber -Version 2.0
+    Install-Package SharpGrabber -Version 2.0.1
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.Converter/">SharpGrabber.Converter</a>
 It's an optional package to work with media files. Using this package, you can easily concatenate video segments, or mux audio and video channels.

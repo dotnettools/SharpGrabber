@@ -26,7 +26,7 @@ namespace DotNetTools.SharpGrabber
 
         public async Task<GrabResult> GrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
         {
-            progress.Report(0);
+            progress?.Report(0);
             options ??= DefaultGrabOptions;
 
             var result = await InternalGrabAsync(uri,
@@ -34,7 +34,7 @@ namespace DotNetTools.SharpGrabber
                 options,
                 progress ?? new Progress<double>()).ConfigureAwait(false);
 
-            progress.Report(1);
+            progress?.Report(1);
             return result;
         }
 
