@@ -16,6 +16,7 @@
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
         <PackageTags>adult,porn,video,download,grab,scrape,pornhub,xvideos,xnxx</PackageTags>
         <NoWarn>1701;1702;1591</NoWarn>
+        <Version>1.0.1</Version>
     </PropertyGroup>
 
     <ItemGroup>

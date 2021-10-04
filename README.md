@@ -49,11 +49,11 @@ This package adds the capability to parse M3U8 playlist files - including master
 With the help of the `SharpGrabber.Converter` package, segments may be joined together.
 This package also supports `AES-128` decryption.
 
-    Install-Package SharpGrabber.Hls -Version 0.1
+    Install-Package SharpGrabber.Hls -Version 1.0
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.Adult/">Adult</a> - `PornHub`, `xnxx`, and `xvideos`
 
-    Install-Package SharpGrabber.Adult -Version 1.0
+    Install-Package SharpGrabber.Adult -Version 1.0.1
 
 ## Quick Start
 ### 1. Start with building a Grabber
@@ -88,12 +88,7 @@ I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 
 </details>
     
-<details>
-    <summary>
-        For Desktop Users
-    </summary>
-    
-## SharpGrabber.Desktop
+## SharpGrabber.Desktop 3.2
 - It uses every package mentioned above and supports all of the mentioned providers!
 - Displays information and downloads videos, audios, images etc.
 - Merges YouTube separated audio and video streams into complete media files. It can join HLS segments as well!
@@ -105,7 +100,6 @@ Requirements of the cross-platform desktop application to run and operate correc
    - On any OS check out the <a href="https://ffmpeg.org/download.html">official website</a>.
  
  Download the latest binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
-</details>
     
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
