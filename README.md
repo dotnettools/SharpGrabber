@@ -2,8 +2,8 @@
 
 # SharpGrabber
 
-![GitHub](https://img.shields.io/github/license/dotnettools/SharpGrabber)
-![Nuget](https://img.shields.io/nuget/dt/SharpGrabber)
+[![GitHub](https://img.shields.io/github/license/dotnettools/SharpGrabber)](https://github.com/dotnettools/SharpGrabber/blob/master/LICENSE)
+[![NuGet download count](https://img.shields.io/nuget/dt/SharpGrabber)](https://www.nuget.org/packages/SharpGrabber)
 
 **⭐ Please give a star if you find this project useful!**
 
@@ -12,7 +12,13 @@ This repository contains multiple related projects:
 - `SharpGrabber.Converter` is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files. It is also used for merging HLS stream segments.
 - `SharpGrabber.Desktop` A cross-platform desktop application which utilizes both mentioned libraries to expose their functionality to desktop end-users.
 
-## Installation
+# How to Use
+<details>
+    <summary>
+        For Developers
+    </summary>
+    
+## Package Installation
 The `SharpGrabber` package defines abstractions only. The actual grabbers have their own packages and should be installed separately.
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber/">SharpGrabber</a> - Core Package
@@ -34,7 +40,7 @@ The high-quality output is possible thanks to the `SharpGrabber.Converter` libra
     Install-Package SharpGrabber.Vimeo -Version 1.0
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.Instagram/">Instagram</a>
-Warning: This grabber is not guaranteed to work, it's reported to work for some users though.
+Warning: This grabber is not guaranteed to work. It works only for clients that Instagram allows anonymous access to public content.
 
     Install-Package SharpGrabber.Instagram -Version 0.1
 
@@ -74,14 +80,24 @@ No matter what website the URI refers to, the multi-grabber will detect the prov
     Console.WriteLine("Time Length: {0}", info.Length);
     var images = result.Resources<GrabbedImage>();
     var videos = result.Resources<GrabbedMedia>();
+    
+## Upgrade From 1.x to 2.x
+ATTENTION! Beware of the breaking changes since v2.0 that requires you to update your code.
+The good news is no functionality has been removed, so with a minor refactoring, you should be good to go!
+I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 
-## Not a Programmer? Just an end-user?
-No worries! Why don't you download the `SharpGrabber.Desktop` application?
+</details>
+    
+<details>
+    <summary>
+        For Desktop Users
+    </summary>
+    
+## SharpGrabber.Desktop
 - It uses every package mentioned above and supports all of the mentioned providers!
 - Displays information and downloads videos, audios, images etc.
 - Merges YouTube separated audio and video streams into complete media files. It can join HLS segments as well!
 
-## SharpGrabber.Desktop
 Requirements of the cross-platform desktop application to run and operate correctly: 
  - .NET Core 3.1
  - **Shared libraries** of *ffmpeg* copied into `ffmpeg` directory alongside app executable files for media manipulation support.
@@ -89,13 +105,10 @@ Requirements of the cross-platform desktop application to run and operate correc
    - On any OS check out the <a href="https://ffmpeg.org/download.html">official website</a>.
  
  Download the latest binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
- 
+</details>
+    
 <img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
 
-## Upgrade From 1.x to 2.x
-ATTENTION! Beware of the breaking changes since v2.0 that requires you to update your code.
-The good news is no functionality has been removed, so with a minor refactoring, you should be good to go!
-I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 
 ## Contribution
 You are most welcome to contribute!
