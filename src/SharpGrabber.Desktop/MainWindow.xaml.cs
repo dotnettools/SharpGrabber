@@ -40,7 +40,7 @@ namespace SharpGrabber.Desktop
         private Image img;
         private LoadingSpinner imgSpinner;
         private StackPanel resourceContainer;
-        private Grid basicInfo;
+        private Border basicInfo;
         #endregion
 
         #region Properties
@@ -109,7 +109,7 @@ namespace SharpGrabber.Desktop
             txtTitle = this.FindControl<TextBlock>("txtTitle");
             img = this.FindControl<Image>("img");
             imgSpinner = this.FindControl<LoadingSpinner>("imgSpinner");
-            basicInfo = this.FindControl<Grid>("basicInfo");
+            basicInfo = this.FindControl<Border>("basicInfo");
             resourceContainer = this.FindControl<StackPanel>("resourceContainer");
 
             this.Subscribe(KeyDownEvent, MainWindow_KeyDown);
