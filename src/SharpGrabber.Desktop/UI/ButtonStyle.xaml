@@ -6,7 +6,7 @@
         Selector="Button.btn">
     <Setter Property="Cursor" Value="Hand" />
     <Setter Property="FontSize" Value="12" />
-    <Setter Property="Padding" Value="8 0" />
+    <Setter Property="Padding" Value="8 4" />
 
     <Setter Property="Background">
         <Setter.Value>

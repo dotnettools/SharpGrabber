@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480"
         x:Class="SharpGrabber.Desktop.MainWindow"
         WindowStartupLocation="CenterScreen"
-        MinWidth="500" MinHeight="300"
+        MinWidth="500" MinHeight="300" BorderThickness="0"
         Width="800" Height="600">
 
     <Window.Resources>
@@ -19,8 +19,8 @@
 
     <Window.Styles>
         <Style Selector="Window">
-            <Setter Property="Background" Value="#ededed" />
-            <Setter Property="Foreground" Value="#99000000" />
+            <!--<Setter Property="Background" Value="#ededed" />
+            <Setter Property="Foreground" Value="#99000000" />-->
         </Style>
 
         <Style Selector="Button">
@@ -28,9 +28,9 @@
         </Style>
 
         <Style Selector="Button.grab">
+            <Setter Property="Margin" Value="8 0 0 0" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="14" />
 
             <Setter Property="Background">
                 <Setter.Value>
@@ -60,6 +60,18 @@
         <Style Selector="Button.overlaybutton:pointerover">
             <Setter Property="Background" Value="#22000000" />
         </Style>
+
+        <Style Selector="Border.overlayContent">
+            <Setter Property="BoxShadow" Value="0 16 64 #99000000" />
+
+            <Setter Property="Transitions">
+                <Setter.Value>
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+                    </Transitions>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Styles>
 
     <Grid>
@@ -72,17 +84,18 @@
             </Grid.RowDefinitions>
 
             <!--Begin Grab Input-->
-            <Grid Background="#1A000000" Height="60">
+            <Grid Background="#33000000" Height="60">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock x:Name="txtTitle" Grid.Column="0" Text="#Grabber" VerticalAlignment="Center"
                            Margin="16 0 16 2" FontSize="24" Cursor="Hand" />
 
                 <Border Grid.Column="1" Margin="0 0 10 0" CornerRadius="6" Height="36" VerticalAlignment="Center"
-                        Background="#80FFFFFF" ClipToBounds="True" BorderBrush="#10000000" BorderThickness="1">
+                        Background="#333" ClipToBounds="True" BorderBrush="#10000000" BorderThickness="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -105,30 +118,33 @@
                         </Border>
 
                         <TextBox x:Name="tbUrl" Grid.Column="1" Background="Transparent" VerticalAlignment="Center"
-                                 BorderThickness="0" Margin="8 0 0 0" AcceptsReturn="False" AcceptsTab="False" />
+                                 BorderThickness="0" Margin="8 0 0 0" AcceptsReturn="False" AcceptsTab="False"
+                                 ScrollViewer.VerticalScrollBarVisibility="Disabled" />
                         <TextBlock x:Name="tbPlaceholder" Grid.Column="1" Text="Enter URL of the video here..."
                                    VerticalAlignment="Center" Margin="10 0 0 0" IsHitTestVisible="False" />
-
-                        <Button x:Name="btnPaste" Classes="btn" Grid.Column="2" Width="40"
-                                VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                                ToolTip.Tip="Paste">
-                            <!--<TextBlock Text="Paste" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
-                            <DrawingPresenter Drawing="{StaticResource FA.ClipboardListSolid}"
-                                              VerticalAlignment="Center" HorizontalAlignment="Center" Margin="4" />
-                        </Button>
-
-                        <Button x:Name="btnGrab" Classes="grab" Grid.Column="3" Width="70"
-                                VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                                IsDefault="True">
-                            <Grid>
-                                <TextBlock x:Name="txtGrab" Text="Grab" HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" />
-                                <components:LoadingSpinner x:Name="spGrab" HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center" />
-                            </Grid>
-                        </Button>
                     </Grid>
                 </Border>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0 10 10 10">
+                    <Button x:Name="btnPaste" Classes="btn" Grid.Column="2" Width="40"
+                                                    VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                                    ToolTip.Tip="Paste">
+                        <!--<TextBlock Text="Paste" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
+                        <DrawingPresenter Drawing="{StaticResource FA.ClipboardListSolid}"
+                                          VerticalAlignment="Center" HorizontalAlignment="Center" Margin="4" />
+                    </Button>
+
+                    <Button x:Name="btnGrab" Classes="grab" Grid.Column="3" Width="70"
+                            VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                            IsDefault="True">
+                        <Grid>
+                            <TextBlock x:Name="txtGrab" Text="Grab" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            <components:LoadingSpinner x:Name="spGrab" HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Button>
+                </StackPanel>
             </Grid>
             <!--End Grab Input-->
 
@@ -155,7 +171,7 @@
                 </Border>
 
                 <Grid Grid.Column="1" Grid.Row="0" Margin="0 20 0 0" TextBlock.FontSize="17">
-                    <TextBlock x:Name="txtMediaTitle" Text="MEDIA_TITLE" />
+                    <TextBlock x:Name="txtMediaTitle" Text="MEDIA_TITLE" FontWeight="Bold" FontSize="18" />
                 </Grid>
 
                 <ScrollViewer Grid.Column="1" Grid.Row="1" HorizontalScrollBarVisibility="Auto"
@@ -219,7 +235,7 @@
                 </Grid.Background>
 
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock HorizontalAlignment="Center" Text="Enter a link to begin." TextWrapping="Wrap" FontSize="18" FontWeight="DemiBold" />
+                    <TextBlock HorizontalAlignment="Center" Text="Enter a URL to begin." TextWrapping="Wrap" FontSize="18" FontWeight="DemiBold" />
                     <TextBlock HorizontalAlignment="Center" Text="[View Grabbers]" Cursor="Hand" x:Name="tbGrabbers" />
                 </StackPanel>
             </Grid>
@@ -228,11 +244,10 @@
         <!--End Whole Content-->
 
         <!--Begin Overlay-->
-        <Grid x:Name="overlayRoot" Background="#CC000000" IsVisible="False">
-            <Border x:Name="overlayContent" Background="White" Margin="20" VerticalAlignment="Center"
-                    HorizontalAlignment="Center">
+        <Grid x:Name="overlayRoot" Background="#66000000" IsVisible="False">
+            <Border x:Name="overlayContent" Background="#DD000000" Margin="20" VerticalAlignment="Center"
+                    HorizontalAlignment="Center" CornerRadius="8" Padding="8" Classes="overlayContent">
                 <Grid>
-
                     <!--Message Box-->
                     <Grid MinWidth="300">
                         <Grid.RowDefinitions>
@@ -243,7 +258,7 @@
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" Margin="8">
-                            <TextBlock x:Name="txtMsgTitle" Text="Message Title" FontSize="14" />
+                            <TextBlock x:Name="txtMsgTitle" Text="Message Title" FontSize="14" FontWeight="Bold" />
                         </Border>
 
                         <Border Grid.Row="1" Height="1" Background="#11000000" />
