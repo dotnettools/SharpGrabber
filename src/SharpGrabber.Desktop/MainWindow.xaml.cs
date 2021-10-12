@@ -32,6 +32,7 @@ namespace SharpGrabber.Desktop
         private Button btnGrab, btnPaste, btnSaveImages;
         private LoadingSpinner spGrab;
         private Grid overlayRoot, noContent;
+        private Border overlayContent;
         private TextBlock txtMsgTitle, txtMsgContent, txtTitle;
         private Button btnMsgOk;
         private TextBlock txtMediaTitle;
@@ -97,6 +98,7 @@ namespace SharpGrabber.Desktop
             spGrab = this.FindControl<LoadingSpinner>("spGrab");
             txtGrab = this.FindControl<TextBlock>("txtGrab");
             overlayRoot = this.FindControl<Grid>("overlayRoot");
+            overlayContent = this.FindControl<Border>("overlayContent");
             noContent = this.FindControl<Grid>("noContent");
             txtMsgTitle = this.FindControl<TextBlock>("txtMsgTitle");
             txtMsgContent = this.FindControl<TextBlock>("txtMsgContent");
@@ -344,7 +346,9 @@ namespace SharpGrabber.Desktop
 
         public void ShowMessage(string title, string text)
         {
+            // overlayContent.Opacity = 0;
             overlayRoot.IsVisible = true;
+            overlayContent.Opacity = 1;
             txtMsgTitle.Text = title;
             txtMsgContent.Text = text;
             btnMsgOk.Focus();
@@ -352,6 +356,7 @@ namespace SharpGrabber.Desktop
 
         public void CloseMessage()
         {
+            overlayContent.Opacity = 0;
             overlayRoot.IsVisible = false;
         }
         #endregion
