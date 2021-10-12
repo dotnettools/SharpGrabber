@@ -88,7 +88,7 @@ I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 
 </details>
     
-## SharpGrabber.Desktop 3.2
+## SharpGrabber.Desktop 3.3
 - It uses every package mentioned above and supports all of the mentioned providers!
 - Displays information and downloads videos, audios, images etc.
 - Merges YouTube separated audio and video streams into complete media files. It can join HLS segments as well!
@@ -101,7 +101,7 @@ Requirements of the cross-platform desktop application to run and operate correc
  
  Download the latest binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
     
-<img src="./assets/SharpGrabberDesktop-ScreenShot-1.png" alt="SharpGrabber.Desktop application" />
+<img src="./assets/SharpGrabberDesktop-ScreenShot-3.3.png" alt="SharpGrabber.Desktop Application" />
 
 
 ## Contribution
