@@ -92,7 +92,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock x:Name="txtTitle" Grid.Column="0" Text="#Grabber" VerticalAlignment="Center"
-                           Margin="16 0 16 2" FontSize="24" Cursor="Hand" />
+                           Margin="16 0 16 2" FontSize="24" FontWeight="DemiBold" Cursor="Hand" />
 
                 <Border Grid.Column="1" Margin="0 0 10 0" CornerRadius="6" Height="36" VerticalAlignment="Center"
                         Background="#333" ClipToBounds="True" BorderBrush="#10000000" BorderThickness="1">
@@ -149,7 +149,7 @@
             <!--End Grab Input-->
 
             <!--Begin Basic Info-->
-            <Grid x:Name="basicInfo" Grid.Row="1" Background="#31FFFFFF">
+            <Grid x:Name="basicInfo" Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -160,12 +160,12 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0" Grid.RowSpan="2" Margin="16" Width="150" Height="128" MaxHeight="128">
+                <Border Grid.Column="0" Grid.RowSpan="2" Margin="16 0" Width="150">
                     <Border Background="#11000000" CornerRadius="3" ClipToBounds="True" BorderThickness="1"
                             BorderBrush="#22000000" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Grid>
                             <Image x:Name="img" Stretch="Uniform" VerticalAlignment="Stretch" Margin="1" />
-                            <components:LoadingSpinner x:Name="imgSpinner" Margin="32" />
+                            <components:LoadingSpinner IsVisible="False" x:Name="imgSpinner" Margin="32" />
                         </Grid>
                     </Border>
                 </Border>
@@ -176,7 +176,7 @@
 
                 <ScrollViewer Grid.Column="1" Grid.Row="1" HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Disabled">
-                    <Grid Margin="0 6 0 0">
+                    <Grid Margin="0 0 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
