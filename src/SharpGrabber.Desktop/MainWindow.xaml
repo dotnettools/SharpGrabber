@@ -175,7 +175,7 @@
                 </Grid>
 
                 <ScrollViewer Grid.Column="1" Grid.Row="1" HorizontalScrollBarVisibility="Auto"
-                              VerticalScrollBarVisibility="Disabled">
+                              VerticalScrollBarVisibility="Disabled" Margin="0 8 0 0">
                     <Grid Margin="0 0 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
