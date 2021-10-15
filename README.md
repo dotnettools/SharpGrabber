@@ -13,6 +13,8 @@ This repository contains multiple related projects:
 - `SharpGrabber.Desktop` A cross-platform desktop application which utilizes both mentioned libraries to expose their functionality to desktop end-users.
 
 # How to Use
+[Go to Documentation](https://github.com/dotnettools/SharpGrabber/wiki)
+
 <details>
     <summary>
         For Developers
