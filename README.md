@@ -17,7 +17,7 @@ This repository contains multiple related projects:
 
 <details>
     <summary>
-        For Developers
+        Quick Start
     </summary>
     
 ## Package Installation
