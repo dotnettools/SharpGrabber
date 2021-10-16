@@ -5,14 +5,14 @@
 [![GitHub](https://img.shields.io/github/license/dotnettools/SharpGrabber)](https://github.com/dotnettools/SharpGrabber/blob/master/LICENSE)
 [![NuGet download count](https://img.shields.io/nuget/dt/SharpGrabber)](https://www.nuget.org/packages/SharpGrabber)
 
-**⭐ Please give a star if you find this project useful!**
-
 This repository contains multiple related projects:
 - `SharpGrabber` is a *.NET Standard* library for scraping top media providers and grabbing high quality video, audio and information.
 - `SharpGrabber.Converter` is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files. It is also used for merging HLS stream segments.
 - `SharpGrabber.Desktop` A cross-platform desktop application which utilizes both mentioned libraries to expose their functionality to desktop end-users.
 
 # How to Use
+**⭐ Please give a star if you find this project useful!**
+
 [Go to Documentation](https://github.com/dotnettools/SharpGrabber/wiki)
 
 <details>
