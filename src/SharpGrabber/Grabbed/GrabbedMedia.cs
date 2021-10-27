@@ -5,9 +5,16 @@ namespace DotNetTools.SharpGrabber.Grabbed
     /// <summary>
     /// <see cref="IGrabbed"/> for media resources, such as audio and video.
     /// </summary>
-    public class GrabbedMedia : IGrabbed
+    public class GrabbedMedia : IGrabbedResource
     {
-        #region Properties
+        public GrabbedMedia(Uri resourceUri, Uri originalUri, MediaFormat format, MediaChannels channels)
+        {
+            OriginalUri = originalUri;
+            ResourceUri = resourceUri;
+            Format = format ?? throw new ArgumentNullException(nameof(format));
+            Channels = channels;
+        }
+
         /// <summary>
         /// Original URI - A value of NULL indicates inheritance from <see cref="GrabResult"/>.
         /// </summary>
@@ -69,18 +76,5 @@ namespace DotNetTools.SharpGrabber.Grabbed
         /// <para>Can be optionally set by <see cref="IGrabber"/>s.</para>
         /// </summary>
         public string FormatTitle { get; set; }
-        #endregion
-
-        #region Constructors
-
-        public GrabbedMedia(Uri resourceUri, Uri originalUri, MediaFormat format, MediaChannels channels)
-        {
-            OriginalUri = originalUri;
-            ResourceUri = resourceUri;
-            Format = format;
-            Channels = channels;
-        }
-
-        #endregion
     }
 }
