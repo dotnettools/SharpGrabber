@@ -76,5 +76,15 @@ namespace DotNetTools.SharpGrabber.Grabbed
         /// <para>Can be optionally set by <see cref="IGrabber"/>s.</para>
         /// </summary>
         public string FormatTitle { get; set; }
+
+        /// <summary>
+        /// Gets the optional pixel width if <see cref="Channels"/> includes <see cref="MediaChannels.Video"/>.
+        /// </summary>
+        public int? PixelWidth { get; set; }
+
+        /// <summary>
+        /// Gets the optional pixel height if <see cref="Channels"/> includes <see cref="MediaChannels.Video"/>.
+        /// </summary>
+        public int? PixelHeight { get; set; }
     }
 }

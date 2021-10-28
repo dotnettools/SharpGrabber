@@ -25,6 +25,7 @@ namespace SharpGrabber.Desktop
         private static readonly HttpClient _client = new HttpClient();
 
         #region Fields
+
         private readonly IMultiGrabber _grabber;
         private bool _uiEnabled = true;
         private TextBox tbUrl;
@@ -41,9 +42,11 @@ namespace SharpGrabber.Desktop
         private LoadingSpinner imgSpinner;
         private StackPanel resourceContainer;
         private Border basicInfo;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Result of the last grab
         /// </summary>
@@ -63,6 +66,7 @@ namespace SharpGrabber.Desktop
                 resourceContainer.IsEnabled = value;
             }
         }
+
         #endregion
 
         public MainWindow()
@@ -124,17 +128,22 @@ namespace SharpGrabber.Desktop
         }
 
         #region Internal Methods
+
         private void CheckLibrary()
         {
             try
             {
                 if (!IOHelper.TryLoadFFMpeg())
-                    throw new Exception("Could not locate path to the ffmpeg library. The following paths were looked up:" + Environment.NewLine
-                        + "- " + string.Join($"{Environment.NewLine}- ", IOHelper.SuggestedFFMpegDirectories.ToArray()));
+                    throw new Exception(
+                        "Could not locate path to the ffmpeg library. The following paths were looked up:" +
+                        Environment.NewLine
+                        + "- " + string.Join($"{Environment.NewLine}- ",
+                            IOHelper.SuggestedFFMpegDirectories.ToArray()));
             }
             catch (Exception exception)
             {
-                ShowMessage("FFMpeg error", $"{exception.Message}{Environment.NewLine}{Environment.NewLine}As a result, conversion capability is disabled. Please check if ffmpeg shared libraries with the matching architecture are available at one of the directories above and restart the application.");
+                ShowMessage("FFMpeg error",
+                    $"{exception.Message}{Environment.NewLine}{Environment.NewLine}As a result, conversion capability is disabled. Please check if ffmpeg shared libraries with the matching architecture are available at one of the directories above and restart the application.");
             }
         }
 
@@ -142,9 +151,11 @@ namespace SharpGrabber.Desktop
         {
             var sb = new StringBuilder();
             sb
-                .Append(Constants.AppName).AppendFormat(" [{0}-bit process]", Environment.Is64BitProcess ? 64 : 32).AppendLine()
+                .Append(Constants.AppName).AppendFormat(" [{0}-bit process]", Environment.Is64BitProcess ? 64 : 32)
+                .AppendLine()
                 .Append("Version ").AppendLine(Constants.AppVersion.ToString())
-                .Append("FFMpeg Version: ").Append(IOHelper.FFMpegLoaded ? ffmpeg.av_version_info() : "<Not Loaded>").AppendLine()
+                .Append("FFMpeg Version: ").Append(IOHelper.FFMpegLoaded ? ffmpeg.av_version_info() : "<Not Loaded>")
+                .AppendLine()
                 .AppendLine()
                 .AppendLine("Copyright © 2021 Javid Shoaei (javidsh.ir) and other contributors");
             ShowMessage("About", sb.ToString());
@@ -252,8 +263,8 @@ namespace SharpGrabber.Desktop
         {
             // init
             CurrentGrab = result;
-            var images = result.Resources.Where(r => r is GrabbedImage).Select(r => r as GrabbedImage).ToArray();
-            var mediaFiles = result.Resources.Where(r => r is GrabbedMedia).Select(r => r as GrabbedMedia).ToArray();
+            var images = result.Resources<GrabbedImage>().ToArray();
+            var mediaFiles = result.Resources<GrabbedMedia>().ToArray();
             noContent.IsVisible = false;
 
             // basic info
@@ -277,7 +288,8 @@ namespace SharpGrabber.Desktop
             img.Source = null;
             if (images.Length > 0)
             {
-                var thumbnail = images.Where(i => i.Type == GrabbedImageType.Thumbnail).FirstOrDefault() ?? images.FirstOrDefault();
+                var thumbnail = images.Where(i => i.Type == GrabbedImageType.Thumbnail).FirstOrDefault() ??
+                                images.FirstOrDefault();
                 imgSpinner.IsVisible = true;
                 try
                 {
@@ -359,6 +371,7 @@ namespace SharpGrabber.Desktop
             overlayContent.Opacity = 0;
             overlayRoot.IsVisible = false;
         }
+
         #endregion
 
         private void TbGrabbers_Click(object sender, RoutedEventArgs e)
@@ -368,6 +381,7 @@ namespace SharpGrabber.Desktop
             {
                 sb.AppendLine(g.Name + (string.IsNullOrEmpty(g.StringId) ? null : $" ({g.StringId})"));
             }
+
             ShowMessage("Registered Grabbers", sb.ToString());
         }
 
@@ -404,6 +418,7 @@ namespace SharpGrabber.Desktop
                 ShowMessage("Clipboard error", "The text in the clipboard is too long.");
                 return;
             }
+
             tbUrl.Text = text.Replace("\r", string.Empty).Replace("\n", string.Empty);
             tbPlaceholder.IsVisible = false;
 
