@@ -89,7 +89,7 @@ The good news is no functionality has been removed, so with a minor refactoring,
 I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 
 </details>
-    
+        
 ## SharpGrabber.Desktop 3.3
 - It uses every package mentioned above and supports all of the mentioned providers!
 - Displays information and downloads videos, audios, images etc.
@@ -105,7 +105,9 @@ Requirements of the cross-platform desktop application to run and operate correc
     
 <img src="./assets/SharpGrabberDesktop-ScreenShot-3.3.png" alt="SharpGrabber.Desktop Application" />
 
-
+# Introducing BlackWidow
+<img src="./assets/blackwidow-logo-text.png" alt="SharpGrabber" height="128" />
+    
 ## Contribution
 You are most welcome to contribute!
 - Support for more media providers such as *DailyMotion*, *Instagram*, *Facebook*, *Twitch* etc.
