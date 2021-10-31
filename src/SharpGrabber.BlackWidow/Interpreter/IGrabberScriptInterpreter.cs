@@ -5,8 +5,14 @@ using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter
 {
+    /// <summary>
+    /// Interprets a script as a grabber.
+    /// </summary>
     public interface IGrabberScriptInterpreter
     {
+        /// <summary>
+        /// Loads the specified script source and interprets it as a grabber.
+        /// </summary>
         Task<IGrabber> InterpretAsync(IGrabberScriptSource script);
     }
 }
