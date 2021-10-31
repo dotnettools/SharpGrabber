@@ -22,4 +22,8 @@
         <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Interpreter\JavaScript\" />
+    </ItemGroup>
+
 </Project>

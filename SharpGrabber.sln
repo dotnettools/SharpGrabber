@@ -24,7 +24,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.Hls", "src\Sha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.Instagram", "src\SharpGrabber.Instagram\SharpGrabber.Instagram.csproj", "{094B729B-9871-4A2C-9228-9AAEE66F135D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGrabber.BlackWidow", "src\SharpGrabber.BlackWidow\SharpGrabber.BlackWidow.csproj", "{9F3A8C86-8F28-4F54-B8A6-DBB49DDB5171}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.BlackWidow", "src\SharpGrabber.BlackWidow\SharpGrabber.BlackWidow.csproj", "{9F3A8C86-8F28-4F54-B8A6-DBB49DDB5171}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGrabber.BlackWidow.Tests", "tests\SharpGrabber.BlackWidow.Tests\SharpGrabber.BlackWidow.Tests.csproj", "{4CB41014-D036-4090-B6FA-4CFB01D82C3A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{ADFEEE61-D79B-4F91-A192-F6A2E949673C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,9 +72,16 @@ Global
 		{9F3A8C86-8F28-4F54-B8A6-DBB49DDB5171}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F3A8C86-8F28-4F54-B8A6-DBB49DDB5171}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F3A8C86-8F28-4F54-B8A6-DBB49DDB5171}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CB41014-D036-4090-B6FA-4CFB01D82C3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CB41014-D036-4090-B6FA-4CFB01D82C3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CB41014-D036-4090-B6FA-4CFB01D82C3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CB41014-D036-4090-B6FA-4CFB01D82C3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4CB41014-D036-4090-B6FA-4CFB01D82C3A} = {ADFEEE61-D79B-4F91-A192-F6A2E949673C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0003E70E-C9A2-459C-A6A0-540449AC7A87}

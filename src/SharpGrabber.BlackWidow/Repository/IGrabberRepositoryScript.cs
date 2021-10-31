@@ -28,6 +28,16 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         /// Gets whether the script is deprecated or works flawlessly.
         /// </summary>
         bool IsDeprecated { get; }
+
+        /// <summary>
+        /// Gets a list of optional regular expressions at least one of which a URI must match before grabbing.
+        /// </summary>
+        string[] SupportedRegularExpressions { get; }
+
+        /// <summary>
+        /// Tests whether or not <paramref name="uri"/> matches any of <see cref="SupportedRegularExpressions"/>.
+        /// </summary>
+        bool IsMatch(Uri uri);
     }
 
     /// <summary>
