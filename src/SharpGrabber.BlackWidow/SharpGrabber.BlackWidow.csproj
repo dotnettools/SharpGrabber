@@ -19,11 +19,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Jurassic" Version="3.2.4" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Interpreter\JavaScript\" />
+      <Folder Include="Interpreter\Api\v1\" />
     </ItemGroup>
 
 </Project>
