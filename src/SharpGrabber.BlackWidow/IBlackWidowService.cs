@@ -1,4 +1,5 @@
-﻿using DotNetTools.SharpGrabber.BlackWidow.Repository;
+﻿using DotNetTools.SharpGrabber.BlackWidow.Host;
+using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow
     /// </summary>
     public interface IBlackWidowService
     {
+        /// <summary>
+        /// Gets the script host.
+        /// </summary>
+        IScriptHost ScriptHost { get; }
+
         /// <summary>
         /// Gets the local grabber repository.
         /// </summary>

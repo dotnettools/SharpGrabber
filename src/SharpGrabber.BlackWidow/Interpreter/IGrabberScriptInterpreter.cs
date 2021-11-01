@@ -13,6 +13,6 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter
         /// <summary>
         /// Loads the specified script source and interprets it as a grabber.
         /// </summary>
-        Task<IGrabber> InterpretAsync(IGrabberScriptSource script);
+        Task<IGrabber> InterpretAsync(IGrabberScriptSource script, int apiVersion);
     }
 }

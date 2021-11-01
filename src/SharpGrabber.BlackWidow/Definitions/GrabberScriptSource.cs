@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Definitions
 {
@@ -9,16 +11,26 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Definitions
     /// </summary>
     public class GrabberScriptSource : IGrabberScriptSource
     {
-        public GrabberScriptSource() { }
+        private readonly string _source;
 
         public GrabberScriptSource(string source)
         {
-            Source = source;
+            _source = source;
         }
 
         /// <summary>
-        /// Gets or sets the source code of the grabber script.
+        /// Creates a <see cref="GrabberScriptSource"/> by reading all the source code from a file.
         /// </summary>
-        public string Source { get; set; }
+        public static GrabberScriptSource FromFile(string fileName)
+        {
+            var src = File.ReadAllText(fileName);
+            return new GrabberScriptSource(src);
+        }
+
+        public string GetSource()
+            => _source;
+
+        public Task<string> GetSourceAsync()
+            => Task.FromResult(_source);
     }
 }

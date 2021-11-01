@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.Instagram", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.BlackWidow", "src\SharpGrabber.BlackWidow\SharpGrabber.BlackWidow.csproj", "{9F3A8C86-8F28-4F54-B8A6-DBB49DDB5171}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGrabber.BlackWidow.Tests", "tests\SharpGrabber.BlackWidow.Tests\SharpGrabber.BlackWidow.Tests.csproj", "{4CB41014-D036-4090-B6FA-4CFB01D82C3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGrabber.BlackWidow.Tests", "tests\SharpGrabber.BlackWidow.Tests\SharpGrabber.BlackWidow.Tests.csproj", "{4CB41014-D036-4090-B6FA-4CFB01D82C3A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{ADFEEE61-D79B-4F91-A192-F6A2E949673C}"
 EndProject

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow
 {
@@ -12,6 +13,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow
         /// <summary>
         /// Gets the source code of the grabber script.
         /// </summary>
-        string Source { get; }
+        string GetSource();
+
+        /// <summary>
+        /// Gets the source code of the grabber script.
+        /// </summary>
+        Task<string> GetSourceAsync();
     }
 }

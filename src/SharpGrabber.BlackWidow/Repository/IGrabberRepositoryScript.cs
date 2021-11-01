@@ -25,6 +25,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         string Version { get; }
 
         /// <summary>
+        /// Gets the BlackWidow API version.
+        /// </summary>
+        int ApiVersion { get; }
+
+        /// <summary>
         /// Gets whether the script is deprecated or works flawlessly.
         /// </summary>
         bool IsDeprecated { get; }

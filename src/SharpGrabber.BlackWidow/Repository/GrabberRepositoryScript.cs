@@ -34,6 +34,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             }
         }
 
+        public int ApiVersion { get; set; } = 1;
+
         public bool IsMatch(Uri uri)
         {
             // test for potential general support

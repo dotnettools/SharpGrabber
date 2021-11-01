@@ -19,15 +19,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Jurassic" Version="3.2.4" />
+      <PackageReference Include="Jint" Version="3.0.0-beta-2035" />
+      <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Interpreter\Api\v1\" />
     </ItemGroup>
 
 </Project>

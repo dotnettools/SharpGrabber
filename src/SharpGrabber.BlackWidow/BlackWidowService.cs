@@ -1,4 +1,5 @@
 ﻿using DotNetTools.SharpGrabber.BlackWidow.Exceptions;
+using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter;
 using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using System;
@@ -20,17 +21,16 @@ namespace DotNetTools.SharpGrabber.BlackWidow
         private IGrabberRepositoryFeed _localFeed;
         private IGrabberRepositoryFeed _remoteFeed;
 
-        protected BlackWidowService(IGrabberRepository localRepository, IGrabberRepository remoteRepository,
-            IGrabberScriptInterpreterService interpreterService)
+        private BlackWidowService(IGrabberRepository localRepository, IGrabberRepository remoteRepository,
+            IScriptHost scriptHost, IGrabberScriptInterpreterService interpreterService)
         {
             Interpreters = interpreterService ?? throw new ArgumentNullException(nameof(interpreterService));
             LocalRepository = localRepository ?? throw new ArgumentNullException(nameof(localRepository));
             RemoteRepository = remoteRepository ?? throw new ArgumentNullException(nameof(remoteRepository));
+            ScriptHost = scriptHost;
         }
 
-        protected BlackWidowService(IGrabberRepository localRepository, IGrabberRepository remoteRepository)
-            : this(localRepository, remoteRepository, new GrabberScriptInterpreterService())
-        { }
+        public IScriptHost ScriptHost { get; }
 
         /// <summary>
         /// Gets the interpreter service.
@@ -45,9 +45,10 @@ namespace DotNetTools.SharpGrabber.BlackWidow
         /// Creates a new instance of <see cref="BlackWidowService"/>.
         /// </summary>
         public static async Task<BlackWidowService> CreateAsync(IGrabberRepository localRepository, IGrabberRepository remoteRepository,
-            IGrabberScriptInterpreterService interpreterService)
+            IScriptHost scriptHost, IGrabberScriptInterpreterService interpreterService = null)
         {
-            var service = new BlackWidowService(localRepository, remoteRepository, interpreterService);
+            interpreterService ??= new GrabberScriptInterpreterService();
+            var service = new BlackWidowService(localRepository, remoteRepository, scriptHost, interpreterService);
             await service.LoadLocalFeedAsync().ConfigureAwait(false);
             return service;
         }
@@ -117,7 +118,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             if (interpreter == null)
                 throw new ScriptInterpretException($"No interpreter is registered for {scriptInfo.Type}.");
 
-            var grabber = await interpreter.InterpretAsync(scriptSource).ConfigureAwait(false);
+            var grabber = await interpreter.InterpretAsync(scriptSource, scriptInfo.ApiVersion).ConfigureAwait(false);
             _grabbers.TryAdd(scriptInfo.Id, grabber);
             return grabber;
         }
