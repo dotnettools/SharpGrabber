@@ -41,14 +41,21 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
             engine.Execute(scriptSource);
 
             var processedScript = _interpreterApiService.ProcessResult(apiVersion, hostObject);
-            var b1 = processedScript.Supports(new Uri("http://jwiqdvajavdi"));
-            var b2 = processedScript.Supports(new Uri("http://fb.com/qwesd/qwrr?qwet=5&asd=bsd"));
+
+            var testUri = new Uri("https://www.pornhub.com/view_video.php?viewkey=ph5f1b68fd84e30");
+            var supports = processedScript.Supports(testUri);
+            if (supports)
+            {
+                var result = await processedScript.GrabAsync(testUri, CancellationToken.None, new GrabOptions(), new Progress<double>());
+            }
             return null;
         }
 
         private Jint.Engine CreateEngine()
         {
-            var engine = new Jint.Engine(o => { });
+            var engine = new Engine(o =>
+            {
+            });
             var host = new JintJavaScriptHost(engine, _scriptHost);
             host.Apply(engine);
             return engine;

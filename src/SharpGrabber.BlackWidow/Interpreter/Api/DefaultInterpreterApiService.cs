@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
 {
@@ -37,16 +38,26 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
             if (hostObject.Grabber.Grab == null)
                 throw new ScriptInterpretException($"The {nameof(hostObject.Grabber.Grab)} function is not set.");
 
-            SupportsDelegate supports = uri =>
+            bool supports(Uri uri)
             {
                 return hostObject.Grabber.Supports(uri?.ToString());
-            };
-            GrabDelegate grab = async (uri, cancellationToken, options, progress) =>
+            }
+
+            async Task<GrabResult> grab(Uri uri, CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
             {
                 var request = new v1.GrabRequest(uri, cancellationToken, options, progress);
-                var response = await hostObject.Grabber.Grab(request).ConfigureAwait(false);
+                var response = new v1.GrabResponse();
+
+                var promise = new TaskCompletionSource<bool>();
+                cancellationToken.Register(promise.SetCanceled);
+                void resolve() => promise.SetResult(true);
+                void reject() => promise.SetResult(false);
+                hostObject.Grabber.Grab(request, response, resolve, reject);
+                await promise.Task.ConfigureAwait(false);
+
                 return null;
-            };
+            }
+
             return new ProcessedGrabScript(supports, grab);
         }
     }
