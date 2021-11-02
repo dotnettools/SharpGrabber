@@ -14,14 +14,15 @@ namespace DotNetTools.SharpGrabber.BlackWidow
 
         public static void Test()
         {
+            // nothing should be done here,
+            // the static constructor would run once.
         }
 
         private static void EnsureLoaded(params Type[] types)
         {
             foreach (var type in types)
             {
-                // nothing to do here
-                // the framework will automatically load the assembly
+                // create a dummy instance just to ensure the type is loaded
                 var o = Activator.CreateInstance(type);
                 if (o is IDisposable disposable)
                     disposable.Dispose();
