@@ -10,7 +10,7 @@ namespace DotNetTools.SharpGrabber.Grabbed
     public class GrabbedStreamMetadata : IGrabbed
     {
         public GrabbedStreamMetadata(Uri originalUri, Uri resourceUri, string name, RectSize resolution, int bandwidth,
-            MediaFormat format, MediaFormat outputFormat, Lazy<Task<GrabbedStream>> stream)
+            MediaFormat format, MediaFormat outputFormat, Lazy<Task<GrabbedHlsStream>> stream)
         {
             OriginalUri = originalUri;
             ResourceUri = resourceUri;
@@ -54,6 +54,6 @@ namespace DotNetTools.SharpGrabber.Grabbed
         /// <summary>
         /// Resolves the stream associated with current metadata.
         /// </summary>
-        public Lazy<Task<GrabbedStream>> Stream { get; }
+        public Lazy<Task<GrabbedHlsStream>> Stream { get; }
     }
 }

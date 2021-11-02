@@ -9,6 +9,7 @@ namespace DotNetTools.SharpGrabber.Grabbed
     /// Each property of this class is optional/nullable, as they might not be applicable for
     /// different sources.
     /// </remarks>
+    [GrabbedType("Info")]
     public class GrabbedInfo : IGrabbed
     {
         /// <summary>

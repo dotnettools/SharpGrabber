@@ -5,8 +5,19 @@ namespace DotNetTools.SharpGrabber.Grabbed
     /// <summary>
     /// <see cref="IGrabbed"/> for media resources, such as audio and video.
     /// </summary>
+    [GrabbedType("Media")]
     public class GrabbedMedia : IGrabbedResource
     {
+        public GrabbedMedia() { }
+
+        public GrabbedMedia(Uri resourceUri, MediaFormat format, MediaChannels channels)
+        {
+            ResourceUri = resourceUri;
+            Format = format ?? throw new ArgumentNullException(nameof(format));
+            Channels = channels;
+        }
+
+        [Obsolete("Use the parameterless constructor instead.")]
         public GrabbedMedia(Uri resourceUri, Uri originalUri, MediaFormat format, MediaChannels channels)
         {
             OriginalUri = originalUri;
@@ -18,10 +29,10 @@ namespace DotNetTools.SharpGrabber.Grabbed
         /// <summary>
         /// Original URI - A value of NULL indicates inheritance from <see cref="GrabResult"/>.
         /// </summary>
-        public Uri OriginalUri { get; }
+        public Uri OriginalUri { get; set; }
 
         /// <inheritdoc />
-        public Uri ResourceUri { get; }
+        public Uri ResourceUri { get; set; }
 
         /// <summary>
         /// Optional unique identifier of this format - For YouTube media, this value would be the same as iTag integer number.
@@ -34,12 +45,12 @@ namespace DotNetTools.SharpGrabber.Grabbed
         /// <summary>
         /// Contains information about mime type and extension of the media.
         /// </summary>
-        public MediaFormat Format { get; }
+        public MediaFormat Format { get; set; }
 
         /// <summary>
         /// Defines if this grabbed media contains either audio and/or video channels.
         /// </summary>
-        public MediaChannels Channels { get; }
+        public MediaChannels Channels { get; set; }
 
         /// <summary>
         /// Full title obtained from source. A value of NULL indicates inheritance from <see cref="GrabResult"/>.

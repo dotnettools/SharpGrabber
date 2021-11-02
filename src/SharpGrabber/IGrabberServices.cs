@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
 
 namespace DotNetTools.SharpGrabber
 {
@@ -19,5 +21,15 @@ namespace DotNetTools.SharpGrabber
         /// The result <see cref="HttpClient"/> MUST NOT be disposed; otherwise it will break the functionality.
         /// </remarks>
         HttpClient GetClient();
+
+        /// <summary>
+        /// Gets a registered type implementing <see cref="IGrabbed"/> with identifier <paramref name="grabbedId"/>.
+        /// </summary>
+        Type GetGrabbed(string grabbedId);
+
+        /// <summary>
+        /// Converts <paramref name="value"/> to <paramref name="targetType"/>.
+        /// </summary>
+        object ChangeType(object value, Type targetType);
     }
 }

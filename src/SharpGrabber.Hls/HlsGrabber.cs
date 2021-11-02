@@ -92,7 +92,7 @@ namespace DotNetTools.SharpGrabber.Hls
                 var uri = new Uri(originalUri, stream.Uri);
                 var resolvableStream = new ResolvableStream(uri, stream, Services);
                 var g = new GrabbedStreamMetadata(originalUri, uri, stream.Name,
-                    stream.Resolution, stream.Bandwidth, PlaylistFormat, OutputFormat, new Lazy<Task<GrabbedStream>>(resolvableStream.Resolve));
+                    stream.Resolution, stream.Bandwidth, PlaylistFormat, OutputFormat, new Lazy<Task<GrabbedHlsStream>>(resolvableStream.Resolve));
                 list.Add(g);
             }
             return list.OrderByDescending(s => s.Resolution.Height).ToList<IGrabbed>();
@@ -111,10 +111,16 @@ namespace DotNetTools.SharpGrabber.Hls
                 segments.Add(new MediaSegment(segment.Title, uri, segment.Duration));
             }
 
-            var g = new GrabbedStream(originalUri, originalUri, totalDuration, segments);
+            var g = new GrabbedHlsStream
+            {
+                OriginalUri = originalUri,
+                ResourceUri = originalUri,
+                Length = totalDuration,
+                Segments = segments,
+            };
             var resolvableStream = new ResolvableStream(g);
             list.Add(new GrabbedStreamMetadata(originalUri, originalUri, "Media", null, 0, PlaylistFormat, OutputFormat,
-                new Lazy<Task<GrabbedStream>>(resolvableStream.Resolve)));
+                new Lazy<Task<GrabbedHlsStream>>(resolvableStream.Resolve)));
             return list;
         }
 
@@ -122,7 +128,7 @@ namespace DotNetTools.SharpGrabber.Hls
         {
             private readonly Uri _uri;
             private readonly HlsStreamInfo _stream;
-            private readonly GrabbedStream _resolved;
+            private readonly GrabbedHlsStream _resolved;
             private readonly IGrabberServices _services;
 
             public ResolvableStream(Uri uri, HlsStreamInfo stream, IGrabberServices services)
@@ -132,12 +138,12 @@ namespace DotNetTools.SharpGrabber.Hls
                 _services = services;
             }
 
-            public ResolvableStream(GrabbedStream resolved)
+            public ResolvableStream(GrabbedHlsStream resolved)
             {
                 _resolved = resolved;
             }
 
-            public async Task<GrabbedStream> Resolve()
+            public async Task<GrabbedHlsStream> Resolve()
             {
                 if (_resolved != null)
                     return _resolved;

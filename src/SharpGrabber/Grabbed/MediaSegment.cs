@@ -3,7 +3,7 @@
 namespace DotNetTools.SharpGrabber.Grabbed
 {
     /// <summary>
-    /// Represents a single segment of a <see cref="GrabbedStream"/>.
+    /// Represents a single segment of a <see cref="GrabbedHlsStream"/>.
     /// </summary>
     public class MediaSegment
     {
