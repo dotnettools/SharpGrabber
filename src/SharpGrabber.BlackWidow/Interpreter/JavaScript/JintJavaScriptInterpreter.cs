@@ -42,7 +42,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
 
             var processedScript = _interpreterApiService.ProcessResult(apiVersion, hostObject);
 
-            var testUri = new Uri("https://www.pornhub.com/view_video.php?viewkey=ph5f1b68fd84e30");
+            var testUri = new Uri("https://www.pornhub.com/view_video.php?viewkey=ph5d5811977a18f");
             var supports = processedScript.Supports(testUri);
             if (supports)
             {

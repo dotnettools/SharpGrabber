@@ -1,4 +1,5 @@
-﻿using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http;
+﻿using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Html;
+using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,5 +17,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
         public ApiGrabberContext Grabber { get; } = new ApiGrabberContext();
 
         public ApiHttpContext Http { get; }
+
+        public ApiHtmlContext Html { get; } = new ApiHtmlContext();
     }
 }
