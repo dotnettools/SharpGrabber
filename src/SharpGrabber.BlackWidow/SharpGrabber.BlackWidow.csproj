@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
+      <ProjectReference Include="..\SharpGrabber.Hls\SharpGrabber.Hls.csproj" />
     </ItemGroup>
 
 </Project>

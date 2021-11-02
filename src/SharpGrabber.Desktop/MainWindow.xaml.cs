@@ -243,7 +243,7 @@ namespace SharpGrabber.Desktop
             }
 
             // present streams
-            var streams = allGrabbedResources.OfType<GrabbedStreamMetadata>().ToList();
+            var streams = allGrabbedResources.OfType<GrabbedHlsStreamMetadata>().ToList();
             foreach (var streamMetadata in streams)
             {
                 var view = new StreamResourceView(new GrabbedStreamViewModel(streamMetadata));
@@ -251,7 +251,7 @@ namespace SharpGrabber.Desktop
             }
 
             // present stream references
-            var streamRefs = allGrabbedResources.OfType<GrabbedStreamReference>().ToList();
+            var streamRefs = allGrabbedResources.OfType<GrabbedHlsStreamReference>().ToList();
             foreach (var streamRef in streamRefs)
             {
                 var view = new StreamReferenceView(new GrabbedStreamRefViewModel(streamRef));

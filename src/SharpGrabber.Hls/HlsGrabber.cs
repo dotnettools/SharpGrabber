@@ -11,6 +11,11 @@ namespace DotNetTools.SharpGrabber.Hls
 {
     public class HlsGrabber : GrabberBase
     {
+        /// <summary>
+        /// Gets the initializer for the assembly.
+        /// </summary>
+        public static Type Initializer => typeof(AssemblyInitializer);
+
         private const string MpegUrlContentType = "application/x-mpegurl";
         private const string M3u8Extension = ".m3u8";
         private static readonly MediaFormat PlaylistFormat = new MediaFormat("application/x-mpegURL", "m3u8");
@@ -86,12 +91,12 @@ namespace DotNetTools.SharpGrabber.Hls
 
         private IList<IGrabbed> GrabStreams(Uri originalUri, PlaylistDocument doc)
         {
-            var list = new List<GrabbedStreamMetadata>();
+            var list = new List<GrabbedHlsStreamMetadata>();
             foreach (var stream in doc.Streams)
             {
                 var uri = new Uri(originalUri, stream.Uri);
                 var resolvableStream = new ResolvableStream(uri, stream, Services);
-                var g = new GrabbedStreamMetadata(originalUri, uri, stream.Name,
+                var g = new GrabbedHlsStreamMetadata(originalUri, uri, stream.Name,
                     stream.Resolution, stream.Bandwidth, PlaylistFormat, OutputFormat, new Lazy<Task<GrabbedHlsStream>>(resolvableStream.Resolve));
                 list.Add(g);
             }
@@ -119,7 +124,7 @@ namespace DotNetTools.SharpGrabber.Hls
                 Segments = segments,
             };
             var resolvableStream = new ResolvableStream(g);
-            list.Add(new GrabbedStreamMetadata(originalUri, originalUri, "Media", null, 0, PlaylistFormat, OutputFormat,
+            list.Add(new GrabbedHlsStreamMetadata(originalUri, originalUri, "Media", null, 0, PlaylistFormat, OutputFormat,
                 new Lazy<Task<GrabbedHlsStream>>(resolvableStream.Resolve)));
             return list;
         }
@@ -150,7 +155,7 @@ namespace DotNetTools.SharpGrabber.Hls
 
                 var grabber = new HlsGrabber(_services);
                 var result = await grabber.GrabAsync(_uri).ConfigureAwait(false);
-                return await result.Resources.OfType<GrabbedStreamMetadata>().Single().Stream.Value.ConfigureAwait(false);
+                return await result.Resources.OfType<GrabbedHlsStreamMetadata>().Single().Stream.Value.ConfigureAwait(false);
             }
         }
     }

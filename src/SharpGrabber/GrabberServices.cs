@@ -12,18 +12,18 @@ namespace DotNetTools.SharpGrabber
     {
         public static readonly GrabberServices Default = new();
 
-        static GrabberServices()
-        {
-            Default.RegisterBuiltInGrabbedTypes();
-        }
-
+        private readonly bool _autoRegisterBuiltInGrabbedTypes;
         private readonly Func<HttpClient> _httpClientProvider;
         private readonly Dictionary<string, Type> _grabbedTypes = new(StringComparer.InvariantCultureIgnoreCase);
+        private readonly HashSet<Assembly> _scannedAssemblies = new();
 
-        public GrabberServices(Func<HttpClient> httpClientProvider = null, IMimeService mime = null)
+        public GrabberServices(Func<HttpClient> httpClientProvider = null, IMimeService mime = null, bool registerBuiltInGrabbedTypes = true)
         {
+            _autoRegisterBuiltInGrabbedTypes = registerBuiltInGrabbedTypes;
             _httpClientProvider = httpClientProvider ?? GetGlobalHttpClient;
             Mime = mime ?? DefaultMimeService.Instance;
+            if (registerBuiltInGrabbedTypes)
+                RegisterBuiltInGrabbedTypes();
         }
         public IMimeService Mime { get; }
 
@@ -47,16 +47,23 @@ namespace DotNetTools.SharpGrabber
         }
 
         /// <summary>
-        /// Scans the primary SharpGrabber assembly for types implementing <see cref="IGrabbed"/>.
+        /// Scans the built-in assemblies for types implementing <see cref="IGrabbed"/>, if not already scanned.
         /// </summary>
         public void RegisterBuiltInGrabbedTypes()
         {
-            var types = typeof(GrabberServices).Assembly
-                .GetTypes()
+            var newAssemblies = GrabberServicesAssemblyRegistry.Assemblies
+                .Where(a => !_scannedAssemblies.Contains(a))
+                .ToArray();
+
+            var types = newAssemblies
+                .SelectMany(a => a.GetTypes())
                 .Where(t => t.GetInterfaces().Contains(typeof(IGrabbed)));
 
             foreach (var type in types)
                 RegisterGrabbedType(type);
+
+            foreach (var assembly in newAssemblies)
+                _scannedAssemblies.Add(assembly);
         }
 
         public void RegisterGrabbedType(Type type)
@@ -77,7 +84,14 @@ namespace DotNetTools.SharpGrabber
         }
 
         public Type GetGrabbed(string grabbedId)
-            => _grabbedTypes.GetOrDefault(grabbedId);
+        {
+            var grabbed = _grabbedTypes.GetOrDefault(grabbedId);
+            if (grabbed != null || !_autoRegisterBuiltInGrabbedTypes)
+                return grabbed;
+
+            RegisterBuiltInGrabbedTypes();
+            return _grabbedTypes.GetOrDefault(grabbedId);
+        }
 
         public object ChangeType(object value, Type targetType)
         {
@@ -102,19 +116,30 @@ namespace DotNetTools.SharpGrabber
 
         protected virtual bool ChangeTypeInternal(object value, Type targetType, out object newValue)
         {
-            if (targetType == typeof(string))
+            var t = targetType;
+            var nullable = t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>);
+            if (nullable)
+                t = t.GetGenericArguments()[0];
+
+            if (t == typeof(string))
             {
                 newValue = value.ToString();
                 return true;
             }
-            if (targetType == typeof(Uri))
+            if (t == typeof(Uri))
             {
                 newValue = new Uri(value.ToString());
                 return true;
             }
-            if (targetType.IsEnum)
+            if (t == typeof(TimeSpan))
             {
-                newValue = Enum.Parse(targetType, value.ToString(), true);
+                var milliseconds = (double)Convert.ChangeType(value, typeof(double));
+                newValue = TimeSpan.FromMilliseconds(milliseconds);
+                return true;
+            }
+            if (t.IsEnum)
+            {
+                newValue = Enum.Parse(t, value.ToString(), true);
                 return true;
             }
 

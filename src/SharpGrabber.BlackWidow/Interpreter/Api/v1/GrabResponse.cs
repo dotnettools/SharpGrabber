@@ -47,7 +47,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
         {
             var grabbedType = _grabberServices.GetGrabbed(grabbedTypeId);
             if (grabbedType == null)
-                throw new NotSupportedException($"Grabbed type '{grabbedType}' is not registered.");
+                throw new NotSupportedException($"Grabbed type '{grabbedTypeId}' is not registered.");
 
             var grabbed = (IGrabbed)Activator.CreateInstance(grabbedType);
             SetProperties(grabbed, values);

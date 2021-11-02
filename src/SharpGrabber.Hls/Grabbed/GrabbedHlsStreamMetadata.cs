@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 namespace DotNetTools.SharpGrabber.Grabbed
 {
     /// <summary>
-    /// <see cref="IGrabbed"/> for information about HLS master playlist streams. This class represents
-    /// a stream, which refers to an M3U8 playlist containing the actual media files.
+    /// Implements <see cref="IGrabbed"/> to provide information about HLS master playlist streams. This class represents
+    /// a single stream, which refers to an M3U8 playlist containing the actual media files.
     /// </summary>
-    public class GrabbedStreamMetadata : IGrabbed
+    [GrabbedType("HlsStreamMetadata")]
+    public class GrabbedHlsStreamMetadata : IGrabbed
     {
-        public GrabbedStreamMetadata(Uri originalUri, Uri resourceUri, string name, RectSize resolution, int bandwidth,
+        public GrabbedHlsStreamMetadata(Uri resourceUri, string name, RectSize resolution, int bandwidth,
             MediaFormat format, MediaFormat outputFormat, Lazy<Task<GrabbedHlsStream>> stream)
         {
-            OriginalUri = originalUri;
             ResourceUri = resourceUri;
             Name = name;
             Resolution = resolution;
@@ -20,6 +20,14 @@ namespace DotNetTools.SharpGrabber.Grabbed
             StreamFormat = format;
             OutputFormat = outputFormat;
             Stream = stream;
+        }
+
+        [Obsolete("Use another constructor.")]
+        public GrabbedHlsStreamMetadata(Uri originalUri, Uri resourceUri, string name, RectSize resolution, int bandwidth,
+            MediaFormat format, MediaFormat outputFormat, Lazy<Task<GrabbedHlsStream>> stream)
+            : this(resourceUri, name, resolution, bandwidth, format, outputFormat, stream)
+        {
+            OriginalUri = originalUri;
         }
 
         public Uri OriginalUri { get; }

@@ -166,7 +166,7 @@ namespace DotNetTools.SharpGrabber.Adult
                 switch (format.ToLowerInvariant())
                 {
                     case "mp4":
-                        var m = new GrabbedMedia(uri, result.OriginalUri, DefaultMediaFormat, MediaChannels.Both)
+                        var m = new GrabbedMedia(uri, DefaultMediaFormat, MediaChannels.Both)
                         {
                             Resolution = resol,
                             FormatTitle = $"MP4 {resol}",
@@ -174,7 +174,7 @@ namespace DotNetTools.SharpGrabber.Adult
                         grabbed.Add(quality, m);
                         break;
                     case "hls":
-                        var sr = new GrabbedStreamReference(uri, result.OriginalUri)
+                        var sr = new GrabbedHlsStreamReference(uri)
                         {
                             Resolution = resol,
                             PlaylistType = playlistType,

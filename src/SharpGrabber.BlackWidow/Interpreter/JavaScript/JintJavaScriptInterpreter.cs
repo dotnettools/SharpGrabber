@@ -21,6 +21,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
         public JintJavaScriptInterpreter(IInterpreterApiService interpreterApiService, IGrabberServices grabberServices,
             IScriptHost host)
         {
+            BlackWidowInitializer.Test();
             _interpreterApiService = interpreterApiService;
             _grabberServices = grabberServices;
             _scriptHost = host;

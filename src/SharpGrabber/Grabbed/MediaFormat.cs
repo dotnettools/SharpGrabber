@@ -17,7 +17,6 @@
         public string Extension { get; set; }
         #endregion
 
-        #region Methods
 
         public MediaFormat() { }
 
@@ -27,6 +26,5 @@
             Extension = extension;
         }
 
-        #endregion
     }
 }
