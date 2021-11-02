@@ -20,18 +20,18 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
             };
         }
 
-        public ProcessedGrabScript ProcessResult(int apiVersion, object hostObject)
+        public ProcessedGrabScript ProcessResult(int apiVersion, object hostObject, IGrabberServices grabberServices)
         {
             if (apiVersion <= 0)
                 throw new ArgumentOutOfRangeException(nameof(apiVersion));
             return apiVersion switch
             {
-                1 => ProcessV1((v1.HostObject)hostObject),
+                1 => ProcessV1((v1.HostObject)hostObject, grabberServices),
                 _ => throw new ScriptApiVersionMismatchException($"This script requires API version {apiVersion}; which is not supported."),
             };
         }
 
-        private ProcessedGrabScript ProcessV1(v1.HostObject hostObject)
+        private ProcessedGrabScript ProcessV1(v1.HostObject hostObject, IGrabberServices grabberServices)
         {
             if (hostObject.Grabber.Supports == null)
                 throw new ScriptInterpretException($"The {nameof(hostObject.Grabber.Supports)} function is not set.");
@@ -45,8 +45,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
 
             async Task<GrabResult> grab(Uri uri, CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
             {
+                var grabbedList = new List<IGrabbed>();
+                var result = new GrabResult(uri, grabbedList);
+
                 var request = new v1.GrabRequest(uri, cancellationToken, options, progress);
-                var response = new v1.GrabResponse();
+                var response = new v1.GrabResponse(result, grabbedList, grabberServices);
 
                 var promise = new TaskCompletionSource<bool>();
                 cancellationToken.Register(promise.SetCanceled);
@@ -55,7 +58,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
                 hostObject.Grabber.Grab(request, response, resolve, reject);
                 await promise.Task.ConfigureAwait(false);
 
-                return null;
+                return result;
             }
 
             return new ProcessedGrabScript(supports, grab);

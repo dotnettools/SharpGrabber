@@ -1,4 +1,5 @@
 ﻿using DotNetTools.SharpGrabber.BlackWidow.Host;
+using DotNetTools.SharpGrabber.Exceptions;
 using Jint;
 using Jint.Native;
 using System;
@@ -21,6 +22,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
 
         public void Apply(Engine engine)
         {
+            engine.SetValue(new JsString("GrabException"), typeof(GrabException));
+
             engine.SetValue(new JsString("alert"), (Action<object>)_host.Alert);
             engine.SetValue(new JsString("console"), new ConsoleContext(this));
             engine.SetValue(new JsString("URL"), typeof(URL));

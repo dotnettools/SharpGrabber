@@ -8,6 +8,6 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
     {
         object GetHostObject(int apiVersion, IGrabberServices grabberServices);
 
-        ProcessedGrabScript ProcessResult(int apiVersion, object hostObject);
+        ProcessedGrabScript ProcessResult(int apiVersion, object hostObject, IGrabberServices grabberServices);
     }
 }

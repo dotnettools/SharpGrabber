@@ -1,5 +1,6 @@
 ﻿using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Html;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http;
+using DotNetTools.SharpGrabber.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Text;
