@@ -32,7 +32,7 @@ namespace DotNetTools.SharpGrabber.Grabbed
 
         public Uri OriginalUri { get; }
 
-        public Uri ResourceUri { get; }
+        public Uri ResourceUri { get; set; }
 
         /// <summary>
         /// Optional name for the stream

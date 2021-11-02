@@ -1,6 +1,7 @@
 ﻿using Esprima.Ast;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Reflection;
 using System.Text;
 
@@ -54,9 +55,12 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
             _grabbedCollection.Add(grabbed);
         }
 
-        private void SetProperties(IGrabbed grabbed, IDictionary<string, object> values)
+        private void SetProperties(object obj, IDictionary<string, object> values)
         {
-            var type = grabbed.GetType();
+            if (obj == null)
+                return;
+
+            var type = obj.GetType();
             foreach (var pair in values)
             {
                 if (pair.Value == null)
@@ -66,8 +70,22 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
                 if (prop == null)
                     continue;
 
+                if (pair.Value is IDictionary<string, object> map)
+                {
+                    if (map.Count == 0)
+                        return;
+                    var innerObject = prop.GetValue(obj);
+                    if (innerObject == null)
+                    {
+                        innerObject = Activator.CreateInstance(prop.PropertyType);
+                        prop.SetValue(obj, innerObject);
+                    }
+                    SetProperties(innerObject, map);
+                    return;
+                }
+
                 var value = _grabberServices.ChangeType(pair.Value, prop.PropertyType);
-                prop.SetValue(grabbed, value);
+                prop.SetValue(obj, value);
             }
         }
     }

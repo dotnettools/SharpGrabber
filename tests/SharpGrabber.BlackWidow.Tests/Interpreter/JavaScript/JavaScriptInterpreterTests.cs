@@ -4,6 +4,7 @@ using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript;
+using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,8 +30,11 @@ namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
                 Debugger.Break();
             };
             var i = new JintJavaScriptInterpreter(apiService, GrabberServices.Default, host);
+            var script = new GrabberRepositoryScript();
             var src = GrabberScriptSource.FromFile(@"C:\Users\Jaweed\Desktop\new 11.js");
-            var grabber = await i.InterpretAsync(src, 1);
+            var grabber = await i.InterpretAsync(script, src, 1);
+
+            var result = await grabber.GrabAsync(new Uri(@""));
         }
     }
 }

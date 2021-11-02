@@ -15,6 +15,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         string Id { get; }
 
         /// <summary>
+        /// Gets the friendly name of this script.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Gets the script type, which is used to understand how the script should be interpreted.
         /// </summary>
         GrabberScriptType Type { get; }

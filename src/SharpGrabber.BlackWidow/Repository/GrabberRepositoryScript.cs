@@ -16,6 +16,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         public string Id { get; set; }
 
+        public string Name { get; set; }
+
         public GrabberScriptType Type { get; set; }
 
         public string Version { get; set; }

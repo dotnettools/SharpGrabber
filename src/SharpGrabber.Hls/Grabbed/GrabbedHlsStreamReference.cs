@@ -31,6 +31,8 @@ namespace DotNetTools.SharpGrabber.Grabbed
 
         public HlsPlaylistType PlaylistType { get; set; }
 
+        public string Title { get; set; }
+
         public string Resolution { get; set; }
     }
 }

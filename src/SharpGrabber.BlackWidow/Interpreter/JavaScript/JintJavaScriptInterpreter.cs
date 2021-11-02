@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Internal;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
+using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using Jint;
 using Jint.Native;
 
@@ -32,10 +33,10 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
         /// </summary>
         public string MainFunctionName { get; set; } = "main";
 
-        public async Task<IGrabber> InterpretAsync(IGrabberScriptSource script, int apiVersion)
+        public async Task<IGrabber> InterpretAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, int apiVersion)
         {
             var engine = CreateEngine();
-            var scriptSource = await script.GetSourceAsync().ConfigureAwait(false);
+            var scriptSource = await source.GetSourceAsync().ConfigureAwait(false);
 
             var hostObject = _interpreterApiService.GetHostObject(apiVersion, _grabberServices);
             DefineHostObjectOnScript(engine, hostObject);
@@ -43,13 +44,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
 
             var processedScript = _interpreterApiService.ProcessResult(apiVersion, hostObject, _grabberServices);
 
-            var testUri = new Uri("https://www.pornhub.com/view_video.php?viewkey=ph5d5811977a18f");
-            var supports = processedScript.Supports(testUri);
-            if (supports)
-            {
-                var result = await processedScript.GrabAsync(testUri, CancellationToken.None, new GrabOptions(), new Progress<double>());
-            }
-            return null;
+            return new JintGrabber(processedScript, script.Name, _grabberServices);
         }
 
         private Jint.Engine CreateEngine()
@@ -71,29 +66,27 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
             }
         }
 
-        private class JavaScriptGrabber : GrabberBase
+        private class JintGrabber : GrabberBase
         {
-            public JavaScriptGrabber(string stringId, string name, IGrabberServices grabberServices) : base(
+            private readonly ProcessedGrabScript _processedGrabScript;
+
+            public JintGrabber(ProcessedGrabScript processedGrabScript, string name, IGrabberServices grabberServices) : base(
                 grabberServices)
             {
-                StringId = stringId;
+                _processedGrabScript = processedGrabScript;
                 Name = name;
             }
 
-            public override string StringId { get; }
+            public override string StringId => null;
 
             public override string Name { get; }
 
             public override bool Supports(Uri uri)
-            {
-                throw new NotImplementedException();
-            }
+                => _processedGrabScript.Supports(uri);
 
             protected override Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken,
                 GrabOptions options, IProgress<double> progress)
-            {
-                throw new NotImplementedException();
-            }
+                => _processedGrabScript.GrabAsync(uri, cancellationToken, options, progress);
         }
     }
 }

@@ -118,7 +118,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             if (interpreter == null)
                 throw new ScriptInterpretException($"No interpreter is registered for {scriptInfo.Type}.");
 
-            var grabber = await interpreter.InterpretAsync(scriptSource, scriptInfo.ApiVersion).ConfigureAwait(false);
+            var grabber = await interpreter.InterpretAsync(scriptInfo, scriptSource, scriptInfo.ApiVersion).ConfigureAwait(false);
             _grabbers.TryAdd(scriptInfo.Id, grabber);
             return grabber;
         }

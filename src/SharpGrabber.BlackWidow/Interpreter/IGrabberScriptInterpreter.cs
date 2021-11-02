@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetTools.SharpGrabber.BlackWidow.Repository;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,6 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter
         /// <summary>
         /// Loads the specified script source and interprets it as a grabber.
         /// </summary>
-        Task<IGrabber> InterpretAsync(IGrabberScriptSource script, int apiVersion);
+        Task<IGrabber> InterpretAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, int apiVersion);
     }
 }
