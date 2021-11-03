@@ -60,11 +60,13 @@ This package also supports `AES-128` decryption.
 ## Quick Start
 ### 1. Start with building a Grabber
 
-    var grabber = GrabberBuilder.New()
-        .UseDefaultServices()
-        .AddYouTube()
-        .AddVimeo()
-        .Build();
+```csharp
+var grabber = GrabberBuilder.New()
+	.UseDefaultServices()
+	.AddYouTube()
+	.AddVimeo()
+	.Build();
+```
     
 This will result in the creation of a "multi-grabber".
 
@@ -72,17 +74,21 @@ What grabbers you can "add" depends on what packages you've installed. In this e
 
 ### 2. Grab from a URI
 
-    var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=LTseTg48568"));
+```csharp
+var result = await grabber.GrabAsync(new Uri("https://www.youtube.com/watch?v=LTseTg48568"));
+```
 
 No matter what website the URI refers to, the multi-grabber will detect the provider and put the right grabber to use.
 
 ### 3. Process the Result
 
-    var info = result.Resource<GrabbedInfo>();
-    Console.WriteLine("Time Length: {0}", info.Length);
-    var images = result.Resources<GrabbedImage>();
-    var videos = result.Resources<GrabbedMedia>();
-    
+```csharp
+var info = result.Resource<GrabbedInfo>();
+Console.WriteLine("Time Length: {0}", info.Length);
+var images = result.Resources<GrabbedImage>();
+var videos = result.Resources<GrabbedMedia>();
+```
+
 ## Upgrade From 1.x to 2.x
 ATTENTION! Beware of the breaking changes since v2.0 that requires you to update your code.
 The good news is no functionality has been removed, so with a minor refactoring, you should be good to go!
