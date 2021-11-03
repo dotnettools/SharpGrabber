@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotNetTools.SharpGrabber.BlackWidow.Definitions
+namespace DotNetTools.SharpGrabber.BlackWidow
 {
     /// <summary>
     /// Default implementation for <see cref="IGrabberScriptSource"/>
