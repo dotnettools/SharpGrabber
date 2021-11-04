@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 {
+    /// <summary>
+    /// Mounts to a phyisical directory to fetch and store grabbers.
+    /// </summary>
     public class LocalGrabberRepository : IGrabberRepository
     {
         private readonly string _rootPath;
@@ -32,7 +35,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             var root = new DirectoryInfo(_rootPath);
             var ids = root.EnumerateDirectories().Select(d => d.Name).ToArray();
             var scripts = ids.Select(id => ReadScriptInfo(id));
-            var feed = new InMemoryRepositoryFeed(scripts);
+            var feed = new GrabberRepositoryFeed(scripts);
             return Task.FromResult<IGrabberRepositoryFeed>(feed);
         }
 

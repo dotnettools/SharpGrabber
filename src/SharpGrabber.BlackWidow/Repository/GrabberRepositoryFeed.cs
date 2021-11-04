@@ -6,13 +6,16 @@ using System.Text;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 {
-    internal class InMemoryRepositoryFeed : IGrabberRepositoryFeed
+    /// <summary>
+    /// Default in-memory implementation for <see cref="IGrabberRepositoryFeed"/>
+    /// </summary>
+    public class GrabberRepositoryFeed : IGrabberRepositoryFeed
     {
         private readonly ConcurrentDictionary<string, IGrabberRepositoryScript> _scripts = new();
 
-        public InMemoryRepositoryFeed() { }
+        public GrabberRepositoryFeed() { }
 
-        public InMemoryRepositoryFeed(IEnumerable<IGrabberRepositoryScript> scripts)
+        public GrabberRepositoryFeed(IEnumerable<IGrabberRepositoryScript> scripts)
         {
             foreach (var script in scripts)
                 _scripts.TryAdd(script.Id, script);
