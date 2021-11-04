@@ -9,6 +9,18 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
 {
     public class DefaultInterpreterApiService : IInterpreterApiService
     {
+        private readonly IGrabberServices _grabberServices;
+        private readonly IGrabbedTypeCollection _grabbedTypeCollection;
+        private readonly IApiTypeConverter _typeConverter;
+
+        public DefaultInterpreterApiService(IGrabberServices grabberServices, IGrabbedTypeCollection grabbedTypeCollection,
+            IApiTypeConverter typeConverter)
+        {
+            _grabberServices = grabberServices;
+            _grabbedTypeCollection = grabbedTypeCollection;
+            _typeConverter = typeConverter;
+        }
+
         public object GetHostObject(int apiVersion, IGrabberServices grabberServices)
         {
             if (apiVersion <= 0)
@@ -20,18 +32,18 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
             };
         }
 
-        public ProcessedGrabScript ProcessResult(int apiVersion, object hostObject, IGrabberServices grabberServices)
+        public ProcessedGrabScript ProcessResult(int apiVersion, object hostObject)
         {
             if (apiVersion <= 0)
                 throw new ArgumentOutOfRangeException(nameof(apiVersion));
             return apiVersion switch
             {
-                1 => ProcessV1((v1.HostObject)hostObject, grabberServices),
+                1 => ProcessV1((v1.HostObject)hostObject),
                 _ => throw new ScriptApiVersionMismatchException($"This script requires API version {apiVersion}; which is not supported."),
             };
         }
 
-        private ProcessedGrabScript ProcessV1(v1.HostObject hostObject, IGrabberServices grabberServices)
+        private ProcessedGrabScript ProcessV1(v1.HostObject hostObject)
         {
             if (hostObject.Grabber.Supports == null)
                 throw new ScriptInterpretException($"The {nameof(hostObject.Grabber.Supports)} function is not set.");
@@ -49,7 +61,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
                 var result = new GrabResult(uri, grabbedList);
 
                 var request = new v1.GrabRequest(uri, cancellationToken, options, progress);
-                var response = new v1.GrabResponse(result, grabbedList, grabberServices);
+                var response = new v1.GrabResponse(result, grabbedList, _grabberServices, _grabbedTypeCollection, _typeConverter);
 
                 var promise = new TaskCompletionSource<bool>();
                 cancellationToken.Register(promise.SetCanceled);

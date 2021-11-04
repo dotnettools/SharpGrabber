@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.BlackWidow.Host;
@@ -33,18 +34,33 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
         /// </summary>
         public string MainFunctionName { get; set; } = "main";
 
-        public async Task<IGrabber> InterpretAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, int apiVersion)
+        public async Task<IGrabber> InterpretAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, int apiVersion,
+            GrabberScriptInterpretOptions options)
         {
+            if (script == null)
+                throw new ArgumentNullException(nameof(script));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             var engine = CreateEngine();
             var scriptSource = await source.GetSourceAsync().ConfigureAwait(false);
 
             var hostObject = _interpreterApiService.GetHostObject(apiVersion, _grabberServices);
             DefineHostObjectOnScript(engine, hostObject);
+            DefineAdditionalExposedData(engine, options.ExposedData);
             engine.Execute(scriptSource);
 
-            var processedScript = _interpreterApiService.ProcessResult(apiVersion, hostObject, _grabberServices);
+            var processedScript = _interpreterApiService.ProcessResult(apiVersion, hostObject);
 
             return new JintGrabber(processedScript, script.Name, _grabberServices);
+        }
+
+        private void DefineAdditionalExposedData(Engine engine, IEnumerable<KeyValuePair<string, object>> exposedData)
+        {
+            foreach (var exposedPair in exposedData)
+            {
+                engine.SetValue(exposedPair.Key, exposedPair.Value);
+            }
         }
 
         private Jint.Engine CreateEngine()

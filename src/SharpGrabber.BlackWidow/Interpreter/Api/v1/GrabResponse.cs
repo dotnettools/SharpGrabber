@@ -11,12 +11,17 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
     {
         private readonly GrabResult _grabResult;
         private readonly IGrabberServices _grabberServices;
+        private readonly IGrabbedTypeCollection _grabbedTypeCollection;
+        private readonly IApiTypeConverter _typeConverter;
         private readonly ICollection<IGrabbed> _grabbedCollection;
 
-        public GrabResponse(GrabResult grabResult, ICollection<IGrabbed> grabbedCollection, IGrabberServices grabberServices)
+        public GrabResponse(GrabResult grabResult, ICollection<IGrabbed> grabbedCollection, IGrabberServices grabberServices,
+            IGrabbedTypeCollection grabbedTypeCollection, IApiTypeConverter typeConverter)
         {
             _grabResult = grabResult;
             _grabberServices = grabberServices;
+            _typeConverter = typeConverter;
+            _grabbedTypeCollection = grabbedTypeCollection;
             _grabbedCollection = grabbedCollection;
         }
 
@@ -46,7 +51,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
 
         public void Grab(string grabbedTypeId, IDictionary<string, object> values)
         {
-            var grabbedType = _grabberServices.GetGrabbed(grabbedTypeId);
+            var grabbedType = _grabbedTypeCollection.GetGrabbed(grabbedTypeId);
             if (grabbedType == null)
                 throw new NotSupportedException($"Grabbed type '{grabbedTypeId}' is not registered.");
 
@@ -84,7 +89,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
                     return;
                 }
 
-                var value = _grabberServices.ChangeType(pair.Value, prop.PropertyType);
+                var value = _typeConverter.ChangeType(pair.Value, prop.PropertyType);
                 prop.SetValue(obj, value);
             }
         }
