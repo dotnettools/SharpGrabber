@@ -15,6 +15,8 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using System.Threading;
+using DotNetTools.SharpGrabber.Exceptions;
 
 namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
 {
@@ -36,6 +38,54 @@ namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
                 await Assert.ThrowsAsync<ScriptInterpretException>(TryLoad);
             else
                 await TryLoad();
+        }
+
+        [Theory]
+        [InlineData(true, @"
+            grabber.supports=()=>{};
+            grabber.grab=(request, result, resolve, reject) => {
+                resolve();
+            };
+        ")]
+        [InlineData(false, @"
+            grabber.supports=()=>{};
+            grabber.grab=(request, result, resolve, reject) => {
+                reject();
+            };
+        ")]
+        [InlineData(null, @"
+            grabber.supports=()=>{};
+            grabber.grab=(request, result, resolve, reject) => {};
+        ")]
+        public async Task Test_GrabResolveAndReject(bool? expectedSuccess, string src)
+        {
+            var html = AssetsAccessor.GetText("Html/SamplePage.html");
+            var grabber = await LoadScript(src, new
+            {
+                pageHtml = html,
+            });
+
+            var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(1));
+
+            Task GrabAsync()
+                => grabber.GrabAsync(new Uri("https://example.site"), cancellationTokenSource.Token);
+
+            switch (expectedSuccess)
+            {
+                case null:
+                    // expect ethernal wait
+                    await Assert.ThrowsAsync<TaskCanceledException>(GrabAsync);
+                    break;
+
+                case false:
+                    await Assert.ThrowsAsync<GrabException>(GrabAsync);
+                    break;
+
+                case true:
+                    await GrabAsync();
+                    break;
+            }
         }
 
         [Theory]

@@ -1,4 +1,5 @@
 ﻿using DotNetTools.SharpGrabber.BlackWidow.Exceptions;
+using DotNetTools.SharpGrabber.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -66,7 +67,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
                 var promise = new TaskCompletionSource<bool>();
                 cancellationToken.Register(promise.SetCanceled);
                 void resolve() => promise.SetResult(true);
-                void reject() => promise.SetResult(false);
+                void reject()
+                {
+                    promise.SetResult(false);
+                    throw new GrabException();
+                }
                 hostObject.Grabber.Grab(request, response, resolve, reject);
                 await promise.Task.ConfigureAwait(false);
 
