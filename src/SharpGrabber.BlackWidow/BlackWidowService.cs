@@ -81,7 +81,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             // fetch the script
             if (needUpdate)
             {
-                var source = await RemoteRepository.FetchScriptAsync(remoteInfo).ConfigureAwait(false);
+                var source = await RemoteRepository.FetchSourceAsync(remoteInfo).ConfigureAwait(false);
                 await LocalRepository.PutAsync(remoteInfo, source).ConfigureAwait(false);
                 await LoadLocalFeedAsync().ConfigureAwait(false);
             }
@@ -107,7 +107,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             {
                 if (_grabbers.ContainsKey(scriptInfo.Id))
                     continue;
-                var scriptSource = await LocalRepository.FetchScriptAsync(scriptInfo).ConfigureAwait(false);
+                var scriptSource = await LocalRepository.FetchSourceAsync(scriptInfo).ConfigureAwait(false);
                 await LoadGrabberAsync(scriptInfo, scriptSource).ConfigureAwait(false);
             }
         }

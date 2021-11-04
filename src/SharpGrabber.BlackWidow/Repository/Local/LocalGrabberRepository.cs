@@ -39,7 +39,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             return Task.FromResult<IGrabberRepositoryFeed>(feed);
         }
 
-        public Task<IGrabberScriptSource> FetchScriptAsync(IGrabberRepositoryScript script)
+        public Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script)
         {
             var scriptPath = GetScriptPath(script);
             var source = new GrabberScriptSource(File.ReadAllText(scriptPath));
@@ -50,8 +50,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         {
             var descriptorPath = GetDescriptorPath(script.Id);
             var scriptPath = GetScriptPath(script);
-            Directory.CreateDirectory(descriptorPath);
-            Directory.CreateDirectory(scriptPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(descriptorPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(scriptPath));
 
             var sourceContent = await source.GetSourceAsync().ConfigureAwait(false);
             File.WriteAllText(descriptorPath, SerializeDescriptor(script));
@@ -65,7 +65,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         protected virtual IGrabberRepositoryScript DeserializeDescriptor(string serializedValue)
         {
-            return JsonConvert.DeserializeObject<IGrabberRepositoryScript>(serializedValue);
+            return JsonConvert.DeserializeObject<GrabberRepositoryScript>(serializedValue);
         }
 
         private IGrabberRepositoryScript ReadScriptInfo(string scriptId)
@@ -77,7 +77,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         private string GetPath(IEnumerable<string> parts)
         {
-            var array = parts.Union(new[] { _rootPath }).ToArray();
+            var array = new[] { _rootPath }.Union(parts).ToArray();
             return Path.Combine(array);
         }
 

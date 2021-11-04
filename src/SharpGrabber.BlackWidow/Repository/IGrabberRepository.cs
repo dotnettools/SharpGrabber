@@ -19,7 +19,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         /// <summary>
         /// Fetches the source of a specific script.
         /// </summary>
-        Task<IGrabberScriptSource> FetchScriptAsync(IGrabberRepositoryScript script);
+        Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script);
 
         /// <summary>
         /// Puts the <paramref name="script"/> with its <paramref name="source"/> into the repository.
