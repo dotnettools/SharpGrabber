@@ -57,6 +57,9 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
 
         private void DefineAdditionalExposedData(Engine engine, IEnumerable<KeyValuePair<string, object>> exposedData)
         {
+            if (exposedData == null)
+                return;
+
             foreach (var exposedPair in exposedData)
             {
                 engine.SetValue(exposedPair.Key, exposedPair.Value);

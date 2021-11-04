@@ -1,7 +1,7 @@
 ﻿using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript;
-using Jint;
 using Jint.Native;
+using Jint;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,10 +9,10 @@ using Xunit;
 
 namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
 {
-    public class JintJavaScriptHostTests
+    public class JintUrlTests
     {
         [Fact]
-        public void Test_URL()
+        public void Test_URLParts()
         {
             var engine = CreateEngine();
             var url = engine.GetValue("URL");
