@@ -14,11 +14,15 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
     public class LocalGrabberRepository : IGrabberRepository
     {
         private readonly string _rootPath;
+        private readonly bool _readOnly;
 
-        public LocalGrabberRepository(string rootPath)
+        public LocalGrabberRepository(string rootPath, bool readOnly = false)
         {
             _rootPath = rootPath;
+            _readOnly = readOnly;
         }
+
+        public bool CanPut => !_readOnly;
 
         /// <summary>
         /// Gets or sets the descriptor file name without extension. The default value is 'descriptor.json'.
@@ -48,6 +52,9 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         public async Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source)
         {
+            if (_readOnly)
+                throw new NotSupportedException("The repository is read-only.");
+
             var descriptorPath = GetDescriptorPath(script.Id);
             var scriptPath = GetScriptPath(script);
             Directory.CreateDirectory(Path.GetDirectoryName(descriptorPath));

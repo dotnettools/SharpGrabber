@@ -11,6 +11,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
     public interface IGrabberRepository
     {
         /// <summary>
+        /// Gets whether or not this repository supports putting scripts.
+        /// </summary>
+        bool CanPut { get; }
+
+        /// <summary>
         /// Gets the latest feed from the source.
         /// This will result in an I/O operation such as a web service call, disk scan etc.
         /// </summary>
@@ -24,6 +29,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         /// <summary>
         /// Puts the <paramref name="script"/> with its <paramref name="source"/> into the repository.
         /// </summary>
+        /// <exception cref="NotSupportedException">Thrown if putting scripts into this repository is not supported.</exception>
         Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source);
     }
 }

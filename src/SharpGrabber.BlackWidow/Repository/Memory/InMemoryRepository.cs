@@ -13,6 +13,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository.Memory
     {
         private readonly Dictionary<string, ScriptInfo> _scripts = new();
 
+        public bool CanPut => true;
+
         public Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script)
         {
             var info = _scripts.GetOrDefault(script.Id);
