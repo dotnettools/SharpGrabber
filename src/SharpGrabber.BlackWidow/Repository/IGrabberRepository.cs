@@ -16,6 +16,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         bool CanPut { get; }
 
         /// <summary>
+        /// Gets whether or not this implementation supports notifying changes.
+        /// </summary>
+        bool CanNotifyChanges { get; }
+
+        /// <summary>
         /// Gets the latest feed from the source.
         /// This will result in an I/O operation such as a web service call, disk scan etc.
         /// </summary>
@@ -31,5 +36,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         /// </summary>
         /// <exception cref="NotSupportedException">Thrown if putting scripts into this repository is not supported.</exception>
         Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source);
+
+        /// <summary>
+        /// Tries to subscribe to changes to the repository.
+        /// </summary>
+        /// <returns>The subscription, or NULL if the implementation is unable to detect its changes.</returns>
+        Task<IGrabberRepositorySubscription> SubscribeAsync();
     }
 }

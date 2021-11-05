@@ -14,6 +14,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         public virtual bool CanPut => false;
 
+        public virtual bool CanNotifyChanges => false;
+
         public abstract Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script);
 
         public abstract Task<IGrabberRepositoryFeed> GetFeedAsync();
@@ -21,6 +23,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         public virtual Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source)
         {
             throw new NotSupportedException($"Putting is not supported by {GetType()}.");
+        }
+
+        public Task<IGrabberRepositorySubscription> SubscribeAsync()
+        {
+            return Task.FromResult<IGrabberRepositorySubscription>(null);
         }
 
         public void Dispose()
