@@ -21,16 +21,16 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         /// Gets the friendly name of this script.
         /// </summary>
         string Name { get; }
+        
+        /// <summary>
+        /// Gets the semantic version.
+        /// </summary>
+        string Version { get; }
 
         /// <summary>
         /// Gets the script type, which is used to understand how the script should be interpreted.
         /// </summary>
         GrabberScriptType Type { get; }
-
-        /// <summary>
-        /// Gets the semantic version.
-        /// </summary>
-        string Version { get; }
 
         /// <summary>
         /// Gets the BlackWidow API version.

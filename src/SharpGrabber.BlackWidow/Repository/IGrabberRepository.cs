@@ -8,7 +8,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
     /// <summary>
     /// Represents a BlackWidow repository.
     /// </summary>
-    public interface IGrabberRepository
+    public interface IGrabberRepository : IDisposable
     {
         /// <summary>
         /// Gets whether or not this repository supports putting scripts.

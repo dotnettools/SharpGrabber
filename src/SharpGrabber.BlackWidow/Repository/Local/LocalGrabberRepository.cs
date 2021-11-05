@@ -11,7 +11,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
     /// <summary>
     /// Mounts to a phyisical directory to fetch and store grabbers.
     /// </summary>
-    public class LocalGrabberRepository : IGrabberRepository
+    public class LocalGrabberRepository : GrabberRepositoryBase
     {
         private readonly string _rootPath;
         private readonly bool _readOnly;
@@ -22,7 +22,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             _readOnly = readOnly;
         }
 
-        public bool CanPut => !_readOnly;
+        public override bool CanPut => !_readOnly;
 
         /// <summary>
         /// Gets or sets the descriptor file name without extension. The default value is 'descriptor.json'.
@@ -34,7 +34,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         /// </summary>
         public string ScriptFileNameWithoutExtension { get; set; } = "script";
 
-        public Task<IGrabberRepositoryFeed> GetFeedAsync()
+        public override Task<IGrabberRepositoryFeed> GetFeedAsync()
         {
             var root = new DirectoryInfo(_rootPath);
             var ids = root.EnumerateDirectories().Select(d => d.Name).ToArray();
@@ -43,14 +43,14 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             return Task.FromResult<IGrabberRepositoryFeed>(feed);
         }
 
-        public Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script)
+        public override Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script)
         {
             var scriptPath = GetScriptPath(script);
             var source = new GrabberScriptSource(File.ReadAllText(scriptPath));
             return Task.FromResult<IGrabberScriptSource>(source);
         }
 
-        public async Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source)
+        public override async Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source)
         {
             if (_readOnly)
                 throw new NotSupportedException("The repository is read-only.");

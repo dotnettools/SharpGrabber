@@ -9,25 +9,25 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository.Memory
     /// <summary>
     /// In-memory implementation of grabber repository.
     /// </summary>
-    public class InMemoryRepository : IGrabberRepository
+    public class InMemoryRepository : GrabberRepositoryBase
     {
         private readonly Dictionary<string, ScriptInfo> _scripts = new();
 
-        public bool CanPut => true;
+        public override bool CanPut => true;
 
-        public Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script)
+        public override Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script)
         {
             var info = _scripts.GetOrDefault(script.Id);
             return Task.FromResult(info?.Source);
         }
 
-        public Task<IGrabberRepositoryFeed> GetFeedAsync()
+        public override Task<IGrabberRepositoryFeed> GetFeedAsync()
         {
             var feed = new GrabberRepositoryFeed(_scripts.Values.Select(i => i.Script));
             return Task.FromResult<IGrabberRepositoryFeed>(feed);
         }
 
-        public Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source)
+        public override Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source)
         {
             var info = new ScriptInfo(script, source);
             _scripts[script.Id] = info;

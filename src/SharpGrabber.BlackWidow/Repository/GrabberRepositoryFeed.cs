@@ -17,6 +17,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         public GrabberRepositoryFeed(IEnumerable<IGrabberRepositoryScript> scripts)
         {
+            if (scripts == null)
+                throw new ArgumentNullException(nameof(scripts));
             foreach (var script in scripts)
                 _scripts.TryAdd(script.Id, script);
         }
