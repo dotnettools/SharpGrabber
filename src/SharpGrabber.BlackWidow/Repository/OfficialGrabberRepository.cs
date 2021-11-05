@@ -7,7 +7,7 @@ using System.Text;
 namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 {
     /// <summary>
-    /// Defines the official SharpGrabber repository.
+    /// Defines the official SharpGrabber grabber repository.
     /// </summary>
     public class OfficialGrabberRepository : GitHubGrabberRepository
     {
