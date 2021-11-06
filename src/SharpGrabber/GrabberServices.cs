@@ -10,6 +10,9 @@ namespace DotNetTools.SharpGrabber
 {
     public class GrabberServices : IGrabberServices
     {
+        /// <summary>
+        /// The built-in instance of <see cref="GrabberServices"/>
+        /// </summary>
         public static readonly GrabberServices Default = new();
 
         private readonly Func<HttpClient> _httpClientProvider;

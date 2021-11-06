@@ -21,7 +21,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow
         private IGrabberRepositoryFeed _localFeed;
         private IGrabberRepositoryFeed _remoteFeed;
 
-        private BlackWidowService(IGrabberRepository localRepository, IGrabberRepository remoteRepository,
+        protected BlackWidowService(IGrabberRepository localRepository, IGrabberRepository remoteRepository,
             IScriptHost scriptHost, IGrabberScriptInterpreterService interpreterService)
         {
             Interpreters = interpreterService ?? throw new ArgumentNullException(nameof(interpreterService));
@@ -77,6 +77,9 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             var localInfo = _localFeed.GetScript(scriptId);
             var remoteInfo = _remoteFeed?.GetScript(scriptId);
             var needUpdate = localInfo == null || (remoteInfo != null && remoteInfo.GetVersion() > localInfo.GetVersion());
+
+            if (localInfo == null && remoteInfo == null)
+                return null;
 
             // fetch the script
             if (needUpdate)

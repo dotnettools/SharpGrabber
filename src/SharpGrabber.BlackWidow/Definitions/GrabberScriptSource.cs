@@ -11,6 +11,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow
     /// </summary>
     public class GrabberScriptSource : IGrabberScriptSource
     {
+        /// <summary>
+        /// Refers to a static empty source.
+        /// </summary>
+        public static readonly GrabberScriptSource Empty = new(string.Empty);
+
         private readonly string _source;
 
         public GrabberScriptSource(string source)
