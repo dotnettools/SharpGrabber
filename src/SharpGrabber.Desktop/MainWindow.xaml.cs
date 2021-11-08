@@ -35,6 +35,7 @@ namespace SharpGrabber.Desktop
         private Grid overlayRoot, noContent;
         private Border overlayContent;
         private TextBlock txtMsgTitle, txtMsgContent, txtTitle;
+        private MenuItem miAbout;
         private Button btnMsgOk;
         private TextBlock txtMediaTitle;
         private TextBlock[] txtCol = new TextBlock[3];
@@ -111,6 +112,7 @@ namespace SharpGrabber.Desktop
                 txtCol[i] = this.FindControl<TextBlock>($"txtCol{i}");
             txtMediaTitle = this.FindControl<TextBlock>("txtMediaTitle");
             txtTitle = this.FindControl<TextBlock>("txtTitle");
+            miAbout = this.FindControl<MenuItem>("miAbout");
             img = this.FindControl<Image>("img");
             imgSpinner = this.FindControl<LoadingSpinner>("imgSpinner");
             basicInfo = this.FindControl<Border>("basicInfo");
@@ -124,7 +126,8 @@ namespace SharpGrabber.Desktop
             btnPaste.Subscribe(Button.ClickEvent, BtnPaste_Click);
             btnSaveImages.Subscribe(Button.ClickEvent, BtnSaveImages_Click);
             btnMsgOk.Subscribe(Button.ClickEvent, BtnOk_Click);
-            txtTitle.Subscribe(PointerPressedEvent, TxtTitle_PointerPressed);
+            txtTitle.Subscribe(PointerPressedEvent, TxtTitle_Click);
+            miAbout.Subscribe(MenuItem.ClickEvent, MiAbout_Click);
         }
 
         #region Internal Methods
@@ -459,8 +462,6 @@ namespace SharpGrabber.Desktop
                 CloseMessage();
         }
 
-        private void TxtTitle_PointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e) => DisplayAbout();
-
         private void TbUrl_LostFocus(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             tbPlaceholder.IsVisible = string.IsNullOrEmpty(tbUrl.Text);
@@ -469,6 +470,16 @@ namespace SharpGrabber.Desktop
         private void TbUrl_GotFocus(object sender, Avalonia.Input.GotFocusEventArgs e)
         {
             tbPlaceholder.IsVisible = false;
+        }
+
+        private void TxtTitle_Click(object sender, PointerPressedEventArgs e)
+        {
+            txtTitle.ContextMenu.Open();
+        }
+
+        private void MiAbout_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayAbout();
         }
 
         private void MainWindow_Initialized(object sender, System.EventArgs e)

@@ -18,7 +18,12 @@
     </Window.Resources>
 
     <Window.Styles>
-        <Style Selector="Window">
+        <Style Selector="ContextMenu">
+            <Setter Property="Background" Value="#CC000000" />
+        </Style>
+
+        <Style Selector="MenuItem:pointerover">
+            <Setter Property="Background" Value="#FFFFFF" />
         </Style>
 
         <Style Selector="Button">
@@ -90,7 +95,15 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock x:Name="txtTitle" Grid.Column="0" Text="#Grabber" VerticalAlignment="Center"
-                           Margin="16 0 16 2" FontSize="24" FontWeight="DemiBold" Cursor="Hand" />
+                           Margin="16 0 16 2" FontSize="24" FontWeight="DemiBold" Cursor="Hand">
+                    <TextBlock.ContextMenu>
+                        <ContextMenu>
+                            <ContextMenu.Items>
+                                <MenuItem Name="miAbout" Header="About..." />
+                            </ContextMenu.Items>
+                        </ContextMenu>
+                    </TextBlock.ContextMenu>
+                </TextBlock>
 
                 <Border Grid.Column="1" Margin="0 0 10 0" CornerRadius="6" Height="36" VerticalAlignment="Center"
                         Background="#333" ClipToBounds="True" BorderBrush="#10000000" BorderThickness="1">
