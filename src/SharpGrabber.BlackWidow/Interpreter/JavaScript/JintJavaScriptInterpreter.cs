@@ -55,7 +55,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
             return new JintGrabber(processedScript, script.Name, _grabberServices);
         }
 
-        private void DefineAdditionalExposedData(Engine engine, IEnumerable<KeyValuePair<string, object>> exposedData)
+        private static void DefineAdditionalExposedData(Engine engine, IEnumerable<KeyValuePair<string, object>> exposedData)
         {
             if (exposedData == null)
                 return;

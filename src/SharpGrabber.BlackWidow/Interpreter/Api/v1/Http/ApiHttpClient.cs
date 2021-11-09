@@ -21,7 +21,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http
         {
             using var message = await CreateRequestMessageAsync(request).ConfigureAwait(false);
             using var response = await _client.SendAsync(message).ConfigureAwait(false);
-            return await ProcessResponseAsync(response).ConfigureAwait(false);
+            return await ProcessResponseAsync(response, request).ConfigureAwait(false);
         }
 
         public Task<ApiHttpResponse> GetAsync(ApiHttpRequest request)
@@ -67,18 +67,28 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http
                 using var writer = new StreamWriter(requestStream);
                 writer.Write(request.BodyText);
             }
+
             return message;
         }
 
-        private async Task<ApiHttpResponse> ProcessResponseAsync(HttpResponseMessage response)
+        private async Task<ApiHttpResponse> ProcessResponseAsync(HttpResponseMessage response,
+            ApiHttpRequest request)
         {
             var contentType = response.Content.Headers.GetValues("Content-Type")?.FirstOrDefault();
 
             string bodyText = null;
-            if (response.IsSuccessStatusCode && !string.IsNullOrEmpty(contentType) && contentType.StartsWith("text/", StringComparison.InvariantCultureIgnoreCase))
+            if (response.IsSuccessStatusCode)
             {
-                bodyText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var expectText = request.ExpectText;
+                if (!expectText)
+                    expectText = !string.IsNullOrEmpty(contentType) &&
+                                 contentType.StartsWith("text/", StringComparison.InvariantCultureIgnoreCase);
+                if (expectText)
+                {
+                    bodyText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
             }
+
             return new ApiHttpResponse(response, bodyText);
         }
     }

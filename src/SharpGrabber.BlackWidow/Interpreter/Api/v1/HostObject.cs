@@ -1,7 +1,6 @@
 ﻿using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Html;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http;
 using DotNetTools.SharpGrabber.Exceptions;
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +12,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
         public HostObject(IGrabberServices grabberServices)
         {
             Http = new ApiHttpContext(grabberServices);
+            Mime = new ApiMimeContext(grabberServices.Mime);
         }
 
         public ApiGrabberContext Grabber { get; } = new ApiGrabberContext();
@@ -20,5 +20,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
         public ApiHttpContext Http { get; }
 
         public ApiHtmlContext Html { get; } = new ApiHtmlContext();
+
+        public ApiMimeContext Mime { get; }
     }
 }
