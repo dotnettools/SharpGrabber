@@ -17,7 +17,9 @@ namespace DotNetTools.SharpGrabber.BlackWidow
     /// </summary>
     public class BlackWidowService : IBlackWidowService
     {
-        private readonly ConcurrentDictionary<string, IGrabber> _grabbers = new(StringComparer.InvariantCultureIgnoreCase);
+        private readonly ConcurrentDictionary<string, IGrabber> _grabbers =
+            new(StringComparer.InvariantCultureIgnoreCase);
+
         private IGrabberRepositoryFeed _localFeed;
         private IGrabberRepositoryFeed _remoteFeed;
 
@@ -44,7 +46,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow
         /// <summary>
         /// Creates a new instance of <see cref="BlackWidowService"/>.
         /// </summary>
-        public static async Task<BlackWidowService> CreateAsync(IGrabberRepository localRepository, IGrabberRepository remoteRepository,
+        public static async Task<BlackWidowService> CreateAsync(IGrabberRepository localRepository,
+            IGrabberRepository remoteRepository,
             IScriptHost scriptHost, IGrabberScriptInterpreterService interpreterService = null)
         {
             interpreterService ??= new GrabberScriptInterpreterService();
@@ -76,13 +79,20 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             // init
             var localInfo = _localFeed.GetScript(scriptId);
             var remoteInfo = _remoteFeed?.GetScript(scriptId);
-            var needUpdate = localInfo == null || (remoteInfo != null && remoteInfo.GetVersion() > localInfo.GetVersion());
+            if (localInfo == null)
+            {
+                await LoadLocalFeedAsync().ConfigureAwait(false);
+                localInfo = _localFeed.GetScript(scriptId);
+            }
+
+            var updateNeeded = localInfo == null ||
+                               (remoteInfo != null && remoteInfo.GetVersion() > localInfo.GetVersion());
 
             if (localInfo == null && remoteInfo == null)
                 return null;
 
             // fetch the script
-            if (needUpdate)
+            if (updateNeeded)
             {
                 var source = await RemoteRepository.FetchSourceAsync(remoteInfo).ConfigureAwait(false);
                 await LocalRepository.PutAsync(remoteInfo, source).ConfigureAwait(false);
@@ -115,13 +125,15 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             }
         }
 
-        private async Task<IGrabber> LoadGrabberAsync(IGrabberRepositoryScript scriptInfo, IGrabberScriptSource scriptSource)
+        private async Task<IGrabber> LoadGrabberAsync(IGrabberRepositoryScript scriptInfo,
+            IGrabberScriptSource scriptSource)
         {
             var interpreter = Interpreters.GetInterpreter(scriptInfo.Type);
             if (interpreter == null)
                 throw new ScriptInterpretException($"No interpreter is registered for {scriptInfo.Type}.");
 
-            var grabber = await interpreter.InterpretAsync(scriptInfo, scriptSource, scriptInfo.ApiVersion).ConfigureAwait(false);
+            var grabber = await interpreter.InterpretAsync(scriptInfo, scriptSource, scriptInfo.ApiVersion)
+                .ConfigureAwait(false);
             _grabbers.TryAdd(scriptInfo.Id, grabber);
             return grabber;
         }
