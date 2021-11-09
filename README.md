@@ -119,6 +119,11 @@ You are most welcome to contribute!
 - Support for more media providers such as *DailyMotion*, *Instagram*, *Facebook*, *Twitch* etc.
 - Accelerate downloads in the desktop app (like a download manager)
 
+## Disclaimer
+The SharpGrabber library, BlackWidow and other projects and libraries provided in this repository are developed for educational purposes.
+It's illegal to extract copyrighted data. You should make sure your usage of the tools provided here complies with copyright laws.
+Contributors to these tools are not responsible for any copyright infringement that may occur per usage.
+
 ## License
 Copyright &copy; 2021 Javid Shoaei and other contributors<br />
 
