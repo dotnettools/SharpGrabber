@@ -112,7 +112,7 @@ Requirements of the cross-platform desktop application to run and operate correc
 <img src="./assets/SharpGrabberDesktop-ScreenShot-3.3.png" alt="SharpGrabber.Desktop Application" />
 
 # Introducing BlackWidow
-<img src="./assets/blackwidow-logo-text.png" alt="SharpGrabber" height="92" />
+<img src="./assets/blackwidow-logo-text-sm.png" alt="SharpGrabber" height="92" />
     
 ## Contribution
 You are most welcome to contribute!
