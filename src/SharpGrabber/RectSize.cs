@@ -5,6 +5,10 @@
     /// </summary>
     public class RectSize
     {
+        public RectSize()
+        {
+        }
+
         public RectSize(int width, int height)
         {
             Width = width;
@@ -14,12 +18,12 @@
         /// <summary>
         /// Size width
         /// </summary>
-        public int Width { get; }
+        public int Width { get; set; }
 
         /// <summary>
         /// Size height
         /// </summary>
-        public int Height { get; }
+        public int Height { get; set; }
 
         /// <inheritdoc />
         public override string ToString()
