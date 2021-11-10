@@ -49,5 +49,6 @@
 			  "required": [ "id", "name", "version", "type", "apiVersion", "supportedRegularExpressions", "file" ]
 		  }
 	  }
-  }
+  },
+  "required": [ "scripts" ]
 }
