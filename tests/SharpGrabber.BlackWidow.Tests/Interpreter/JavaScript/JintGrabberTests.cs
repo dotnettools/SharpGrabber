@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using System.Threading;
+using DotNetTools.ConvertEx;
 using DotNetTools.SharpGrabber.Exceptions;
 
 namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
@@ -104,7 +105,7 @@ namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
             var grabber = await LoadScript(src, new
             {
                 pageHtml = html,
-                deliver = (Action<object>)(data => Assert.Equal(expectedData, data))
+                deliver = (Action<object>) (data => Assert.Equal(expectedData, data))
             });
             await grabber.GrabAsync(new Uri("https://example.site"));
         }
@@ -112,25 +113,22 @@ namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
         private static async Task<IGrabber> LoadScript(string source, object dataObject = null)
         {
             var collection = new GrabbedTypeCollection();
-            var apiService = new DefaultInterpreterApiService(GrabberServices.Default, collection, ApiTypeConverter.Default);
+            var apiService =
+                new DefaultInterpreterApiService(GrabberServices.Default, collection, ConvertEx.DefaultConverter);
             var host = new ScriptHost();
-            host.OnAlert += o =>
-            {
-                Debugger.Break();
-            };
-            host.OnLog += log =>
-            {
-                Debugger.Break();
-            };
+            host.OnAlert += o => { Debugger.Break(); };
+            host.OnLog += log => { Debugger.Break(); };
             var i = new JintJavaScriptInterpreter(apiService, GrabberServices.Default, host);
             var script = new GrabberRepositoryScript();
             var src = new GrabberScriptSource(source);
             var options = new GrabberScriptInterpretOptions
             {
-                ExposedData = dataObject == null ? null : new Dictionary<string, object>
-                {
-                    { "data", dataObject }
-                }
+                ExposedData = dataObject == null
+                    ? null
+                    : new Dictionary<string, object>
+                    {
+                        {"data", dataObject}
+                    }
             };
             var grabber = await i.InterpretAsync(script, src, 1, options);
             return grabber;

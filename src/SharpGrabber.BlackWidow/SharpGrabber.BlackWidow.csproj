@@ -16,10 +16,12 @@
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
         <PackageTags>blackwidow,grab,scrape,script,ecma</PackageTags>
         <NoWarn>1701;1702;1591</NoWarn>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="AngleSharp" Version="0.16.1" />
+      <PackageReference Include="ConvertEx" Version="1.0.2" />
       <PackageReference Include="Jint" Version="3.0.0-beta-2035" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />

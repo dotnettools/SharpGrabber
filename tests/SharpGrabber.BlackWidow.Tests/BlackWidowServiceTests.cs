@@ -8,8 +8,10 @@ using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using DotNetTools.SharpGrabber.BlackWidow.Repository.Memory;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using DotNetTools.ConvertEx;
 using Xunit;
 
 namespace SharpGrabber.BlackWidow.Tests
@@ -33,7 +35,7 @@ namespace SharpGrabber.BlackWidow.Tests
         private IInterpreterApiService _apiService;
         private ScriptHost _scriptHost;
         private GrabbedTypeCollection _typeCollection;
-        private IApiTypeConverter _typeConverter;
+        private ITypeConverter _typeConverter;
 
         [Fact]
         public async Task Test_CorrectRepositoryReferences()
@@ -55,7 +57,7 @@ namespace SharpGrabber.BlackWidow.Tests
             {
                 Id = "A",
                 Type = GrabberScriptType.JavaScript,
-                SupportedRegularExpressions = new[] { ".*" },
+                SupportedRegularExpressions = new[] {".*"},
             };
             await _remoteRepository.PutAsync(script, new GrabberScriptSource(DummySource));
 
@@ -64,17 +66,37 @@ namespace SharpGrabber.BlackWidow.Tests
             Assert.NotNull(grabber);
         }
 
+        [Fact]
+        public async Task Test_Temp()
+        {
+            await Initialize();
+            var script = new GrabberRepositoryScript()
+            {
+                Id = "temp",
+                Type = GrabberScriptType.JavaScript,
+            };
+            var src = await System.IO.File.ReadAllTextAsync(
+                @"D:\Projects\C#\SharpGrabber\blackwidow\repo\scripts\vimeo.js");
+            var source = new GrabberScriptSource(src);
+            await _service.LocalRepository.PutAsync(script, source);
+            var grabber = await _service.GetScriptAsync("temp");
+            var result = await grabber.GrabAsync(new Uri(@"https://vimeo.com/423222165"));
+        }
+
         private async Task Initialize()
         {
             _localRepository = new InMemoryRepository();
             _remoteRepository = new InMemoryRepository();
             _scriptHost = new ScriptHost();
+            _scriptHost.OnAlert += o => Debugger.Break();
+            _scriptHost.OnLog += log => Debugger.Break();
             _typeCollection = new GrabbedTypeCollection();
-            _typeConverter = ApiTypeConverter.Default;
+            _typeConverter = ConvertEx.DefaultConverter;
             _apiService = new DefaultInterpreterApiService(GrabberServices.Default, _typeCollection, _typeConverter);
             _interpreterService = new GrabberScriptInterpreterService();
             _interpreterService.RegisterJint(_apiService, GrabberServices.Default, _scriptHost);
-            _service = await BlackWidowService.CreateAsync(_localRepository, _remoteRepository, _scriptHost, _interpreterService);
+            _service = await BlackWidowService.CreateAsync(_localRepository, _remoteRepository, _scriptHost,
+                _interpreterService);
         }
     }
 }

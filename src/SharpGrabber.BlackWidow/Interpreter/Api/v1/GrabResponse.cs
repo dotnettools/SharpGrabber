@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
 using System.Text;
+using DotNetTools.ConvertEx;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
 {
@@ -12,11 +13,12 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
         private readonly GrabResult _grabResult;
         private readonly IGrabberServices _grabberServices;
         private readonly IGrabbedTypeCollection _grabbedTypeCollection;
-        private readonly IApiTypeConverter _typeConverter;
+        private readonly ITypeConverter _typeConverter;
         private readonly ICollection<IGrabbed> _grabbedCollection;
 
-        public GrabResponse(GrabResult grabResult, ICollection<IGrabbed> grabbedCollection, IGrabberServices grabberServices,
-            IGrabbedTypeCollection grabbedTypeCollection, IApiTypeConverter typeConverter)
+        public GrabResponse(GrabResult grabResult, ICollection<IGrabbed> grabbedCollection,
+            IGrabberServices grabberServices,
+            IGrabbedTypeCollection grabbedTypeCollection, ITypeConverter typeConverter)
         {
             _grabResult = grabResult;
             _grabberServices = grabberServices;
@@ -55,7 +57,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
             if (grabbedType == null)
                 throw new NotSupportedException($"Grabbed type '{grabbedTypeId}' is not registered.");
 
-            var grabbed = (IGrabbed)Activator.CreateInstance(grabbedType);
+            var grabbed = (IGrabbed) Activator.CreateInstance(grabbedType);
             SetProperties(grabbed, values);
             _grabbedCollection.Add(grabbed);
         }
@@ -71,7 +73,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
                 if (pair.Value == null)
                     continue;
 
-                var prop = type.GetProperty(pair.Key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                var prop = type.GetProperty(pair.Key,
+                    BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
                 if (prop == null)
                     continue;
 
@@ -85,11 +88,12 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
                         innerObject = Activator.CreateInstance(prop.PropertyType);
                         prop.SetValue(obj, innerObject);
                     }
+
                     SetProperties(innerObject, map);
                     return;
                 }
 
-                var value = _typeConverter.ChangeType(pair.Value, prop.PropertyType);
+                var value = _typeConverter.Convert(pair.Value, prop.PropertyType);
                 prop.SetValue(obj, value);
             }
         }
