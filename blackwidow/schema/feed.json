@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/dotnettools/SharpGrabber/blackwidow/blackwidow/schema/feed.json",
+  "title": "Feed",
+  "description": "BlackWidow Grabber Repository Feed",
+  "type": "object",
+  "properties": {
+	  "scripts": {
+		  "description": "Array of scripts defined in this feed",
+		  "type": "array",
+		  "items": {
+			  "description": "BlackWidow Grabber Repository Script",
+			  "type": "object",
+			  "properties": {
+				  "id": {
+					  "description": "The unique identifier for the script",
+					  "type": "string"
+				  },
+				  "name": {
+					  "description": "A friendly name for the script",
+					  "type": "string"
+				  },
+				  "version": {
+					  "description": "The semantic version of the script",
+					  "type": "string"
+				  },
+				  "type": {
+					  "description": "Type of the script",
+					  "type": "string",
+					  "enum": ["JavaScript"]
+				  },
+				  "apiVersion": {
+					  "description": "BlackWidow API version",
+					  "type": "integer",
+					  "minimum": 1
+				  },
+				  "supportedRegularExpressions": {
+					  "description": "Array of regular expressions the script can potentially support",
+					  "type": "array",
+					  "items": {
+						  "type": "string"
+					  }
+				  },
+				  "file": {
+					  "description": "Virtual path to the script file, relative to the feed",
+					  "type": "string"
+				  },
+			  },
+			  "required": [ "id", "name", "version", "type", "apiVersion", "supportedRegularExpressions", "file" ]
+		  }
+	  }
+  }
+}
