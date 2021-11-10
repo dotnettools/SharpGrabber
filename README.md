@@ -120,8 +120,8 @@ You are most welcome to contribute!
 - Accelerate downloads in the desktop app (like a download manager)
 
 ## Disclaimer
-The SharpGrabber library, BlackWidow and other projects and libraries provided in this repository are developed for educational purposes.
-It's illegal to extract copyrighted data. You should make sure your usage of the tools provided here complies with copyright laws.
+SharpGrabber library, BlackWidow and other projects and libraries provided in this repository are developed for educational purposes.
+Since it's illegal to extract copyrighted data, you should make sure your usage of the tools provided here complies with copyright laws.
 Contributors to these tools are not responsible for any copyright infringement that may occur per usage.
 
 ## License
