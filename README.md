@@ -6,9 +6,10 @@
 [![NuGet download count](https://img.shields.io/nuget/dt/SharpGrabber)](https://www.nuget.org/packages/SharpGrabber)
 
 This repository contains multiple related projects:
-- `SharpGrabber` is a *.NET Standard* library for scraping top media providers and grabbing high quality video, audio and information.
-- `SharpGrabber.Converter` is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files. It is also used for merging HLS stream segments.
-- `SharpGrabber.Desktop` A cross-platform desktop application which utilizes both mentioned libraries to expose their functionality to desktop end-users.
+- <a href="#package-installation">`SharpGrabber`</a> is a *.NET Standard* library for scraping top media providers and grabbing high quality video, audio and information.
+- <a href="#package-installation">`SharpGrabber.Converter`</a> is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files. It is also used for merging HLS stream segments.
+- <a href="#sharpgrabberdesktop">`SharpGrabber.Desktop`</a> A cross-platform desktop application which utilizes both mentioned libraries to expose their functionality to desktop end-users.
+- <a href="#introducing-blackwidow">`SharpGrabber.BlackWidow`</a>
 
 # How to Use
 **⭐ Please give a star if you find this project useful!**
@@ -96,8 +97,9 @@ I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 
 </details>
         
-## SharpGrabber.Desktop 3.3
-- It uses every package mentioned above and supports all of the mentioned providers!
+## SharpGrabber.Desktop
+### Version 3.3
+- Grabs from every source supported by official grabbers.
 - Displays information and downloads videos, audios, images etc.
 - Merges YouTube separated audio and video streams into complete media files. It can join HLS segments as well!
 
