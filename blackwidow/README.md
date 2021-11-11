@@ -1,6 +1,6 @@
 # BlackWidow
 
-<img src="./assets/blackwidow-logo-text.png" alt="SharpGrabber" height="128" />
+<img src="../assets/blackwidow-logo-text.png" alt="SharpGrabber" height="128" />
 
 ## Introduction
 BlackWidow is a .NET library based on SharpGrabber. Instead of relying on .NET assemblies, it rather executes scripts written specifically for grabbing.
