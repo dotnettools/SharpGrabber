@@ -30,7 +30,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
                 throw new ArgumentOutOfRangeException(nameof(apiVersion));
             return apiVersion switch
             {
-                1 => new v1.HostObject(grabberServices),
+                1 => new v1.ApiHostObject(grabberServices),
                 _ => throw new ScriptApiVersionMismatchException(
                     $"This script requires API version {apiVersion}; which is not supported."),
             };
@@ -42,13 +42,13 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
                 throw new ArgumentOutOfRangeException(nameof(apiVersion));
             return apiVersion switch
             {
-                1 => ProcessV1((v1.HostObject) hostObject),
+                1 => ProcessV1((v1.ApiHostObject)hostObject),
                 _ => throw new ScriptApiVersionMismatchException(
                     $"This script requires API version {apiVersion}; which is not supported."),
             };
         }
 
-        private ProcessedGrabScript ProcessV1(v1.HostObject hostObject)
+        private ProcessedGrabScript ProcessV1(v1.ApiHostObject hostObject)
         {
             if (hostObject.Grabber.Supports == null)
                 throw new ScriptInterpretException($"The {nameof(hostObject.Grabber.Supports)} function is not set.");
@@ -66,22 +66,20 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
                 var grabbedList = new List<IGrabbed>();
                 var result = new GrabResult(uri, grabbedList);
 
-                var request = new v1.GrabRequest(uri, cancellationToken, options, progress);
-                var response = new v1.GrabResponse(result, grabbedList, _grabberServices, _grabbedTypeCollection,
+                var request = new v1.ApiGrabRequest(uri, cancellationToken, options, progress);
+                var response = new v1.ApiGrabResponse(result, grabbedList, _grabberServices, _grabbedTypeCollection,
                     _typeConverter);
 
-                var promise = new TaskCompletionSource<bool>();
-                cancellationToken.Register(promise.SetCanceled);
-                void resolve() => promise.SetResult(true);
-
-                void reject()
+                if (hostObject.Grabber.GrabAsync != null)
+                    // invoke GrabAsync
+                    await hostObject.Grabber.GrabAsync(request, response).ConfigureAwait(false);
+                else
                 {
-                    promise.SetResult(false);
-                    throw new GrabException();
+                    // invoke Grab
+                    var success = await Task.Run(() => hostObject.Grabber.Grab(request, response)).ConfigureAwait(false);
+                    if (!success)
+                        return null;
                 }
-
-                hostObject.Grabber.Grab(request, response, resolve, reject);
-                await promise.Task.ConfigureAwait(false);
 
                 return result;
             }

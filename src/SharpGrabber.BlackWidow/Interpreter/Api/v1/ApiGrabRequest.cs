@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
 {
-    public class GrabRequest
+    public class ApiGrabRequest
     {
         private readonly Uri _uri;
         private readonly CancellationToken _cancellationToken;
@@ -13,7 +13,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
         private readonly IProgress<double> _progress;
         private double _progressValue;
 
-        public GrabRequest(Uri uri, CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
+        public ApiGrabRequest(Uri uri, CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
         {
             _uri = uri;
             _cancellationToken = cancellationToken;

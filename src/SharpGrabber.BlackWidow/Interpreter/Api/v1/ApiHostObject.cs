@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
 {
-    public class HostObject
+    public class ApiHostObject
     {
-        public HostObject(IGrabberServices grabberServices)
+        public ApiHostObject(IGrabberServices grabberServices)
         {
             Http = new ApiHttpContext(grabberServices);
             Mime = new ApiMimeContext(grabberServices.Mime);

@@ -8,7 +8,7 @@ using DotNetTools.ConvertEx;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
 {
-    public class GrabResponse
+    public class ApiGrabResponse
     {
         private readonly GrabResult _grabResult;
         private readonly IGrabberServices _grabberServices;
@@ -16,7 +16,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
         private readonly ITypeConverter _typeConverter;
         private readonly ICollection<IGrabbed> _grabbedCollection;
 
-        public GrabResponse(GrabResult grabResult, ICollection<IGrabbed> grabbedCollection,
+        public ApiGrabResponse(GrabResult grabResult, ICollection<IGrabbed> grabbedCollection,
             IGrabberServices grabberServices,
             IGrabbedTypeCollection grabbedTypeCollection, ITypeConverter typeConverter)
         {

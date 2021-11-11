@@ -7,7 +7,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1
 {
     public delegate bool GrabberSupportsDelegate(string url);
 
-    public delegate void GrabberGrabDelegate(GrabRequest request, GrabResponse response, Action resolve, Action reject);
+    public delegate bool GrabberGrabDelegate(ApiGrabRequest request, ApiGrabResponse response);
 
-    public delegate Task GrabberGrabAsyncDelegate(GrabRequest request, GrabResponse response);
+    public delegate Task GrabberGrabAsyncDelegate(ApiGrabRequest request, ApiGrabResponse response);
 }
