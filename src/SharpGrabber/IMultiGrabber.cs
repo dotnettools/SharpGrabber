@@ -13,5 +13,15 @@ namespace DotNetTools.SharpGrabber
         /// Enumerates all registered grabbers on this multi grabber.
         /// </summary>
         IEnumerable<IGrabber> GetRegisteredGrabbers();
+
+        /// <summary>
+        /// Registers a grabber.
+        /// </summary>
+        void Register(IGrabber grabber);
+
+        /// <summary>
+        /// Unregisters a grabber.
+        /// </summary>
+        void Unregister(IGrabber grabber);
     }
 }

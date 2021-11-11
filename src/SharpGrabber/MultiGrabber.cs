@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.Exceptions;
+using DotNetTools.SharpGrabber.Internal;
 
 namespace DotNetTools.SharpGrabber
 {
@@ -12,18 +13,24 @@ namespace DotNetTools.SharpGrabber
     /// </summary>
     internal class MultiGrabber : IMultiGrabber
     {
-        private readonly IList<IGrabber> _grabbers;
+        private readonly ConcurrentHashSet<IGrabber> _grabbers;
 
         public MultiGrabber(IEnumerable<IGrabber> grabbers, IGrabberServices services)
         {
             Services = services;
-            _grabbers = grabbers.ToArray();
-            Name = string.Join(", ", grabbers.Select(g => g.Name));
+            grabbers ??= Array.Empty<IGrabber>();
+            _grabbers = new ConcurrentHashSet<IGrabber>(grabbers);
+            GrabbersUpdated();
+        }
+
+        public MultiGrabber(IGrabberServices services) : this(null, services)
+        {
+
         }
 
         public string StringId { get; } = null;
 
-        public string Name { get; }
+        public string Name { get; private set; }
 
         public GrabOptions DefaultGrabOptions => null;
 
@@ -60,5 +67,22 @@ namespace DotNetTools.SharpGrabber
 
         public IEnumerable<IGrabber> GetRegisteredGrabbers()
             => _grabbers.AsEnumerable();
+
+        public void Register(IGrabber grabber)
+        {
+            _grabbers.Add(grabber);
+            GrabbersUpdated();
+        }
+
+        public void Unregister(IGrabber grabber)
+        {
+            _grabbers.Remove(grabber);
+            GrabbersUpdated();
+        }
+
+        private void GrabbersUpdated()
+        {
+            Name = string.Join(", ", _grabbers.Select(g => g.Name)).NullIfEmpty();
+        }
     }
 }
