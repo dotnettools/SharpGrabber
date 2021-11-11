@@ -1,0 +1,13 @@
+{
+    "scripts": [
+        {
+            "id": "vimeo.com",
+            "name": "Vimeo",
+            "version": "1.0",
+            "type": "JavaScript",
+            "apiVersion": 1,
+            "supportedRegularExpressions": [ "^https?://(www\\.|player\\.)?vimeo\\.com/(video/)?([0-9]+)" ],
+            "file": "scripts/vimeo.js"
+        }
+    ]
+}
