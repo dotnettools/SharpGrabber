@@ -57,30 +57,13 @@ namespace SharpGrabber.BlackWidow.Tests
             {
                 Id = "A",
                 Type = GrabberScriptType.JavaScript,
-                SupportedRegularExpressions = new[] {".*"},
+                SupportedRegularExpressions = new[] { ".*" },
             };
             await _remoteRepository.PutAsync(script, new GrabberScriptSource(DummySource));
 
             await _service.UpdateFeedAsync();
             grabber = await _service.GetScriptAsync("A");
             Assert.NotNull(grabber);
-        }
-
-        [Fact]
-        public async Task Test_Temp()
-        {
-            await Initialize();
-            var script = new GrabberRepositoryScript()
-            {
-                Id = "temp",
-                Type = GrabberScriptType.JavaScript,
-            };
-            var src = await System.IO.File.ReadAllTextAsync(
-                @"D:\Projects\C#\SharpGrabber\blackwidow\repo\scripts\vimeo.js");
-            var source = new GrabberScriptSource(src);
-            await _service.LocalRepository.PutAsync(script, source);
-            var grabber = await _service.GetScriptAsync("temp");
-            var result = await grabber.GrabAsync(new Uri(@"https://vimeo.com/423222165"));
         }
 
         private async Task Initialize()
