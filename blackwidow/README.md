@@ -23,4 +23,4 @@ To keep the scripts up-to-date, a remote repository is constantly monitored as t
 ## Installation
 *WIP*
 
-<a href="..">&lt;- Back to Home Page</a>
+<a href="https://github.com/dotnettools/SharpGrabber">&lt;- Back to Home Page</a>
