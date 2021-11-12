@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <PackageReference Include="AngleSharp" Version="0.16.1" />
+      <PackageReference Include="ConvertEx" Version="1.0.5" />
       <PackageReference Include="Jint" Version="3.0.0-beta-2036" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
@@ -29,12 +30,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\SharpGrabber.Hls\SharpGrabber.Hls.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="ConvertEx, Version=1.0.4.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\..\ConvertEx\src\ConvertEx\bin\Release\netstandard2.0\ConvertEx.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>
