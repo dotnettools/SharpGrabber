@@ -16,7 +16,7 @@ namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
         {
             var engine = CreateEngine();
             var url = engine.GetValue("URL");
-            var result = url.Invoke(new JsString("https://user:pass@site.com:1234/serve?id=85#someid"));
+            var result = engine.Invoke(url, new JsString("https://user:pass@site.com:1234/serve?id=85#someid"));
             object Get(string name)
                 => result.Get(new JsString(name)).ToObject();
             Assert.Equal("#someid", Get("hash"));

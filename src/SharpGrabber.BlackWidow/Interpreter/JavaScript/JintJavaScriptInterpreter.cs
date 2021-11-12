@@ -8,6 +8,7 @@ using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
 using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using Jint;
 using Jint.Native;
+using Jint.Runtime.Interop;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
 {
@@ -34,15 +35,42 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
         /// </summary>
         public string MainFunctionName { get; set; } = "main";
 
-        public async Task<IGrabber> InterpretAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, int apiVersion,
-            GrabberScriptInterpretOptions options)
+        /// <summary>
+        /// Gets or sets the memory limit for script. A value of 0 represents no limit. Default value is 10 MiB.
+        /// </summary>
+        public long MemoryLimit { get; set; } = 10_485_760;
+
+        /// <summary>
+        /// Gets or sets the maximum allowed time for the script to execute. <see cref="TimeSpan.Zero"/> represents no limit.
+        /// Default value is 30 seconds.
+        /// </summary>
+        public TimeSpan ExecutionTimeout { get; set; } = TimeSpan.FromSeconds(30);
+
+        /// <summary>
+        /// Gets or sets the call recursion limit. A value of 0 represents no limit. Default value is 256.
+        /// </summary>
+        public int RecursionLimit { get; set; } = 256;
+
+        /// <summary>
+        /// Clears execution limits.
+        /// </summary>
+        public void SetNoLimits()
+        {
+            MemoryLimit = 0;
+            ExecutionTimeout = TimeSpan.Zero;
+            RecursionLimit = 0;
+        }
+
+        public async Task<IGrabber> InterpretAsync(IGrabberRepositoryScript script, IGrabberScriptSource source,
+            int apiVersion,
+            GrabberScriptInterpretOptions options, CancellationToken cancellationToken)
         {
             if (script == null)
                 throw new ArgumentNullException(nameof(script));
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            var engine = CreateEngine();
+            var engine = CreateEngine(apiVersion, cancellationToken);
             var scriptSource = await source.GetSourceAsync().ConfigureAwait(false);
 
             var hostObject = _interpreterApiService.GetHostObject(apiVersion, _grabberServices);
@@ -55,7 +83,32 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
             return new JintGrabber(processedScript, script.Name, _grabberServices);
         }
 
-        private static void DefineAdditionalExposedData(Engine engine, IEnumerable<KeyValuePair<string, object>> exposedData)
+        /// <summary>
+        /// Configures Jint engine options.
+        /// </summary>
+        protected virtual void ConfigureEngine(Options options, int apiVersion, CancellationToken cancellationToken)
+        {
+            options.SetTypeConverter(engine => ConfigureTypeConverter(engine, apiVersion));
+            options.CancellationToken(cancellationToken);
+            if (MemoryLimit > 0)
+                options.LimitMemory(MemoryLimit);
+            if (ExecutionTimeout > TimeSpan.Zero)
+                options.TimeoutInterval(ExecutionTimeout);
+            if (RecursionLimit > 0)
+                options.LimitRecursion(RecursionLimit);
+        }
+
+        protected virtual Jint.Runtime.Interop.ITypeConverter ConfigureTypeConverter(Engine engine, int apiVersion)
+        {
+            // var converter = _interpreterApiService.GetTypeConverter(apiVersion);
+            // var multiTypeConverter =
+            //     JintMultiTypeConverter.CreateDefault(engine, new ConvertEx.ITypeConverter[] {converter});
+            // return multiTypeConverter;
+            return new DefaultTypeConverter(engine);
+        }
+
+        private static void DefineAdditionalExposedData(Engine engine,
+            IEnumerable<KeyValuePair<string, object>> exposedData)
         {
             if (exposedData == null)
                 return;
@@ -66,11 +119,9 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
             }
         }
 
-        private Jint.Engine CreateEngine()
+        private Jint.Engine CreateEngine(int apiVersion, CancellationToken cancellationToken)
         {
-            var engine = new Engine(o =>
-            {
-            });
+            var engine = new Engine((engine, options) => ConfigureEngine(options, apiVersion, cancellationToken));
             var host = new JintJavaScriptHost(engine, _scriptHost);
             host.Apply(engine);
             return engine;
@@ -89,7 +140,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
         {
             private readonly ProcessedGrabScript _processedGrabScript;
 
-            public JintGrabber(ProcessedGrabScript processedGrabScript, string name, IGrabberServices grabberServices) : base(
+            public JintGrabber(ProcessedGrabScript processedGrabScript, string name,
+                IGrabberServices grabberServices) : base(
                 grabberServices)
             {
                 _processedGrabScript = processedGrabScript;

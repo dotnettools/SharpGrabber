@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetTools.ConvertEx;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,5 +19,10 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
         /// Processes the result of the call by processing the <paramref name="hostObject"/>.
         /// </summary>
         ProcessedGrabScript ProcessResult(int apiVersion, object hostObject);
+
+        /// <summary>
+        /// Gets the proper type converter that should be used for the specified API version.
+        /// </summary>
+        ITypeConverter GetTypeConverter(int apiVersion);
     }
 }

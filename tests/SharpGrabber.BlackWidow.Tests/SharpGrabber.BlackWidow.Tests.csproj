@@ -31,4 +31,10 @@
     <EmbeddedResource Include="Assets\Html\SamplePage.html" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="ConvertEx">
+      <HintPath>..\..\..\ConvertEx\src\ConvertEx\bin\Release\netstandard2.0\ConvertEx.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

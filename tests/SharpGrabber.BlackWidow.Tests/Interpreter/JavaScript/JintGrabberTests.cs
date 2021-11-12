@@ -43,22 +43,23 @@ namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
 
         [Theory]
         [InlineData(true, @"
-            grabber.supports=()=>{};
-            grabber.grab=(request, result, resolve, reject) => {
-                resolve();
+            grabber.grab=(request, result) => {
+                return true;
             };
+            grabber.supports=()=>{};
         ")]
         [InlineData(false, @"
-            grabber.supports=()=>{};
-            grabber.grab=(request, result, resolve, reject) => {
-                reject();
+            grabber.grab=(request, result) => {
+                return false;
             };
-        ")]
-        [InlineData(null, @"
             grabber.supports=()=>{};
-            grabber.grab=(request, result, resolve, reject) => {};
         ")]
-        public async Task Test_GrabResolveAndReject(bool? expectedSuccess, string src)
+        // [InlineData(false, @"
+        //     grabber.grab=(request, result) => {
+        //     };
+        //     grabber.supports=()=>{};
+        // ")]
+        public async Task Test_GrabResult(bool? expectedSuccess, string src)
         {
             var html = AssetsAccessor.GetText("Html/SamplePage.html");
             var grabber = await LoadScript(src, new
@@ -67,24 +68,28 @@ namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
             });
 
             var cancellationTokenSource = new CancellationTokenSource();
-            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(1));
+            if (expectedSuccess == null)
+                cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(1));
 
-            Task GrabAsync()
+            Task<GrabResult> GrabAsync()
                 => grabber.GrabAsync(new Uri("https://example.site"), cancellationTokenSource.Token);
 
+            GrabResult result;
             switch (expectedSuccess)
             {
                 case null:
-                    // expect ethernal wait
+                    // expect eternal wait
                     await Assert.ThrowsAsync<TaskCanceledException>(GrabAsync);
                     break;
 
                 case false:
-                    await Assert.ThrowsAsync<GrabException>(GrabAsync);
+                    result = await GrabAsync();
+                    Assert.Null(result);
                     break;
 
                 case true:
-                    await GrabAsync();
+                    result = await GrabAsync();
+                    Assert.NotNull(result);
                     break;
             }
         }
@@ -92,11 +97,11 @@ namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
         [Theory]
         [InlineData("BLACKWIDOW", @"
             grabber.supports=()=>{};
-            grabber.grab=(request, result, resolve, reject) => {
+            grabber.grab=(request, result) => {
                 const doc = html.parse(data.pageHtml);
                 const elem = doc.select('head title');
                 data.deliver(elem.innerText);
-                resolve();
+                return true
             };
         ")]
         public async Task Test_HtmlSelector(object expectedData, string src)
@@ -119,6 +124,7 @@ namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
             host.OnAlert += o => { Debugger.Break(); };
             host.OnLog += log => { Debugger.Break(); };
             var i = new JintJavaScriptInterpreter(apiService, GrabberServices.Default, host);
+            i.SetNoLimits();
             var script = new GrabberRepositoryScript();
             var src = new GrabberScriptSource(source);
             var options = new GrabberScriptInterpretOptions

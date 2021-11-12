@@ -36,6 +36,16 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
             };
         }
 
+        public ITypeConverter GetTypeConverter(int apiVersion)
+        {
+            if (apiVersion <= 0)
+                throw new ArgumentOutOfRangeException(nameof(apiVersion));
+            return apiVersion switch
+            {
+                _ => ConvertEx.ConvertEx.DefaultConverter,
+            };
+        }
+
         public ProcessedGrabScript ProcessResult(int apiVersion, object hostObject)
         {
             if (apiVersion <= 0)
@@ -72,13 +82,16 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
 
                 if (hostObject.Grabber.GrabAsync != null)
                     // invoke GrabAsync
-                    await hostObject.Grabber.GrabAsync(request, response).ConfigureAwait(false);
+                    await hostObject.Grabber.GrabAsync(request, response);
                 else
                 {
                     // invoke Grab
-                    var success = await Task.Run(() => hostObject.Grabber.Grab(request, response)).ConfigureAwait(false);
-                    if (!success)
+                    var success = await Task.Run(() => hostObject.Grabber.Grab(request, response), cancellationToken);
+                    // var success = hostObject.Grabber.Grab(request, response);
+                    if (success != true)
+                    {
                         return null;
+                    }
                 }
 
                 return result;

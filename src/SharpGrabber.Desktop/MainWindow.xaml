@@ -99,7 +99,9 @@
                     <TextBlock.ContextMenu>
                         <ContextMenu>
                             <ContextMenu.Items>
-                                <MenuItem Name="miAbout" Header="About..." />
+                                <MenuItem Name="miLoadScript" Header="Load Script..." />
+                                <Separator />
+                                <MenuItem Name="miAbout" Header="About" />
                             </ContextMenu.Items>
                         </ContextMenu>
                     </TextBlock.ContextMenu>

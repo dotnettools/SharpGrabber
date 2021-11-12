@@ -35,7 +35,7 @@ namespace SharpGrabber.Desktop
         private Grid overlayRoot, noContent;
         private Border overlayContent;
         private TextBlock txtMsgTitle, txtMsgContent, txtTitle;
-        private MenuItem miAbout;
+        private MenuItem miAbout, miLoadScript;
         private Button btnMsgOk;
         private TextBlock txtMediaTitle;
         private TextBlock[] txtCol = new TextBlock[3];
@@ -113,6 +113,7 @@ namespace SharpGrabber.Desktop
             txtMediaTitle = this.FindControl<TextBlock>("txtMediaTitle");
             txtTitle = this.FindControl<TextBlock>("txtTitle");
             miAbout = this.FindControl<MenuItem>("miAbout");
+            miLoadScript = this.FindControl<MenuItem>("miLoadScript");
             img = this.FindControl<Image>("img");
             imgSpinner = this.FindControl<LoadingSpinner>("imgSpinner");
             basicInfo = this.FindControl<Border>("basicInfo");
@@ -128,6 +129,7 @@ namespace SharpGrabber.Desktop
             btnMsgOk.Subscribe(Button.ClickEvent, BtnOk_Click);
             txtTitle.Subscribe(PointerPressedEvent, TxtTitle_Click);
             miAbout.Subscribe(MenuItem.ClickEvent, MiAbout_Click);
+            miLoadScript.Subscribe(MenuItem.ClickEvent, MiLoadScript_Click);
         }
 
         #region Internal Methods
@@ -475,6 +477,22 @@ namespace SharpGrabber.Desktop
         private void TxtTitle_Click(object sender, PointerPressedEventArgs e)
         {
             txtTitle.ContextMenu.Open();
+        }
+
+        private async void MiLoadScript_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new OpenFileDialog
+            {
+                Title = "Load BlackWidow Script",
+                Filters = new List<FileDialogFilter> {
+                    new FileDialogFilter { Name = "JavaScript File", Extensions = new List<string> { "js" } }
+                },
+                AllowMultiple = false,
+            };
+            var fileNames = await dlg.ShowAsync(this);
+            if (fileNames == null || fileNames.Length == 0)
+                return;
+            ShowMessage("You Selected", fileNames.First());
         }
 
         private void MiAbout_Click(object sender, RoutedEventArgs e)
