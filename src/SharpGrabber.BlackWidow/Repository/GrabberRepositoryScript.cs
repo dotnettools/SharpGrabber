@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetTools.SharpGrabber.BlackWidow.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,23 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
             var uriString = uri.ToString();
             return _regularExpressions.Any(regex => regex.IsMatch(uriString));
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCodeUtils.Compute(Id, Name, Type, Version, IsDeprecated, ApiVersion);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return EqualityUtils.Equals<GrabberRepositoryScript>(this, obj,
+                o => o.Id,
+                o => o.Name,
+                o => o.Type,
+                o => o.Version,
+                o => o.IsDeprecated,
+                o => o.SupportedRegularExpressions,
+                o => o.ApiVersion);
         }
     }
 }

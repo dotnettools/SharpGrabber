@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetTools.SharpGrabber.BlackWidow.Internal;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,28 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         public void Remove(string id)
         {
             _scripts.TryRemove(id, out _);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCodeUtils.Compute(_scripts.Values.ToArray());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is GrabberRepositoryFeed feed)
+            {
+                if (_scripts.Count != feed._scripts.Count)
+                    return false;
+                foreach (var ownScript in _scripts.Values)
+                {
+                    var otherScript = feed.GetScript(ownScript.Id);
+                    if (otherScript == null || !otherScript.Equals(ownScript))
+                        return false;
+                }
+                return true;
+            }
+            return base.Equals(obj);
         }
     }
 }

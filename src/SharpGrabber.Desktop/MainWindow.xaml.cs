@@ -25,7 +25,6 @@ namespace SharpGrabber.Desktop
         private static readonly HttpClient _client = new HttpClient();
 
         #region Fields
-
         private readonly IMultiGrabber _grabber;
         private bool _uiEnabled = true;
         private TextBox tbUrl;
@@ -43,7 +42,6 @@ namespace SharpGrabber.Desktop
         private LoadingSpinner imgSpinner;
         private StackPanel resourceContainer;
         private Border basicInfo;
-
         #endregion
 
         #region Properties
@@ -78,7 +76,6 @@ namespace SharpGrabber.Desktop
                 .UseDefaultServices()
                 .AddYouTube()
                 .AddInstagram()
-                .AddVimeo()
                 .AddHls()
                 .AddPornHub()
                 .AddXnxx()
