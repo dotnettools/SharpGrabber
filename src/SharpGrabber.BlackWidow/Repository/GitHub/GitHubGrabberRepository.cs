@@ -74,7 +74,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository.GitHub
 
         public override Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, CancellationToken cancellationToken)
         {
-            throw new NotSupportedException("Putting is not supported on GitHub repositories.");
+            throw new NotSupportedException("Putting is not supported for GitHub repositories.");
         }
 
         protected override void Dispose(bool disposing)
