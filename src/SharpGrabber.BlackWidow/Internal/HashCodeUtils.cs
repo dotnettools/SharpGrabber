@@ -15,7 +15,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Internal
         {
             unchecked
             {
-                var hash = 0;
+                var hash = 17;
                 foreach (var value in values)
                 {
                     var ohash = value?.GetHashCode() ?? 0;

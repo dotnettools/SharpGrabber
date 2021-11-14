@@ -12,7 +12,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
     /// </summary>
     public class GrabberRepositoryChangeDetector : IGrabberRepositoryChangeDetector
     {
-        private readonly IGrabberRepository[] _repositories;
+        private readonly Dictionary<IGrabberRepository, IGrabberRepositoryFeed> _repositories;
         private readonly List<IDisposable> _disposables = new();
         private readonly Mutex _pollingMutex = new(false);
         private IGrabberRepository[] _pollingRepositories;
@@ -22,7 +22,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         public GrabberRepositoryChangeDetector(IEnumerable<IGrabberRepository> repositories)
         {
-            _repositories = repositories.ToArray();
+            _repositories = repositories.ToDictionary(r => r, r => (IGrabberRepositoryFeed)null);
             _ = ProcessRepositoriesAsync();
         }
 
@@ -44,8 +44,15 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         public async Task ForceUpdateFeedAsync(bool pollableOnly = true)
         {
-            _pollingIntervalCancellation?.Cancel();
-            await TriggerPollingAsync();
+            if (pollableOnly)
+            {
+                _pollingIntervalCancellation?.Cancel();
+                await TriggerPollingAsync();
+            }
+            else
+            {
+                await PollAsync(_repositories.Keys, _cancellationTokenSource.Token).ConfigureAwait(false);
+            }
         }
 
         public void Dispose()
@@ -56,6 +63,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             _cancellationTokenSource = null;
             _pollingIntervalCancellation?.Cancel();
             _pollingIntervalCancellation = null;
+            _repositories.Clear();
             RepositoryChanged = null;
             foreach (var disposable in _disposables)
                 disposable.Dispose();
@@ -71,7 +79,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         private async Task ProcessRepositoriesAsync()
         {
             var pollingRepos = new List<IGrabberRepository>();
-            foreach (var repository in _repositories)
+            foreach (var repository in _repositories.Keys)
             {
                 if (repository.CanNotifyChanges)
                 {
@@ -98,7 +106,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
                 if (_pollingRepositories == null || _pollingRepositories.Length == 0)
                     return;
 
-                _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                await PollAsync(_pollingRepositories, _cancellationTokenSource.Token).ConfigureAwait(false);
             }
             finally
             {
@@ -118,9 +126,53 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             await TriggerPollingAsync().ConfigureAwait(false);
         }
 
-        private void Subscription_FeedUpdated(IGrabberRepositoryFeed feed, IGrabberRepository repository)
+        private async Task PollAsync(IEnumerable<IGrabberRepository> repositories, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            async Task<Tuple<IGrabberRepository, IGrabberRepositoryFeed>> GetFeedAsync(IGrabberRepository repo)
+            {
+                var feed = await repo.GetFeedAsync(cancellationToken).ConfigureAwait(false);
+                return new Tuple<IGrabberRepository, IGrabberRepositoryFeed>(repo, feed);
+            };
+
+            var tasks = new HashSet<Task<Tuple<IGrabberRepository, IGrabberRepositoryFeed>>>();
+            foreach (var repo in repositories)
+            {
+                var task = GetFeedAsync(repo);
+                tasks.Add(task);
+            }
+
+            while (tasks.Count > 0)
+            {
+                var task = await Task.WhenAny(tasks);
+                cancellationToken.ThrowIfCancellationRequested();
+                tasks.Remove(task);
+
+                var tuple = task.Result;
+                TestChanged(tuple.Item1, tuple.Item2);
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+        }
+
+        private async void Subscription_FeedUpdated(IGrabberRepositoryFeed feed, IGrabberRepository repository)
+        {
+            if (RepositoryChanged == null)
+                return;
+            feed ??= await repository.GetFeedAsync().ConfigureAwait(false);
+            TestChanged(repository, feed);
+        }
+
+        private void TestChanged(IGrabberRepository repository, IGrabberRepositoryFeed feed)
+        {
+            if (!_repositories.ContainsKey(repository))
+                throw new InvalidOperationException("The repository is not registered.");
+
+            var prevFeed = _repositories[repository];
+            if (prevFeed != null && feed.Equals(prevFeed))
+                // not changed
+                return;
+
+            _repositories[repository] = feed;
+            RepositoryChanged.Invoke(repository, feed);
         }
     }
 }

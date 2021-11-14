@@ -51,7 +51,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         public override int GetHashCode()
         {
-            return HashCodeUtils.Compute(Id, Name, Type, Version, IsDeprecated, ApiVersion);
+            return HashCodeUtils.Compute(Id);
         }
 
         public override bool Equals(object obj)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Repository.Memory
@@ -15,19 +16,19 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository.Memory
 
         public override bool CanPut => true;
 
-        public override Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script)
+        public override Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script, CancellationToken cancellationToken)
         {
             var info = _scripts.GetOrDefault(script.Id);
             return Task.FromResult(info?.Source);
         }
 
-        public override Task<IGrabberRepositoryFeed> GetFeedAsync()
+        public override Task<IGrabberRepositoryFeed> GetFeedAsync(CancellationToken cancellationToken)
         {
             var feed = new GrabberRepositoryFeed(_scripts.Values.Select(i => i.Script));
             return Task.FromResult<IGrabberRepositoryFeed>(feed);
         }
 
-        public override Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source)
+        public override Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, CancellationToken cancellationToken)
         {
             var info = new ScriptInfo(script, source);
             _scripts[script.Id] = info;

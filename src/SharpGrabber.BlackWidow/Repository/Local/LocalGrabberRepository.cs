@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Repository
@@ -34,7 +35,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         /// </summary>
         public string ScriptFileNameWithoutExtension { get; set; } = "script";
 
-        public override Task<IGrabberRepositoryFeed> GetFeedAsync()
+        public override Task<IGrabberRepositoryFeed> GetFeedAsync(CancellationToken cancellationToken)
         {
             var root = new DirectoryInfo(_rootPath);
             var ids = root.EnumerateDirectories().Select(d => d.Name).ToArray();
@@ -43,14 +44,14 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             return Task.FromResult<IGrabberRepositoryFeed>(feed);
         }
 
-        public override Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script)
+        public override Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script, CancellationToken cancellationToken)
         {
             var scriptPath = GetScriptPath(script);
             var source = new GrabberScriptSource(File.ReadAllText(scriptPath));
             return Task.FromResult<IGrabberScriptSource>(source);
         }
 
-        public override async Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source)
+        public override async Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, CancellationToken cancellationToken)
         {
             if (_readOnly)
                 throw new NotSupportedException("The repository is read-only.");

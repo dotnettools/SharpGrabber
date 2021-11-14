@@ -46,7 +46,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         public override int GetHashCode()
         {
-            return HashCodeUtils.Compute(_scripts.Values.ToArray());
+            return 0;
         }
 
         public override bool Equals(object obj)

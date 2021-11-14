@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Repository.GitHub
@@ -50,28 +51,28 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository.GitHub
         /// </summary>
         public string FeedFileName { get; set; } = "feed.json";
 
-        public override async Task<IGrabberRepositoryFeed> GetFeedAsync()
+        public override async Task<IGrabberRepositoryFeed> GetFeedAsync(CancellationToken cancellationToken)
         {
             var url = GetFeedUrl();
-            using var response = await _client.GetAsync(url).ConfigureAwait(false);
+            using var response = await _client.GetAsync(url, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var feedModel = JsonConvert.DeserializeObject<FeedFileModel>(content);
             return new GrabberRepositoryFeed(feedModel.Scripts);
         }
 
-        public override async Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript _script)
+        public override async Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript _script, CancellationToken cancellationToken)
         {
             if (_script is not FeedScriptModel script)
                 throw new InvalidOperationException($"The provided script does not belong to this repository.");
 
             var url = GetScriptUrl(script.File);
-            using var response = await _client.GetAsync(url).ConfigureAwait(false);
+            using var response = await _client.GetAsync(url, cancellationToken).ConfigureAwait(false);
             var src = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return new GrabberScriptSource(src);
         }
 
-        public override Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source)
+        public override Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, CancellationToken cancellationToken)
         {
             throw new NotSupportedException("Putting is not supported on GitHub repositories.");
         }

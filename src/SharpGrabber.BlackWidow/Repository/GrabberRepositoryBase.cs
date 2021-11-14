@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Repository
@@ -23,11 +24,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         protected bool AnySubscribers => _subscriptions.Count > 0;
 
-        public abstract Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script);
+        public abstract Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script, CancellationToken cancellationToken);
 
-        public abstract Task<IGrabberRepositoryFeed> GetFeedAsync();
+        public abstract Task<IGrabberRepositoryFeed> GetFeedAsync(CancellationToken cancellationToken);
 
-        public virtual Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source)
+        public virtual Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, CancellationToken cancellationToken)
         {
             throw new NotSupportedException($"Putting is not supported by {GetType()}.");
         }
