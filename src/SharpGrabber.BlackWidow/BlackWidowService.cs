@@ -20,16 +20,19 @@ namespace DotNetTools.SharpGrabber.BlackWidow
         private readonly ConcurrentDictionary<string, IGrabber> _grabbers =
             new(StringComparer.InvariantCultureIgnoreCase);
 
+        private readonly IGrabberRepositoryChangeDetector _changeDetector;
         private IGrabberRepositoryFeed _localFeed;
         private IGrabberRepositoryFeed _remoteFeed;
 
         protected BlackWidowService(IGrabberRepository localRepository, IGrabberRepository remoteRepository,
-            IScriptHost scriptHost, IGrabberScriptInterpreterService interpreterService)
+            IScriptHost scriptHost, IGrabberScriptInterpreterService interpreterService, IGrabberRepositoryChangeDetector changeDetector)
         {
+            _changeDetector = changeDetector;
             Interpreters = interpreterService ?? throw new ArgumentNullException(nameof(interpreterService));
             LocalRepository = localRepository ?? throw new ArgumentNullException(nameof(localRepository));
             RemoteRepository = remoteRepository ?? throw new ArgumentNullException(nameof(remoteRepository));
             ScriptHost = scriptHost;
+            changeDetector.RepositoryChanged += ChangeDetector_RepositoryChanged;
         }
 
         public IScriptHost ScriptHost { get; }
@@ -48,10 +51,12 @@ namespace DotNetTools.SharpGrabber.BlackWidow
         /// </summary>
         public static async Task<BlackWidowService> CreateAsync(IGrabberRepository localRepository,
             IGrabberRepository remoteRepository,
-            IScriptHost scriptHost, IGrabberScriptInterpreterService interpreterService = null)
+            IScriptHost scriptHost, IGrabberScriptInterpreterService interpreterService = null,
+            IGrabberRepositoryChangeDetector changeDetector = null)
         {
             interpreterService ??= new GrabberScriptInterpreterService();
-            var service = new BlackWidowService(localRepository, remoteRepository, scriptHost, interpreterService);
+            changeDetector ??= new GrabberRepositoryChangeDetector(new[] { localRepository, remoteRepository });
+            var service = new BlackWidowService(localRepository, remoteRepository, scriptHost, interpreterService, changeDetector);
             await service.LoadLocalFeedAsync().ConfigureAwait(false);
             return service;
         }
@@ -108,6 +113,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             _remoteFeed = await RemoteRepository.GetFeedAsync().ConfigureAwait(false);
         }
 
+        public void Dispose()
+        {
+            _changeDetector?.Dispose();
+        }
+
         private async Task LoadLocalFeedAsync()
         {
             _localFeed = await LocalRepository.GetFeedAsync().ConfigureAwait(false);
@@ -136,6 +146,18 @@ namespace DotNetTools.SharpGrabber.BlackWidow
                 .ConfigureAwait(false);
             _grabbers.TryAdd(scriptInfo.Id, grabber);
             return grabber;
+        }
+
+        private void ChangeDetector_RepositoryChanged(IGrabberRepository repository, IGrabberRepositoryFeed feed, IGrabberRepositoryFeed prevFeed)
+        {
+            if (repository != LocalRepository && repository != RemoteRepository)
+                return;
+
+            var isLocal = LocalRepository == repository;
+            if (isLocal)
+                _localFeed = feed;
+            else
+                _remoteFeed = feed;
         }
     }
 }

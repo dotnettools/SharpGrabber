@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace DotNetTools.SharpGrabber.BlackWidow
 {
     /// <summary>
-    /// Manages a local grabber repository.
+    /// Manages a local grabber repository and keeps it constantly up-to-date.
     /// </summary>
-    public interface IBlackWidowService
+    public interface IBlackWidowService : IDisposable
     {
         /// <summary>
         /// Gets the script host.

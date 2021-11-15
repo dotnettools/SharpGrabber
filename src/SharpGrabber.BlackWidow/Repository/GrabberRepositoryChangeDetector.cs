@@ -26,7 +26,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             _ = ProcessRepositoriesAsync();
         }
 
-        public event Action<IGrabberRepository, IGrabberRepositoryFeed> RepositoryChanged;
+        public event GrabberRepositoryChangeEventHandler RepositoryChanged;
 
         /// <summary>
         /// Gets or sets the polling interval, which is the minimum time to wait before fetching the feed of a manually trackable repository.
@@ -172,7 +172,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
                 return;
 
             _repositories[repository] = feed;
-            RepositoryChanged.Invoke(repository, feed);
+            RepositoryChanged.Invoke(repository, feed, prevFeed);
         }
     }
 }

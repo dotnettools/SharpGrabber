@@ -13,7 +13,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         /// <summary>
         /// Invoked when a change in a repository gets detected.
         /// </summary>
-        event Action<IGrabberRepository, IGrabberRepositoryFeed> RepositoryChanged;
+        event GrabberRepositoryChangeEventHandler RepositoryChanged;
 
         /// <summary>
         /// Forces a manual update of all repository feeds.
