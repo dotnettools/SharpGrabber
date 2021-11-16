@@ -8,8 +8,8 @@
 This repository contains multiple related projects:
 - <a href="#how-to-use">`SharpGrabber`</a> is a *.NET Standard* library for scraping top media providers and grabbing high quality video, audio and information.
 - <a href="#how-to-use">`SharpGrabber.Converter`</a> is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files. It is also used for merging HLS stream segments.
-- <a href="#sharpgrabberdesktop">`SharpGrabber.Desktop`</a> A cross-platform desktop application which utilizes both mentioned libraries to expose their functionality to desktop end-users.
 - <a href="#introducing-blackwidow">`SharpGrabber.BlackWidow`</a> is a *.NET Standard* library for grabbing using JavaScript, which has many advantages over using scatter NuGet packages.
+- <a href="#sharpgrabberdesktop">`SharpGrabber.Desktop`</a> A cross-platform desktop application which utilizes all three libraries mentioned above to expose their functionality to desktop end-users.
 
 # How to Use
 **⭐ Please give a star if you find this project useful!**
