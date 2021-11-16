@@ -100,6 +100,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             if (!_pollingMutex.WaitOne(TimeSpan.Zero))
                 return;
 
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
             try
             {
                 // test if there are any repos to poll
@@ -172,7 +174,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
                 return;
 
             _repositories[repository] = feed;
-            RepositoryChanged.Invoke(repository, feed, prevFeed);
+            RepositoryChanged?.Invoke(repository, feed, prevFeed);
         }
     }
 }

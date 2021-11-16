@@ -33,23 +33,23 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
         /// </summary>
         public static IEnumerable<GrabberRepositoryFeedDifference> GetDifferences(this IGrabberRepositoryFeed feed, IGrabberRepositoryFeed otherFeed)
         {
-            var dic1 = otherFeed.GetScripts().ToDictionary(s => s.Id);
-            var dic2 = feed.GetScripts().ToDictionary(s => s.Id);
+            var ownDic = feed.GetScripts().ToDictionary(s => s.Id);
+            var otherDic = otherFeed.GetScripts().ToDictionary(s => s.Id);
 
             // return what's new
-            foreach (var id in dic2.Keys.Where(k => !dic1.ContainsKey(k)))
-                yield return new GrabberRepositoryFeedDifference(GrabberRepositoryFeedDifferenceType.ScriptAdded, null, dic2[id]);
+            foreach (var id in ownDic.Keys.Where(k => !otherDic.ContainsKey(k)))
+                yield return new GrabberRepositoryFeedDifference(GrabberRepositoryFeedDifferenceType.ScriptAdded, ownDic[id], null);
 
             // return what's removed
-            foreach (var id in dic1.Keys.Where(k => !dic2.ContainsKey(k)))
-                yield return new GrabberRepositoryFeedDifference(GrabberRepositoryFeedDifferenceType.ScriptRemoved, dic1[id], null);
+            foreach (var id in otherDic.Keys.Where(k => !ownDic.ContainsKey(k)))
+                yield return new GrabberRepositoryFeedDifference(GrabberRepositoryFeedDifferenceType.ScriptRemoved, null, otherDic[id]);
 
             // return what's changed
-            foreach (var id in dic1.Keys.Intersect(dic2.Keys))
+            foreach (var id in otherDic.Keys.Intersect(ownDic.Keys))
             {
-                var ownScript = dic1[id];
-                var otherScript = dic2[id];
-                if (ownScript.Equals(otherScript))
+                var ownScript = ownDic[id];
+                var otherScript = otherDic[id];
+                if (otherScript.Equals(ownScript))
                     continue;
                 yield return new GrabberRepositoryFeedDifference(GrabberRepositoryFeedDifferenceType.ScriptChanged, ownScript, otherScript);
             }
