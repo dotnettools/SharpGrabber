@@ -67,7 +67,7 @@ function setGrabResult(result, config) {
 	})
 }
 
-grabber.supports = url => getVideoId(url)
+grabber.supports = url => Boolean(getVideoId(url))
 
 grabber.grab = (request, result) => {
 	const videoId = getVideoId(request.url)

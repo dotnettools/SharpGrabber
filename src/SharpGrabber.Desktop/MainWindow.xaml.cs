@@ -81,7 +81,6 @@ namespace SharpGrabber.Desktop
                .AddYouTube()
                .AddInstagram()
                .AddHls()
-               .AddPornHub()
                .AddXnxx()
                .AddXVideos()
                .Build();
