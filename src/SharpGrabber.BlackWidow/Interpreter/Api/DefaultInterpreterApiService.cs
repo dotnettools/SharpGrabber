@@ -9,6 +9,9 @@ using DotNetTools.ConvertEx;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
 {
+    /// <summary>
+    /// Offical implementation for <see cref="IInterpreterApiService"/>
+    /// </summary>
     public class DefaultInterpreterApiService : IInterpreterApiService
     {
         private readonly IGrabberServices _grabberServices;

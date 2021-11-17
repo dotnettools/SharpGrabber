@@ -1,5 +1,6 @@
 ﻿using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter;
+using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,12 +16,12 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Builder
         /// <summary>
         /// Configures the local repository.
         /// </summary>
-        IBlackWidowBuilder ConfigureLocalRepository(Action<IBlackWidowRepositoryBuilder> configurator);
+        IBlackWidowBuilder ConfigureLocalRepository(Action<IBlackWidowRepositoryConfigurator> configure);
 
         /// <summary>
         /// Configures the remote repository.
         /// </summary>
-        IBlackWidowBuilder ConfigureRemoteRepository(Action<IBlackWidowRepositoryBuilder> configurator);
+        IBlackWidowBuilder ConfigureRemoteRepository(Action<IBlackWidowRepositoryConfigurator> configure);
 
         /// <summary>
         /// Sets the script host.
@@ -28,9 +29,19 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Builder
         IBlackWidowBuilder SetScriptHost(IScriptHost scriptHost);
 
         /// <summary>
+        /// Sets the change detector.
+        /// </summary>
+        IBlackWidowBuilder SetChangeDetector(IGrabberRepositoryChangeDetector changeDetector);
+
+        /// <summary>
         /// Sets <paramref name="interpreterService"/> to be used.
         /// </summary>
         IBlackWidowBuilder UseInterpreterService(IGrabberScriptInterpreterService interpreterService);
+
+        /// <summary>
+        /// Configures the interpreter service.
+        /// </summary>
+        IBlackWidowBuilder ConfigureInterpreterService(Action<IGrabberScriptInterpreterServiceConfigurator> configure);
 
         /// <summary>
         /// Builds the service.

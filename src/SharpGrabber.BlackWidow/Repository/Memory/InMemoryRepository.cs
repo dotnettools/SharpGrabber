@@ -12,9 +12,15 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository.Memory
     /// </summary>
     public class InMemoryRepository : GrabberRepositoryBase
     {
+        private readonly bool _readOnly;
         private readonly Dictionary<string, ScriptInfo> _scripts = new();
 
-        public override bool CanPut => true;
+        public InMemoryRepository(bool readOnly = false)
+        {
+            _readOnly = readOnly;
+        }
+
+        public override bool CanPut => !_readOnly;
 
         public override Task<IGrabberScriptSource> FetchSourceAsync(IGrabberRepositoryScript script, CancellationToken cancellationToken)
         {
@@ -30,6 +36,9 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository.Memory
 
         public override Task PutAsync(IGrabberRepositoryScript script, IGrabberScriptSource source, CancellationToken cancellationToken)
         {
+            if (_readOnly)
+                throw new NotSupportedException("Cannot put into the memory repository because it's read-only.");
+
             var info = new ScriptInfo(script, source);
             _scripts[script.Id] = info;
             return Task.CompletedTask;

@@ -12,12 +12,12 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
     /// <summary>
     /// Mounts to a phyisical directory to fetch and store grabbers.
     /// </summary>
-    public class LocalGrabberRepository : GrabberRepositoryBase
+    public class PhysicalGrabberRepository : GrabberRepositoryBase
     {
         private readonly string _rootPath;
         private readonly bool _readOnly;
 
-        public LocalGrabberRepository(string rootPath, bool readOnly = false)
+        public PhysicalGrabberRepository(string rootPath, bool readOnly = false)
         {
             _rootPath = rootPath;
             _readOnly = readOnly;
@@ -37,6 +37,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         public override Task<IGrabberRepositoryFeed> GetFeedAsync(CancellationToken cancellationToken)
         {
+            Directory.CreateDirectory(_rootPath);
             var root = new DirectoryInfo(_rootPath);
             var ids = root.EnumerateDirectories().Select(d => d.Name).ToArray();
             var scripts = ids.Select(id => ReadScriptInfo(id));

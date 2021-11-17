@@ -5,6 +5,9 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using DotNetTools.SharpGrabber;
+using DotNetTools.SharpGrabber.BlackWidow.Builder;
+using DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript;
+using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using DotNetTools.SharpGrabber.Grabbed;
 using FFmpeg.AutoGen;
 using SharpGrabber.Desktop.Components;
@@ -72,15 +75,24 @@ namespace SharpGrabber.Desktop
         {
             Initialized += MainWindow_Initialized;
 
+            var xxx = BlackWidowBuilder.New()
+                .ConfigureInterpreterService(icfg => icfg
+                    .SetDefaultApiService()
+                    .AddJint())
+                .ConfigureLocalRepository(cfg => cfg.UsePhysical(@"blackwidow/repo"))
+                .ConfigureRemoteRepository(cfg => cfg.UseOfficial())
+                .BuildAsync();
+            var bwsvc = xxx.GetAwaiter().GetResult();
+
             _grabber = GrabberBuilder.New()
-                .UseDefaultServices()
-                .AddYouTube()
-                .AddInstagram()
-                .AddHls()
-                .AddPornHub()
-                .AddXnxx()
-                .AddXVideos()
-                .Build();
+               .UseDefaultServices()
+               .AddYouTube()
+               .AddInstagram()
+               .AddHls()
+               .AddPornHub()
+               .AddXnxx()
+               .AddXVideos()
+               .Build();
 
             InitializeComponent();
             basicInfo.IsVisible = resourceContainer.IsVisible = false;

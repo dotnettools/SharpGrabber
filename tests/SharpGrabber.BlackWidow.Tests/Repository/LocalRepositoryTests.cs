@@ -21,7 +21,7 @@ namespace SharpGrabber.BlackWidow.Tests.Repository
             Directory.CreateDirectory(dir);
             try
             {
-                var repo = new LocalGrabberRepository(dir);
+                var repo = new PhysicalGrabberRepository(dir);
 
                 foreach (var id in ids)
                 {
