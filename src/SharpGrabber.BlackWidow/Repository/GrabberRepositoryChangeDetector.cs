@@ -14,7 +14,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
     {
         private readonly Dictionary<IGrabberRepository, IGrabberRepositoryFeed> _repositories;
         private readonly List<IDisposable> _disposables = new();
-        private readonly Mutex _pollingMutex = new(false);
+        private readonly AutoResetEvent _pollingSync = new(false);
         private IGrabberRepository[] _pollingRepositories;
         private CancellationTokenSource _cancellationTokenSource;
         private CancellationTokenSource _pollingIntervalCancellation;
@@ -68,7 +68,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             foreach (var disposable in _disposables)
                 disposable.Dispose();
             _disposables.Clear();
-            _pollingMutex.Dispose();
+            _pollingSync.Dispose();
             Dispose(true);
         }
 
@@ -97,7 +97,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
 
         private async Task TriggerPollingAsync()
         {
-            if (!_pollingMutex.WaitOne(TimeSpan.Zero))
+            if (!_pollingSync.Set())
                 return;
 
             _cancellationTokenSource?.Cancel();
@@ -112,7 +112,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             }
             finally
             {
-                _pollingMutex.ReleaseMutex();
+                _pollingSync.Reset();
             }
 
             // trigger delayed polling

@@ -2,6 +2,8 @@
 using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
+using DotNetTools.SharpGrabber.BlackWidow.TypeConversion;
+using Esprima.Ast;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -67,7 +69,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Builder
             var grabberServies = _grabberServices ?? GrabberServices.Default;
             var scriptHost = _scriptHost ?? new ScriptHost();
             var grabbedTypeCollection = _grabbedTypeCollection ?? new GrabbedTypeCollection();
-            var typeConverter = _typeConverter ?? ConvertEx.ConvertEx.DefaultConverter;
+            var typeConverter = _typeConverter ?? TypeConverters.Default;
             var apiServiceContext = new GrabberScriptInterpreterApiServiceActivationContext(grabberServies, scriptHost, grabbedTypeCollection, typeConverter);
             var apiService = _apiServiceFactory.Invoke(apiServiceContext);
             var interpreterContext = new GrabberScriptInterpreterActivationContext(apiService, grabberServies, scriptHost);

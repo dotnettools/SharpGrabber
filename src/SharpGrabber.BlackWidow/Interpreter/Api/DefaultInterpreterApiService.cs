@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetTools.ConvertEx;
+using DotNetTools.SharpGrabber.BlackWidow.TypeConversion;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
 {
@@ -45,7 +46,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api
                 throw new ArgumentOutOfRangeException(nameof(apiVersion));
             return apiVersion switch
             {
-                _ => ConvertEx.ConvertEx.DefaultConverter,
+                _ => TypeConverters.Default,
             };
         }
 

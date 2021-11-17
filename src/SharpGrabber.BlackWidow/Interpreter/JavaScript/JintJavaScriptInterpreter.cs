@@ -36,9 +36,9 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
         public string MainFunctionName { get; set; } = "main";
 
         /// <summary>
-        /// Gets or sets the memory limit for script. A value of 0 represents no limit. Default value is 10 MiB.
+        /// Gets or sets the memory limit for script. A value of 0 represents no limit. Default value is 100 MiB.
         /// </summary>
-        public long MemoryLimit { get; set; } = 10_485_760;
+        public long MemoryLimit { get; set; } = 104_857_600;
 
         /// <summary>
         /// Gets or sets the maximum allowed time for the script to execute. <see cref="TimeSpan.Zero"/> represents no limit.
@@ -80,7 +80,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
 
             var processedScript = _interpreterApiService.ProcessResult(apiVersion, hostObject);
 
-            return new JintGrabber(processedScript, script.Name, _grabberServices);
+            return new JintGrabber(engine, processedScript, script.Name, _grabberServices);
         }
 
         /// <summary>
@@ -138,12 +138,14 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
 
         private class JintGrabber : GrabberBase
         {
+            private readonly Engine _engine;
             private readonly ProcessedGrabScript _processedGrabScript;
 
-            public JintGrabber(ProcessedGrabScript processedGrabScript, string name,
+            public JintGrabber(Engine engine, ProcessedGrabScript processedGrabScript, string name,
                 IGrabberServices grabberServices) : base(
                 grabberServices)
             {
+                _engine = engine;
                 _processedGrabScript = processedGrabScript;
                 Name = name;
             }
@@ -153,11 +155,17 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
             public override string Name { get; }
 
             public override bool Supports(Uri uri)
-                => _processedGrabScript.Supports(uri);
+            {
+                _engine.ResetConstraints();
+                return _processedGrabScript.Supports(uri);
+            }
 
             protected override Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken,
                 GrabOptions options, IProgress<double> progress)
-                => _processedGrabScript.GrabAsync(uri, cancellationToken, options, progress);
+            {
+                _engine.ResetConstraints();
+                return _processedGrabScript.GrabAsync(uri, cancellationToken, options, progress);
+            }
         }
     }
 }
