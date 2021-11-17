@@ -95,7 +95,7 @@ namespace SharpGrabber.BlackWidow.Tests
             _apiService = new DefaultInterpreterApiService(GrabberServices.Default, _typeCollection, _typeConverter);
             _interpreterService = new GrabberScriptInterpreterService();
             _interpreterService.RegisterJint(_apiService, GrabberServices.Default, _scriptHost);
-            _service = await BlackWidowService.CreateAsync(_localRepository, _remoteRepository, _scriptHost,
+            _service = await BlackWidowService.CreateAsync(_localRepository, _remoteRepository, GrabberServices.Default, _scriptHost,
                 _interpreterService);
         }
     }

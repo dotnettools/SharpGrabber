@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNetTools.SharpGrabber.BlackWidow
@@ -19,12 +20,14 @@ namespace DotNetTools.SharpGrabber.BlackWidow
     {
         private readonly ConcurrentDictionary<string, IGrabber> _grabbers =
             new(StringComparer.InvariantCultureIgnoreCase);
+        private readonly BlackWidowGrabber _grabber;
 
         private readonly IGrabberRepositoryChangeDetector _changeDetector;
         private IGrabberRepositoryFeed _localFeed;
         private IGrabberRepositoryFeed _remoteFeed;
 
         protected BlackWidowService(IGrabberRepository localRepository, IGrabberRepository remoteRepository,
+            IGrabberServices grabberServices,
             IScriptHost scriptHost, IGrabberScriptInterpreterService interpreterService, IGrabberRepositoryChangeDetector changeDetector)
         {
             _changeDetector = changeDetector;
@@ -33,6 +36,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             RemoteRepository = remoteRepository ?? throw new ArgumentNullException(nameof(remoteRepository));
             ScriptHost = scriptHost;
             changeDetector.RepositoryChanged += ChangeDetector_RepositoryChanged;
+            _grabber = new BlackWidowGrabber(this, grabberServices ?? throw new ArgumentNullException(nameof(grabberServices)));
         }
 
         public IScriptHost ScriptHost { get; }
@@ -46,17 +50,20 @@ namespace DotNetTools.SharpGrabber.BlackWidow
 
         public IGrabberRepository RemoteRepository { get; }
 
+        public IGrabber Grabber => _grabber;
+
         /// <summary>
         /// Creates a new instance of <see cref="BlackWidowService"/>.
         /// </summary>
         public static async Task<BlackWidowService> CreateAsync(IGrabberRepository localRepository,
             IGrabberRepository remoteRepository,
+            IGrabberServices grabberServices,
             IScriptHost scriptHost, IGrabberScriptInterpreterService interpreterService = null,
             IGrabberRepositoryChangeDetector changeDetector = null)
         {
             interpreterService ??= new GrabberScriptInterpreterService();
             changeDetector ??= new GrabberRepositoryChangeDetector(new[] { localRepository, remoteRepository });
-            var service = new BlackWidowService(localRepository, remoteRepository, scriptHost, interpreterService, changeDetector);
+            var service = new BlackWidowService(localRepository, remoteRepository, grabberServices, scriptHost, interpreterService, changeDetector);
             await service.LoadLocalFeedAsync().ConfigureAwait(false);
             return service;
         }
@@ -158,6 +165,42 @@ namespace DotNetTools.SharpGrabber.BlackWidow
                 _localFeed = feed;
             else
                 _remoteFeed = feed;
+        }
+
+        private sealed class BlackWidowGrabber : GrabberBase
+        {
+            private readonly BlackWidowService _service;
+
+            public BlackWidowGrabber(BlackWidowService service, IGrabberServices services) : base(services)
+            {
+                _service = service;
+            }
+
+            public override string StringId => "BlackWidow";
+
+            public override string Name => "BlackWidow";
+
+            public override GrabOptions DefaultGrabOptions { get; } = new GrabOptions(GrabOptionFlags.All);
+
+            public override bool Supports(Uri uri)
+            {
+                return _service._localFeed?.GetScripts().Any(s => s.IsMatch(uri)) ?? false;
+            }
+
+            protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
+            {
+                var grabbers = _service._grabbers.Values
+                    .Where(g => g.Supports(uri))
+                    .ToArray();
+
+                foreach (var grabber in grabbers)
+                {
+                    var result = await grabber.GrabAsync(uri, cancellationToken, options, progress).ConfigureAwait(false);
+                    if (result != null)
+                        return result;
+                }
+                return null;
+            }
         }
     }
 }

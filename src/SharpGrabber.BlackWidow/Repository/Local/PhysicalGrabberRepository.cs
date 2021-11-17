@@ -16,6 +16,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
     {
         private readonly string _rootPath;
         private readonly bool _readOnly;
+        private bool _monitoring;
 
         public PhysicalGrabberRepository(string rootPath, bool readOnly = false)
         {
@@ -65,6 +66,24 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository
             var sourceContent = await source.GetSourceAsync().ConfigureAwait(false);
             File.WriteAllText(descriptorPath, SerializeDescriptor(script));
             File.WriteAllText(scriptPath, sourceContent);
+
+            if (_monitoring)
+            {
+                var newFeed = await GetFeedAsync(CancellationToken.None).ConfigureAwait(false);
+                NotifyChanged(newFeed);
+            }
+        }
+
+        protected override Task StartMonitoringAsync()
+        {
+            _monitoring = true;
+            return Task.CompletedTask;
+        }
+
+        protected override Task StopMonitoringAsync()
+        {
+            _monitoring = false;
+            return Task.CompletedTask;
         }
 
         protected virtual string SerializeDescriptor(IGrabberRepositoryScript script)
