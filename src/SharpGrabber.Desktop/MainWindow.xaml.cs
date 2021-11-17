@@ -75,17 +75,9 @@ namespace SharpGrabber.Desktop
         {
             Initialized += MainWindow_Initialized;
 
-            var xxx = BlackWidowBuilder.New()
-                .ConfigureInterpreterService(icfg => icfg
-                    .SetDefaultApiService()
-                    .AddJint())
-                .ConfigureLocalRepository(cfg => cfg.UsePhysical(@"blackwidow/repo"))
-                .ConfigureRemoteRepository(cfg => cfg.UseOfficial())
-                .BuildAsync();
-            var bwsvc = xxx.GetAwaiter().GetResult();
-
             _grabber = GrabberBuilder.New()
                .UseDefaultServices()
+               .Add(Program.BlackWidow.Grabber)
                .AddYouTube()
                .AddInstagram()
                .AddHls()

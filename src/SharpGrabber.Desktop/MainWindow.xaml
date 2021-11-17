@@ -142,7 +142,7 @@
                     <Button x:Name="btnPaste" Classes="btn" Grid.Column="2" Width="40"
                                                     VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
                                                     ToolTip.Tip="Paste">
-                        <!--<TextBlock Text="Paste" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
+                        <!--<TextBlock Text="📋" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" />-->
                         <DrawingPresenter Drawing="{StaticResource FA.ClipboardListSolid}"
                                           VerticalAlignment="Center" HorizontalAlignment="Center" Margin="4" />
                     </Button>
