@@ -17,6 +17,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Builder
     {
         private IGrabberRepository _localRepository;
         private IGrabberRepository _remoteRepository;
+        private IGrabberServices _grabberServices;
         private IGrabberScriptInterpreterService _interpreterService;
         private IScriptHost _scriptHost = new ScriptHost();
         private IGrabberRepositoryChangeDetector _changeDetector;
@@ -38,8 +39,10 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Builder
             var changeDetector = _changeDetector ?? new GrabberRepositoryChangeDetector(new[] { _localRepository, _remoteRepository });
             if (_interpreterService == null)
                 SetDefaultInterpreterService();
+            var grabberServices = _grabberServices ?? GrabberServices.Default;
 
             var service = await BlackWidowService.CreateAsync(_localRepository, _remoteRepository,
+                grabberServices ?? throw new InvalidOperationException("Grabber services instance is unspecified."),
                 _scriptHost ?? throw new InvalidOperationException("Script host is unspecified."),
                 _interpreterService, changeDetector).ConfigureAwait(false);
             return service;
@@ -76,6 +79,12 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Builder
         public IBlackWidowBuilder UseInterpreterService(IGrabberScriptInterpreterService interpreterService)
         {
             _interpreterService = interpreterService;
+            return this;
+        }
+
+        public IBlackWidowBuilder SetGrabberServices(IGrabberServices grabberServices)
+        {
+            _grabberServices = grabberServices;
             return this;
         }
 

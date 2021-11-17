@@ -60,6 +60,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Builder
         public IGrabberScriptInterpreterService Build()
         {
             if (_apiServiceFactory == null)
+                this.SetDefaultApiService();
+            if (_apiServiceFactory == null)
                 throw new InvalidOperationException("Interpreter API service is unspecified.");
 
             var grabberServies = _grabberServices ?? GrabberServices.Default;

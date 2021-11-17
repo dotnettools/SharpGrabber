@@ -24,6 +24,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Builder
         IBlackWidowBuilder ConfigureRemoteRepository(Action<IBlackWidowRepositoryConfigurator> configure);
 
         /// <summary>
+        /// Sets the grabber services.
+        /// </summary>
+        IBlackWidowBuilder SetGrabberServices(IGrabberServices grabberServices);
+
+        /// <summary>
         /// Sets the script host.
         /// </summary>
         IBlackWidowBuilder SetScriptHost(IScriptHost scriptHost);
