@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using DotNetTools.SharpGrabber.BlackWidow;
 using DotNetTools.SharpGrabber.BlackWidow.Builder;
+using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using System;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace SharpGrabber.Desktop
         public static MainWindow MainWindow { get; private set; }
 
         public static IBlackWidowService BlackWidow { get; private set; }
+
+        public static ScriptHost ScriptHost { get; private set; }
 
         public static async Task<int> Main(string[] args)
         {
@@ -41,6 +44,7 @@ namespace SharpGrabber.Desktop
         private static async Task AppMain(Application app)
         {
             BlackWidow = await BlackWidowBuilder.New()
+                .SetScriptHost(ScriptHost = new())
                 .ConfigureInterpreterService(icfg => icfg.AddJint())
                 .ConfigureLocalRepository(cfg => cfg.UsePhysical(@"blackwidow/repo"))
                 .ConfigureRemoteRepository(cfg => cfg.UseOfficial())

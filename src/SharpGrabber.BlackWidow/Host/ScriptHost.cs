@@ -9,6 +9,10 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Host
     /// </summary>
     public class ScriptHost : IScriptHost
     {
+        public ScriptHost()
+        {
+        }
+
         public event Action<object> OnAlert;
         public event Action<ConsoleLog> OnLog;
 

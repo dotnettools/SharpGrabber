@@ -4,8 +4,10 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using DotNetTools.SharpGrabber;
 using DotNetTools.SharpGrabber.BlackWidow.Builder;
+using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript;
 using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using DotNetTools.SharpGrabber.Grabbed;
@@ -84,6 +86,9 @@ namespace SharpGrabber.Desktop
                .AddXnxx()
                .AddXVideos()
                .Build();
+
+            Program.ScriptHost.OnAlert += ScriptHost_OnAlert;
+            Program.ScriptHost.OnLog += ScriptHost_OnLog;
 
             InitializeComponent();
             basicInfo.IsVisible = resourceContainer.IsVisible = false;
@@ -504,5 +509,15 @@ namespace SharpGrabber.Desktop
         {
             Title = Constants.AppFullName;
         }
+
+        private void ScriptHost_OnLog(ConsoleLog logObject)
+        {
+        }
+
+        private void ScriptHost_OnAlert(object input)
+            => Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                ShowMessage("Script", input?.ToString());
+            });
     }
 }
