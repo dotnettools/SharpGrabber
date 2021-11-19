@@ -1,10 +1,8 @@
-﻿using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
+﻿using DotNetTools.SharpGrabber.BlackWidow.Definitions;
+using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DotNetTools.SharpGrabber.BlackWidow.Builder
+namespace DotNetTools.SharpGrabber.BlackWidow
 {
     /// <summary>
     /// Defines extension methods for builder and configurator interfaces to work with built-in implementations.

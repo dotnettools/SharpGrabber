@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using DotNetTools.SharpGrabber.BlackWidow.Definitions;
+using DotNetTools.SharpGrabber.BlackWidow.Repository.Local;
 using Xunit;
 
 namespace SharpGrabber.BlackWidow.Tests.Repository

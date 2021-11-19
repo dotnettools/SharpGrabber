@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Xunit;
 using System.Threading;
 using DotNetTools.ConvertEx;
+using DotNetTools.SharpGrabber.BlackWidow.Definitions;
 using DotNetTools.SharpGrabber.Exceptions;
 
 namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript

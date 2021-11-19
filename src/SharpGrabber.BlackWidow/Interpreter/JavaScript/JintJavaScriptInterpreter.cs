@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetTools.SharpGrabber.BlackWidow.Definitions;
 using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Internal;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;

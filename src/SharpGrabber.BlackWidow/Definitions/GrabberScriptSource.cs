@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace DotNetTools.SharpGrabber.BlackWidow
+namespace DotNetTools.SharpGrabber.BlackWidow.Definitions
 {
     /// <summary>
     /// Default implementation for <see cref="IGrabberScriptSource"/>

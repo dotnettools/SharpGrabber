@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetTools.SharpGrabber.BlackWidow.Definitions;
 
 namespace DotNetTools.SharpGrabber.BlackWidow
 {

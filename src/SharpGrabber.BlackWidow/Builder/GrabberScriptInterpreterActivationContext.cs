@@ -1,11 +1,8 @@
-﻿using DotNetTools.ConvertEx;
+﻿using System;
 using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DotNetTools.SharpGrabber.BlackWidow.Builder
+namespace DotNetTools.SharpGrabber.BlackWidow
 {
     /// <summary>
     /// Provides references to services used when activating an interpreter.

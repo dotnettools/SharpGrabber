@@ -1,9 +1,6 @@
 ﻿using DotNetTools.SharpGrabber.BlackWidow.Repository;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DotNetTools.SharpGrabber.BlackWidow.Builder
+namespace DotNetTools.SharpGrabber.BlackWidow
 {
     /// <summary>
     /// Configures a repository on a builder.

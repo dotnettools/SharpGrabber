@@ -1,14 +1,10 @@
-﻿using DotNetTools.SharpGrabber.BlackWidow.Host;
-using DotNetTools.SharpGrabber.BlackWidow.Interpreter;
-using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
-using DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript;
-using DotNetTools.SharpGrabber.BlackWidow.Repository;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using DotNetTools.SharpGrabber.BlackWidow.Host;
+using DotNetTools.SharpGrabber.BlackWidow.Interpreter;
+using DotNetTools.SharpGrabber.BlackWidow.Repository;
 
-namespace DotNetTools.SharpGrabber.BlackWidow.Builder
+namespace DotNetTools.SharpGrabber.BlackWidow
 {
     /// <summary>
     /// Build a BlackWidow service.

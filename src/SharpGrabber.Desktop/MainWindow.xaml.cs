@@ -7,7 +7,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DotNetTools.SharpGrabber;
 using DotNetTools.SharpGrabber.BlackWidow;
-using DotNetTools.SharpGrabber.BlackWidow.Builder;
 using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript;
 using DotNetTools.SharpGrabber.BlackWidow.Repository;

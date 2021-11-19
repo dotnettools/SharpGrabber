@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using DotNetTools.ConvertEx;
+using DotNetTools.SharpGrabber.BlackWidow.Definitions;
 using Xunit;
 
 namespace SharpGrabber.BlackWidow.Tests

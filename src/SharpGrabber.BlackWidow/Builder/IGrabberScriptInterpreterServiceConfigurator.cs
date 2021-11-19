@@ -1,12 +1,11 @@
-﻿using DotNetTools.ConvertEx;
+﻿using System;
+using DotNetTools.ConvertEx;
+using DotNetTools.SharpGrabber.BlackWidow.Definitions;
 using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DotNetTools.SharpGrabber.BlackWidow.Builder
+namespace DotNetTools.SharpGrabber.BlackWidow
 {
     /// <summary>
     /// Configures a <see cref="IGrabberScriptInterpreter"/> for a BlackWidow builder.

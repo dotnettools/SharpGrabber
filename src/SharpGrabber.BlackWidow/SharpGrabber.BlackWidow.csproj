@@ -6,7 +6,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Authors>Javid Shoaei</Authors>
         <Company>github.com/dotnettools</Company>
-        <Description>Adds support for scripting grabbers; and introduces grabber repositories to always keep the grabbers updated at runtime.</Description>
+        <Description>Adds support for executing grabber scripts written in ECMAScript (also known as JavaScript); and introduces grabber repositories to always keep the grabbers updated at runtime.</Description>
         <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
@@ -14,7 +14,7 @@
         <PackageIconUrl />
         <LangVersion>9</LangVersion>
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
-        <PackageTags>blackwidow,grab,scrape,script,ecma</PackageTags>
+        <PackageTags>blackwidow,grab,scrape,script,ecmascript,ecma,javascript,js</PackageTags>
         <NoWarn>1701;1702;1591</NoWarn>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     </PropertyGroup>

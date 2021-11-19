@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace DotNetTools.SharpGrabber.BlackWidow
+namespace DotNetTools.SharpGrabber.BlackWidow.Definitions
 {
     /// <summary>
     /// Provides access to the source of a grabber script.

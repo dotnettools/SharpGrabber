@@ -2,7 +2,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using DotNetTools.SharpGrabber.BlackWidow;
-using DotNetTools.SharpGrabber.BlackWidow.Builder;
 using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using System;

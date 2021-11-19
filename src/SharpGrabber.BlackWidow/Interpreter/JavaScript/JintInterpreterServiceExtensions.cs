@@ -3,6 +3,7 @@ using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using DotNetTools.SharpGrabber.BlackWidow.Definitions;
 
 namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
 {

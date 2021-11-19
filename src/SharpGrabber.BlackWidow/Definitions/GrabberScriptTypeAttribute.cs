@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DotNetTools.SharpGrabber.BlackWidow
+namespace DotNetTools.SharpGrabber.BlackWidow.Definitions
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class GrabberScriptTypeAttribute : Attribute
