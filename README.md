@@ -98,10 +98,11 @@ I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 </details>
         
 ## SharpGrabber.Desktop
-### Version 3.3
+### Version 4.0
 - Grabs from every source supported by official grabbers.
 - Displays information and downloads videos, audios, images etc.
 - Merges YouTube separated audio and video streams into complete media files. It can join HLS segments as well!
+- BlackWidow integrated
 
 Requirements of the cross-platform desktop application to run and operate correctly: 
  - .NET Core 3.1
@@ -111,7 +112,7 @@ Requirements of the cross-platform desktop application to run and operate correc
  
  Download the latest binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
     
-<img src="./assets/SharpGrabberDesktop-ScreenShot-3.3.png" alt="SharpGrabber.Desktop Application" />
+<img src="./assets/SharpGrabberDesktop-ScreenShot-4.0.png" alt="SharpGrabber.Desktop Application" />
 
 # Introducing BlackWidow
 <img src="./assets/blackwidow-logo-text-sm.png" alt="SharpGrabber" height="92" />
