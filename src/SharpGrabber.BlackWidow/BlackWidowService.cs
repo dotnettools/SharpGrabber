@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.BlackWidow.Definitions;
+using DotNetTools.SharpGrabber.BlackWidow.Internal;
 
 namespace DotNetTools.SharpGrabber.BlackWidow
 {
@@ -24,6 +25,8 @@ namespace DotNetTools.SharpGrabber.BlackWidow
         private readonly BlackWidowGrabber _grabber;
 
         private readonly IGrabberRepositoryChangeDetector _changeDetector;
+        private readonly ConcurrentHashSet<string> _scriptsUsed = new();
+        private readonly ConcurrentHashSet<string> _scriptsUpdating = new();
         private IGrabberRepositoryFeed _localFeed;
         private IGrabberRepositoryFeed _remoteFeed;
 
@@ -109,6 +112,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             {
                 var source = await RemoteRepository.FetchSourceAsync(remoteInfo).ConfigureAwait(false);
                 await LocalRepository.PutAsync(remoteInfo, source).ConfigureAwait(false);
+                _grabbers.TryRemove(scriptId, out _);
                 await LoadLocalFeedAsync().ConfigureAwait(false);
             }
 
@@ -166,6 +170,70 @@ namespace DotNetTools.SharpGrabber.BlackWidow
                 _localFeed = feed;
             else
                 _remoteFeed = feed;
+            _ = UpdateGrabbersAsync(_scriptsUsed);
+        }
+
+        private async Task<bool> UpdateGrabbersAsync(IEnumerable<string> ids)
+        {
+            if (_remoteFeed == null)
+                await UpdateFeedAsync().ConfigureAwait(false);
+
+            var localFeed = _localFeed;
+            var remoteFeed = _remoteFeed;
+            if (localFeed == null || remoteFeed == null)
+                return false;
+
+            var idSet = new HashSet<string>(ids, StringComparer.InvariantCultureIgnoreCase);
+
+            var localScripts = localFeed.GetScripts()
+                .Where(s => idSet.Contains(s.Id))
+                .ToDictionary(s => s.Id);
+            var remoteScripts = remoteFeed.GetScripts()
+                .Where(s => idSet.Contains(s.Id));
+
+            // compare scripts
+            var updateTasks = new List<Task<bool>>();
+            foreach (var remoteScript in remoteScripts)
+            {
+                var localScript = localScripts[remoteScript.Id];
+                if (localScript != null && remoteScript.GetVersion() <= localScript.GetVersion())
+                    continue;
+                var task = UpdateGrabberAsync(remoteScript.Id);
+                updateTasks.Add(task);
+            }
+            await Task.WhenAll(updateTasks).ConfigureAwait(false);
+            var anyUpdates = updateTasks.Any(t => t.Result);
+
+            if (anyUpdates)
+            {
+                await LoadLocalGrabbers().ConfigureAwait(false);
+            }
+            return anyUpdates;
+        }
+
+        private async Task<bool> UpdateGrabberAsync(string id)
+        {
+            // get current records
+            var localScript = _localFeed?.GetScript(id);
+            var remoteScript = _remoteFeed?.GetScript(id);
+            if (remoteScript == null)
+                return false;
+            if (localScript != null && localScript.GetVersion() >= remoteScript.GetVersion())
+                return false;
+
+            if (!_scriptsUpdating.Add(id))
+                return false;
+
+            try
+            {
+                // update script
+                await GetScriptAsync(id);
+            }
+            finally
+            {
+                _scriptsUpdating.Remove(id);
+            }
+            return true;
         }
 
         private sealed class BlackWidowGrabber : GrabberBase, IBlackWidowGrabber
@@ -190,18 +258,27 @@ namespace DotNetTools.SharpGrabber.BlackWidow
 
             public override bool Supports(Uri uri)
             {
-                return _service._localFeed?.GetScripts().Any(s => s.IsMatch(uri)) ?? false;
+                return new[] { _service._localFeed, _service._remoteFeed }
+                    .Any(feed => feed?.GetScripts().Any(s => s.IsMatch(uri)) ?? false);
             }
 
             protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options, IProgress<double> progress)
             {
-                var grabbers = _service._grabbers.Values
-                    .Where(g => g.Supports(uri))
-                    .ToArray();
+                Dictionary<string, IGrabber> GetGrabbers()
+                    => _service._grabbers
+                    .Where(g => g.Value.Supports(uri))
+                    .ToDictionary(g => g.Key, g => g.Value);
+
+                var grabbers = GetGrabbers();
+                if (await _service.UpdateGrabbersAsync(grabbers.Keys).ConfigureAwait(false))
+                {
+                    grabbers = GetGrabbers();
+                }
 
                 foreach (var grabber in grabbers)
                 {
-                    var result = await grabber.GrabAsync(uri, cancellationToken, options, progress).ConfigureAwait(false);
+                    _service._scriptsUsed.Add(grabber.Key);
+                    var result = await grabber.Value.GrabAsync(uri, cancellationToken, options, progress).ConfigureAwait(false);
                     if (result != null)
                         return result;
                 }

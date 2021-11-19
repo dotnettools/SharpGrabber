@@ -88,7 +88,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Repository.Local
 
         protected virtual string SerializeDescriptor(IGrabberRepositoryScript script)
         {
-            return JsonConvert.SerializeObject(script);
+            return JsonConvert.SerializeObject(script, Formatting.Indented);
         }
 
         protected virtual IGrabberRepositoryScript DeserializeDescriptor(string serializedValue)
