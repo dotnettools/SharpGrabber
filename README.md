@@ -115,10 +115,20 @@ Requirements of the cross-platform desktop application to run and operate correc
 
 # Introducing BlackWidow
 <img src="./assets/blackwidow-logo-text-sm.png" alt="SharpGrabber" height="92" />
+
+BlackWidow executes scripts written specifically for grabbing, rather than relying on .NET assemblies.
+- **Always Up-to-date:** The scripts are always kept up-to-date at runtime; so the functionality of the host application won't break as the sources change - at least not for long!
+- **ECMAScript Support:** Supports JavaScript/ECMAScript out of the box.
+- **Easy Maintenance:** *JavaScript* is darn easy to write and understand! This helps contributors to quickly write new grabbers or fix the existing ones.
+- **Secure**: The scripts are executed in a sandbox environment, and they only have access to what the BlackWidow API exposes to them.
+- **Highly Customizable:** Almost everything is open for extension or replacement. Make new script interpreters, custom grabber repositories, or roll out your own interpreter APIs
+
+<a href="blackwidow">Read more + Documentation</a>
     
 ## Contribution
 You are most welcome to contribute!
-- Support for more media providers such as *DailyMotion*, *Instagram*, *Facebook*, *Twitch* etc.
+- Authentication mechanisms for grabbers e.g. Instagram Login
+- Support for more media providers such as *DailyMotion*, *Facebook*, *Twitch* etc.
 - Accelerate downloads in the desktop app (like a download manager)
 
 ## Disclaimer
