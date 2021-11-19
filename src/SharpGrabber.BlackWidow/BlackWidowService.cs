@@ -50,7 +50,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow
 
         public IGrabberRepository RemoteRepository { get; }
 
-        public IGrabber Grabber => _grabber;
+        public IBlackWidowGrabber Grabber => _grabber;
 
         /// <summary>
         /// Creates a new instance of <see cref="BlackWidowService"/>.
@@ -167,7 +167,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow
                 _remoteFeed = feed;
         }
 
-        private sealed class BlackWidowGrabber : GrabberBase
+        private sealed class BlackWidowGrabber : GrabberBase, IBlackWidowGrabber
         {
             private readonly BlackWidowService _service;
 
@@ -181,6 +181,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow
             public override string Name => "BlackWidow";
 
             public override GrabOptions DefaultGrabOptions { get; } = new GrabOptions(GrabOptionFlags.All);
+
+            public IEnumerable<IGrabber> GetScriptGrabbers()
+            {
+                return _service._grabbers.Values.AsEnumerable();
+            }
 
             public override bool Supports(Uri uri)
             {

@@ -13,9 +13,9 @@ namespace DotNetTools.SharpGrabber.BlackWidow
     public interface IBlackWidowService : IDisposable
     {
         /// <summary>
-        /// Gets the dynamic grabber that wraps the BlackWidow service.
+        /// Gets the dynamic grabber that wraps the internal grabbers of the BlackWidow service.
         /// </summary>
-        IGrabber Grabber { get; }
+        IBlackWidowGrabber Grabber { get; }
 
         /// <summary>
         /// Gets the script host.

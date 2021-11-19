@@ -6,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DotNetTools.SharpGrabber;
+using DotNetTools.SharpGrabber.BlackWidow;
 using DotNetTools.SharpGrabber.BlackWidow.Builder;
 using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript;
@@ -31,6 +32,7 @@ namespace SharpGrabber.Desktop
 
         #region Fields
         private readonly IMultiGrabber _grabber;
+        private readonly IBlackWidowGrabber _blackWidowGrabber;
         private bool _uiEnabled = true;
         private TextBox tbUrl;
         private TextBlock tbPlaceholder, txtGrab, tbGrabbers;
@@ -79,7 +81,7 @@ namespace SharpGrabber.Desktop
 
             _grabber = GrabberBuilder.New()
                .UseDefaultServices()
-               .Add(Program.BlackWidow.Grabber)
+               .Add(_blackWidowGrabber = Program.BlackWidow.Grabber)
                .AddYouTube()
                .AddInstagram()
                .AddHls()
@@ -386,11 +388,20 @@ namespace SharpGrabber.Desktop
 
         private void TbGrabbers_Click(object sender, RoutedEventArgs e)
         {
-            var sb = new StringBuilder();
-            foreach (var g in _grabber.GetRegisteredGrabbers())
+            static string GrabberToString(IGrabber grabber)
             {
-                sb.AppendLine(g.Name + (string.IsNullOrEmpty(g.StringId) ? null : $" ({g.StringId})"));
+                return $"- {grabber.Name} {(string.IsNullOrEmpty(grabber.StringId) ? null : $" ({grabber.StringId})")}";
             }
+
+            var sb = new StringBuilder()
+                .AppendLine("Native Grabbers:");
+            foreach (var g in _grabber.GetRegisteredGrabbers())
+                sb.AppendLine(GrabberToString(g));
+
+            sb.AppendLine()
+                .AppendLine("BlackWidow Grabbers:");
+            foreach (var g in _blackWidowGrabber.GetScriptGrabbers())
+                sb.AppendLine(GrabberToString(g));
 
             ShowMessage("Registered Grabbers", sb.ToString());
         }
