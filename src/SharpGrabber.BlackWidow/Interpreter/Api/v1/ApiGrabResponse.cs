@@ -1,5 +1,4 @@
-﻿using Esprima.Ast;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;

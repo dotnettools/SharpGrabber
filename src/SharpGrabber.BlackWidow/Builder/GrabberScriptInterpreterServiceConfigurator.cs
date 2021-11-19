@@ -3,7 +3,6 @@ using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api;
 using DotNetTools.SharpGrabber.BlackWidow.TypeConversion;
-using Esprima.Ast;
 using System;
 using System.Collections.Generic;
 using System.Text;

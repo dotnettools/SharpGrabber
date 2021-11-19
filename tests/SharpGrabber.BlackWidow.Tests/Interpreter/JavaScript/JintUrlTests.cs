@@ -31,7 +31,7 @@ namespace SharpGrabber.BlackWidow.Tests.Interpreter.JavaScript
             Assert.Equal("https:", Get("protocol"));
             Assert.Equal("?id=85", Get("search"));
         }
-
+        
         private static Engine CreateEngine()
         {
             var engine = new Engine();
