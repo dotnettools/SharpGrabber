@@ -59,13 +59,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http
             var message = new HttpRequestMessage(new HttpMethod(request.Method), request.Url);
 
             foreach (var header in request.Headers)
-                message.Headers.Add(header.Key, header.Value);
+                message.Headers.TryAddWithoutValidation(header.Key, header.Value);
 
-            if (!string.IsNullOrEmpty(request.BodyText))
+            if (!string.IsNullOrEmpty(request.BodyText?.ToString()))
             {
-                using var requestStream = await message.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                using var writer = new StreamWriter(requestStream);
-                writer.Write(request.BodyText);
+                message.Content = new StringContent(request.BodyText.ToString());
             }
 
             return message;

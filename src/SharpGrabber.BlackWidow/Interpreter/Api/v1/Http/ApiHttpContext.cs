@@ -16,5 +16,10 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http
         }
 
         public ApiHttpClient Client { get; }
+
+        public ApiHttpRequest Request(ApiHttpRequest request)
+        {
+            return request;
+        }
     }
 }

@@ -101,10 +101,10 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript
 
         protected virtual Jint.Runtime.Interop.ITypeConverter ConfigureTypeConverter(Engine engine, int apiVersion)
         {
-            // var converter = _interpreterApiService.GetTypeConverter(apiVersion);
-            // var multiTypeConverter =
-            //     JintMultiTypeConverter.CreateDefault(engine, new ConvertEx.ITypeConverter[] {converter});
-            // return multiTypeConverter;
+            //var converter = _interpreterApiService.GetTypeConverter(apiVersion);
+            //var multiTypeConverter =
+            //    JintMultiTypeConverter.CreateDefault(engine, new ConvertEx.ITypeConverter[] { converter });
+            //return multiTypeConverter;
             return new DefaultTypeConverter(engine);
         }
 

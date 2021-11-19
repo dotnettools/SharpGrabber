@@ -10,11 +10,11 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http
 
         public string Method { get; set; }
 
-        public string BodyText { get; set; }
+        public object BodyText { get; set; }
 
         public bool ExpectText { get; set; }
 
-        public IDictionary<string, IList<string>> Headers { get; set; } = new Dictionary<string, IList<string>>();
+        public Dictionary<string, List<string>> Headers { get; set; } = new Dictionary<string, List<string>>();
 
         public ApiHttpRequest AddHeader(string name, string value)
         {
