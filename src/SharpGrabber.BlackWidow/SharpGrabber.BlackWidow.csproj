@@ -17,6 +17,7 @@
         <PackageTags>blackwidow,grab,scrape,script,ecmascript,ecma,javascript,js</PackageTags>
         <NoWarn>1701;1702;1591</NoWarn>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <Version>1.0.1</Version>
     </PropertyGroup>
 
     <ItemGroup>
