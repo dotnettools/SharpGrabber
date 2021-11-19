@@ -8,6 +8,15 @@
             "apiVersion": 1,
             "supportedRegularExpressions": [ "^https?://(www\\.|player\\.)?vimeo\\.com/(video/)?([0-9]+)" ],
             "file": "scripts/vimeo.js"
+        },
+		{
+            "id": "pornhub.com",
+            "name": "PornHub",
+            "version": "1.0",
+            "type": "JavaScript",
+            "apiVersion": 1,
+            "supportedRegularExpressions": [ "^(https?:\\/\\/)?(www\\.)?pornhub\\.com\\/([^\\/]+)viewkey=(\\w+).*$" ],
+            "file": "scripts/pornhub.js"
         }
     ]
 }
