@@ -112,7 +112,7 @@ Requirements of the cross-platform desktop application to run and operate correc
  
  Download the latest binaries from the <a href="https://github.com/dotnettools/SharpGrabber/releases">releases page</a>.
     
-<img src="./assets/SharpGrabberDesktop-ScreenShot-4.0.png" alt="SharpGrabber.Desktop Application" />
+<img src="./assets/SharpGrabberDesktop-ScreenShot-4.0-2.png" alt="SharpGrabber.Desktop Application" />
 
 # Introducing BlackWidow
 <img src="./assets/blackwidow-logo-text-sm.png" alt="SharpGrabber" height="92" />
