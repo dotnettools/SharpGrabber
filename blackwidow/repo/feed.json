@@ -9,7 +9,7 @@
             "supportedRegularExpressions": [ "^https?://(www\\.|player\\.)?vimeo\\.com/(video/)?([0-9]+)" ],
             "file": "scripts/vimeo.js"
         },
-		{
+	{
             "id": "pornhub.com",
             "name": "PornHub",
             "version": "1.0",
