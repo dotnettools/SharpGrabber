@@ -123,7 +123,7 @@ namespace DotNetTools.SharpGrabber.Adult
             if (options.Flags.HasFlag(GrabOptionFlags.GrabImages))
             {
                 var image_url = new Uri(result.OriginalUri, flashVars.SelectToken("$.image_url").Value<string>());
-                resources.Add(new GrabbedImage(GrabbedImageType.Primary, null, image_url));
+                resources.Add(new GrabbedImage(GrabbedImageType.Primary, image_url));
             }
 
             result.Title = flashVars.SelectToken("$.video_title").Value<string>();
@@ -140,7 +140,7 @@ namespace DotNetTools.SharpGrabber.Adult
                     var url = quality.Value<string>("url");
                     if (string.IsNullOrEmpty(url))
                         continue;
-                    var vid = new GrabbedMedia(new Uri(result.OriginalUri, url), result.OriginalUri, DefaultMediaFormat, MediaChannels.Both);
+                    var vid = new GrabbedMedia(new Uri(result.OriginalUri, url), DefaultMediaFormat, MediaChannels.Both);
                     vid.Resolution = quality.Value<string>("text");
                     var qint = StringHelper.ForceParseInt(vid.Resolution);
                     grabbed.Add(qint, vid);

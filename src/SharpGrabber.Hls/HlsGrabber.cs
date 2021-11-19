@@ -96,7 +96,7 @@ namespace DotNetTools.SharpGrabber.Hls
             {
                 var uri = new Uri(originalUri, stream.Uri);
                 var resolvableStream = new ResolvableStream(uri, stream, Services);
-                var g = new GrabbedHlsStreamMetadata(originalUri, uri, stream.Name,
+                var g = new GrabbedHlsStreamMetadata( uri, stream.Name,
                     stream.Resolution, stream.Bandwidth, PlaylistFormat, OutputFormat, new Lazy<Task<GrabbedHlsStream>>(resolvableStream.Resolve));
                 list.Add(g);
             }
@@ -124,7 +124,7 @@ namespace DotNetTools.SharpGrabber.Hls
                 Segments = segments,
             };
             var resolvableStream = new ResolvableStream(g);
-            list.Add(new GrabbedHlsStreamMetadata(originalUri, originalUri, "Media", null, 0, PlaylistFormat, OutputFormat,
+            list.Add(new GrabbedHlsStreamMetadata(originalUri, "Media", null, 0, PlaylistFormat, OutputFormat,
                 new Lazy<Task<GrabbedHlsStream>>(resolvableStream.Resolve)));
             return list;
         }

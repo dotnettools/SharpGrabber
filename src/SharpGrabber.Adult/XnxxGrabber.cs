@@ -49,10 +49,10 @@ namespace DotNetTools.SharpGrabber.Adult
             // grab images
             var img = (paramMap.GetOrDefault("image") ?? paramMap.GetOrDefault("ThumbUrl169") ?? paramMap.GetOrDefault("ThumbUrl")) as string;
             if (Uri.TryCreate(img, UriKind.Absolute, out var imgUri))
-                resources.Add(new GrabbedImage(GrabbedImageType.Thumbnail, uri, imgUri));
+                resources.Add(new GrabbedImage(GrabbedImageType.Thumbnail, imgUri));
             img = (paramMap.GetOrDefault("ThumbSlideBig") ?? paramMap.GetOrDefault("ThumbSlide")) as string;
             if (Uri.TryCreate(img, UriKind.Absolute, out imgUri))
-                resources.Add(new GrabbedImage(GrabbedImageType.Preview, uri, imgUri));
+                resources.Add(new GrabbedImage(GrabbedImageType.Preview, imgUri));
 
             // grab resources
             var hls = paramMap["VideoHLS"] as string;

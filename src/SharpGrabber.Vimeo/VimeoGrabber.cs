@@ -111,14 +111,14 @@ namespace DotNetTools.SharpGrabber.Vimeo
                     if (keyValuePair.Key == "base")
                         imageType = GrabbedImageType.Primary;
 
-                    grabList.Add(new GrabbedImage(imageType, null, new Uri(keyValuePair.Value)));
+                    grabList.Add(new GrabbedImage(imageType, new Uri(keyValuePair.Value)));
                 }
             }
 
             foreach (var progressive in configuration.Request.Files.Progressive)
             {
                 var format = new MediaFormat(progressive.Mime, Services.Mime.ExtractMimeExtension(progressive.Mime));
-                var vid = new GrabbedMedia(new Uri(progressive.Url), null, format, MediaChannels.Both)
+                var vid = new GrabbedMedia(new Uri(progressive.Url), format, MediaChannels.Both)
                 {
                     Resolution = progressive.Quality
                 };
