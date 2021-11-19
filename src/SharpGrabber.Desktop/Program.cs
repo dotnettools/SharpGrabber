@@ -1,5 +1,11 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using DotNetTools.SharpGrabber.BlackWidow;
+using DotNetTools.SharpGrabber.BlackWidow.Host;
+using DotNetTools.SharpGrabber.BlackWidow.Repository;
+using System;
+using System.Threading.Tasks;
 
 namespace SharpGrabber.Desktop
 {
@@ -7,21 +13,42 @@ namespace SharpGrabber.Desktop
     {
         public static MainWindow MainWindow { get; private set; }
 
-        // Initialization code. Don't use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-        // yet and stuff might break.
-        public static void Main(string[] args) => BuildAvaloniaApp().Start(AppMain, args);
+        public static IBlackWidowService BlackWidow { get; private set; }
+
+        public static ScriptHost ScriptHost { get; private set; }
+
+        public static async Task<int> Main(string[] args)
+        {
+            var app = BuildAvaloniaApp(args);
+            await AppMain(app.Instance);
+            return 0;
+        }
 
         // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
-            => AppBuilder.Configure<App>()
+        public static AppBuilder BuildAvaloniaApp(string[] args)
+        {
+            var lifetime = new ClassicDesktopStyleApplicationLifetime
+            {
+                ShutdownMode = ShutdownMode.OnMainWindowClose,
+                Args = args,
+            };
+            return AppBuilder.Configure<App>()
                 .UsePlatformDetect()
+                .SetupWithLifetime(lifetime)
                 .LogToTrace();
+        }
 
         // Your application's entry point. Here you can initialize your MVVM framework, DI
         // container, etc.
-        private static void AppMain(Application app, string[] args)
+        private static async Task AppMain(Application app)
         {
+            BlackWidow = await BlackWidowBuilder.New()
+                .SetScriptHost(ScriptHost = new())
+                .ConfigureInterpreterService(icfg => icfg.AddJint())
+                .ConfigureLocalRepository(cfg => cfg.UsePhysical(@"blackwidow/repo"))
+                .ConfigureRemoteRepository(cfg => cfg.UseOfficial())
+                .BuildAsync();
+
             app.Run(MainWindow = new MainWindow());
         }
     }

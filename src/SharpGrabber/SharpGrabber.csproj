@@ -16,11 +16,11 @@
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
         <PackageTags>media,audio,video,download,grab,scrape,spider</PackageTags>
         <NoWarn>1701;1702;1591</NoWarn>
-        <Version>2.0.2</Version>
+        <Version>2.1</Version>
         <PackageId>SharpGrabber</PackageId>
-        <AssemblyVersion>2.0.2.0</AssemblyVersion>
-        <FileVersion>2.0.2.0</FileVersion>
-        <PackageVersion>2.0.2</PackageVersion>
+        <AssemblyVersion>2.1.0.0</AssemblyVersion>
+        <FileVersion>2.1.0.0</FileVersion>
+        <PackageVersion>2.1.0.0</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>

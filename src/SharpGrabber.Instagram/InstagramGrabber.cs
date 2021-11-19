@@ -120,13 +120,13 @@ namespace DotNetTools.SharpGrabber.Instagram
 
             // grab image
             if (!string.IsNullOrEmpty(image))
-                grabList.Add(new GrabbedImage(GrabbedImageType.Primary, null, new Uri(image)));
+                grabList.Add(new GrabbedImage(GrabbedImageType.Primary, new Uri(image)));
 
             // grab video
             if (!string.IsNullOrEmpty(video))
             {
                 var format = new MediaFormat(video_type, Services.Mime.ExtractMimeExtension(video_type));
-                var vid = new GrabbedMedia(new Uri(video), null, format, MediaChannels.Both);
+                var vid = new GrabbedMedia(new Uri(video), format, MediaChannels.Both);
                 grabList.Add(vid);
             }
 

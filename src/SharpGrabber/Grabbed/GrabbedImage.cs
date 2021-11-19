@@ -3,11 +3,22 @@
 namespace DotNetTools.SharpGrabber.Grabbed
 {
     /// <summary>
-    /// Represents grabbed images
+    /// Represents a grabbed image.
     /// </summary>
-    public class GrabbedImage : IGrabbed
+    [GrabbedType("Image")]
+    public class GrabbedImage : IGrabbedResource
     {
+        public GrabbedImage()
+        {
+        }
 
+        public GrabbedImage(GrabbedImageType type, Uri resourceUri)
+        {
+            Type = type;
+            ResourceUri = resourceUri;
+        }
+
+        [Obsolete("Use the parameterless constructor instead.")]
         public GrabbedImage(GrabbedImageType type, Uri originalUri, Uri resourceUri)
         {
             Type = type;
@@ -17,15 +28,15 @@ namespace DotNetTools.SharpGrabber.Grabbed
 
 
         /// <inheritdoc />
-        public Uri OriginalUri { get; }
+        public Uri OriginalUri { get; set; }
 
         /// <inheritdoc />
-        public Uri ResourceUri { get; }
+        public Uri ResourceUri { get; set; }
 
         /// <summary>
         /// Type of the grabbed image e.g. thumbnail, frame etc.
         /// </summary>
-        public GrabbedImageType Type { get; }
+        public GrabbedImageType Type { get; set; }
 
         /// <summary>
         /// Time of the frame - if <see cref="Type"/> is <see cref="GrabbedImageType.Frame"/>

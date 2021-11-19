@@ -4,7 +4,12 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using DotNetTools.SharpGrabber;
+using DotNetTools.SharpGrabber.BlackWidow;
+using DotNetTools.SharpGrabber.BlackWidow.Host;
+using DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript;
+using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using DotNetTools.SharpGrabber.Grabbed;
 using FFmpeg.AutoGen;
 using SharpGrabber.Desktop.Components;
@@ -25,8 +30,8 @@ namespace SharpGrabber.Desktop
         private static readonly HttpClient _client = new HttpClient();
 
         #region Fields
-
         private readonly IMultiGrabber _grabber;
+        private readonly IBlackWidowGrabber _blackWidowGrabber;
         private bool _uiEnabled = true;
         private TextBox tbUrl;
         private TextBlock tbPlaceholder, txtGrab, tbGrabbers;
@@ -35,6 +40,7 @@ namespace SharpGrabber.Desktop
         private Grid overlayRoot, noContent;
         private Border overlayContent;
         private TextBlock txtMsgTitle, txtMsgContent, txtTitle;
+        private MenuItem miAbout, miLoadScript;
         private Button btnMsgOk;
         private TextBlock txtMediaTitle;
         private TextBlock[] txtCol = new TextBlock[3];
@@ -42,7 +48,6 @@ namespace SharpGrabber.Desktop
         private LoadingSpinner imgSpinner;
         private StackPanel resourceContainer;
         private Border basicInfo;
-
         #endregion
 
         #region Properties
@@ -74,15 +79,17 @@ namespace SharpGrabber.Desktop
             Initialized += MainWindow_Initialized;
 
             _grabber = GrabberBuilder.New()
-                .UseDefaultServices()
-                .AddYouTube()
-                .AddInstagram()
-                .AddVimeo()
-                .AddHls()
-                .AddPornHub()
-                .AddXnxx()
-                .AddXVideos()
-                .Build();
+               .UseDefaultServices()
+               .Add(_blackWidowGrabber = Program.BlackWidow.Grabber)
+               .AddYouTube()
+               .AddInstagram()
+               .AddHls()
+               .AddXnxx()
+               .AddXVideos()
+               .Build();
+
+            Program.ScriptHost.OnAlert += ScriptHost_OnAlert;
+            Program.ScriptHost.OnLog += ScriptHost_OnLog;
 
             InitializeComponent();
             basicInfo.IsVisible = resourceContainer.IsVisible = false;
@@ -111,6 +118,8 @@ namespace SharpGrabber.Desktop
                 txtCol[i] = this.FindControl<TextBlock>($"txtCol{i}");
             txtMediaTitle = this.FindControl<TextBlock>("txtMediaTitle");
             txtTitle = this.FindControl<TextBlock>("txtTitle");
+            miAbout = this.FindControl<MenuItem>("miAbout");
+            miLoadScript = this.FindControl<MenuItem>("miLoadScript");
             img = this.FindControl<Image>("img");
             imgSpinner = this.FindControl<LoadingSpinner>("imgSpinner");
             basicInfo = this.FindControl<Border>("basicInfo");
@@ -124,7 +133,9 @@ namespace SharpGrabber.Desktop
             btnPaste.Subscribe(Button.ClickEvent, BtnPaste_Click);
             btnSaveImages.Subscribe(Button.ClickEvent, BtnSaveImages_Click);
             btnMsgOk.Subscribe(Button.ClickEvent, BtnOk_Click);
-            txtTitle.Subscribe(PointerPressedEvent, TxtTitle_PointerPressed);
+            txtTitle.Subscribe(PointerPressedEvent, TxtTitle_Click);
+            miAbout.Subscribe(MenuItem.ClickEvent, MiAbout_Click);
+            miLoadScript.Subscribe(MenuItem.ClickEvent, MiLoadScript_Click);
         }
 
         #region Internal Methods
@@ -243,7 +254,7 @@ namespace SharpGrabber.Desktop
             }
 
             // present streams
-            var streams = allGrabbedResources.OfType<GrabbedStreamMetadata>().ToList();
+            var streams = allGrabbedResources.OfType<GrabbedHlsStreamMetadata>().ToList();
             foreach (var streamMetadata in streams)
             {
                 var view = new StreamResourceView(new GrabbedStreamViewModel(streamMetadata));
@@ -251,7 +262,7 @@ namespace SharpGrabber.Desktop
             }
 
             // present stream references
-            var streamRefs = allGrabbedResources.OfType<GrabbedStreamReference>().ToList();
+            var streamRefs = allGrabbedResources.OfType<GrabbedHlsStreamReference>().ToList();
             foreach (var streamRef in streamRefs)
             {
                 var view = new StreamReferenceView(new GrabbedStreamRefViewModel(streamRef));
@@ -376,11 +387,20 @@ namespace SharpGrabber.Desktop
 
         private void TbGrabbers_Click(object sender, RoutedEventArgs e)
         {
-            var sb = new StringBuilder();
-            foreach (var g in _grabber.GetRegisteredGrabbers())
+            static string GrabberToString(IGrabber grabber)
             {
-                sb.AppendLine(g.Name + (string.IsNullOrEmpty(g.StringId) ? null : $" ({g.StringId})"));
+                return $"- {grabber.Name} {(string.IsNullOrEmpty(grabber.StringId) ? null : $" ({grabber.StringId})")}";
             }
+
+            var sb = new StringBuilder()
+                .AppendLine("Native Grabbers:");
+            foreach (var g in _grabber.GetRegisteredGrabbers())
+                sb.AppendLine(GrabberToString(g));
+
+            sb.AppendLine()
+                .AppendLine("BlackWidow Grabbers (locally available):");
+            foreach (var g in _blackWidowGrabber.GetScriptGrabbers())
+                sb.AppendLine(GrabberToString(g));
 
             ShowMessage("Registered Grabbers", sb.ToString());
         }
@@ -459,8 +479,6 @@ namespace SharpGrabber.Desktop
                 CloseMessage();
         }
 
-        private void TxtTitle_PointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e) => DisplayAbout();
-
         private void TbUrl_LostFocus(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             tbPlaceholder.IsVisible = string.IsNullOrEmpty(tbUrl.Text);
@@ -471,9 +489,46 @@ namespace SharpGrabber.Desktop
             tbPlaceholder.IsVisible = false;
         }
 
+        private void TxtTitle_Click(object sender, PointerPressedEventArgs e)
+        {
+            DisplayAbout();
+            // txtTitle.ContextMenu.Open();
+        }
+
+        private async void MiLoadScript_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new OpenFileDialog
+            {
+                Title = "Load BlackWidow Script",
+                Filters = new List<FileDialogFilter> {
+                    new FileDialogFilter { Name = "JavaScript File", Extensions = new List<string> { "js" } }
+                },
+                AllowMultiple = false,
+            };
+            var fileNames = await dlg.ShowAsync(this);
+            if (fileNames == null || fileNames.Length == 0)
+                return;
+            // not implemented
+        }
+
+        private void MiAbout_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayAbout();
+        }
+
         private void MainWindow_Initialized(object sender, System.EventArgs e)
         {
             Title = Constants.AppFullName;
         }
+
+        private void ScriptHost_OnLog(ConsoleLog logObject)
+        {
+        }
+
+        private void ScriptHost_OnAlert(object input)
+            => Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                ShowMessage("Script", input?.ToString());
+            });
     }
 }

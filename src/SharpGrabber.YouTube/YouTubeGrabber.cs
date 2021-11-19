@@ -568,7 +568,7 @@ namespace DotNetTools.SharpGrabber.YouTube
             foreach (YouTubeImageType imageType in imageTypes)
             {
                 var uri = GetYouTubeImageUri(id, imageType, useHttps);
-                var img = new GrabbedImage(GrabbedImageType.Primary, null, uri);
+                var img = new GrabbedImage(GrabbedImageType.Primary, uri);
                 resources.Add(img);
             }
         }
@@ -623,7 +623,7 @@ namespace DotNetTools.SharpGrabber.YouTube
                 throw new NotSupportedException($"YouTube stream of type {stream.GetType()} is not implemented in {nameof(YouTubeGrabber)}.{nameof(AppendStreamToResult)}.");
 
             var format = new MediaFormat(stream.Mime, extension);
-            var grabbed = new GrabbedMedia(new Uri(stream.Url), null, format, channels);
+            var grabbed = new GrabbedMedia(new Uri(stream.Url), format, channels);
             resources.Add(grabbed);
 
             // update grabbed media iTag info

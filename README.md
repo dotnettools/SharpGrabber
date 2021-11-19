@@ -6,9 +6,10 @@
 [![NuGet download count](https://img.shields.io/nuget/dt/SharpGrabber)](https://www.nuget.org/packages/SharpGrabber)
 
 This repository contains multiple related projects:
-- `SharpGrabber` is a *.NET Standard* library for scraping top media providers and grabbing high quality video, audio and information.
-- `SharpGrabber.Converter` is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files. It is also used for merging HLS stream segments.
-- `SharpGrabber.Desktop` A cross-platform desktop application which utilizes both mentioned libraries to expose their functionality to desktop end-users.
+- <a href="#how-to-use">`SharpGrabber`</a> is a *.NET Standard* library for scraping top media providers and grabbing high quality video, audio and information.
+- <a href="#how-to-use">`SharpGrabber.Converter`</a> is a *.NET Standard* library based on `ffmpeg` shared libraries to join audio and video streams. This is particularly useful when grabbing high quality *YouTube* media that might be separated into audio and video files. It is also used for merging HLS stream segments.
+- <a href="#introducing-blackwidow">`SharpGrabber.BlackWidow`</a> is a *.NET Standard* library for grabbing with JavaScript, which has many advantages over using scattered NuGet packages.
+- <a href="#sharpgrabberdesktop">`SharpGrabber.Desktop`</a> A cross-platform desktop application which utilizes all three libraries mentioned above to expose their functionality to desktop end-users.
 
 # How to Use
 **⭐ Please give a star if you find this project useful!**
@@ -24,7 +25,7 @@ This repository contains multiple related projects:
 The `SharpGrabber` package defines abstractions only. The actual grabbers have their own packages and should be installed separately.
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber/">SharpGrabber</a> - Core Package
-    Install-Package SharpGrabber -Version 2.0.2
+    Install-Package SharpGrabber -Version 2.1
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.Converter/">SharpGrabber.Converter</a>
 It's an optional package to work with media files. Using this package, you can easily concatenate video segments, or mux audio and video channels.
@@ -95,9 +96,10 @@ The good news is no functionality has been removed, so with a minor refactoring,
 I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 
 </details>
-    
-## SharpGrabber.Desktop 3.3
-- It uses every package mentioned above and supports all of the mentioned providers!
+        
+## SharpGrabber.Desktop
+### Version 3.3
+- Grabs from every source supported by official grabbers.
 - Displays information and downloads videos, audios, images etc.
 - Merges YouTube separated audio and video streams into complete media files. It can join HLS segments as well!
 
@@ -111,11 +113,28 @@ Requirements of the cross-platform desktop application to run and operate correc
     
 <img src="./assets/SharpGrabberDesktop-ScreenShot-3.3.png" alt="SharpGrabber.Desktop Application" />
 
+# Introducing BlackWidow
+<img src="./assets/blackwidow-logo-text-sm.png" alt="SharpGrabber" height="92" />
 
+BlackWidow executes scripts written specifically for grabbing, rather than relying on .NET assemblies.
+- **Always Up-to-date:** The scripts are always kept up-to-date at runtime; so the functionality of the host application won't break as the sources change - at least not for long!
+- **ECMAScript Support:** Supports JavaScript/ECMAScript out of the box.
+- **Easy Maintenance:** *JavaScript* is darn easy to write and understand! This helps contributors to quickly write new grabbers or fix the existing ones.
+- **Secure**: The scripts are executed in a sandbox environment, and they only have access to what the BlackWidow API exposes to them.
+- **Highly Customizable:** Almost everything is open for extension or replacement. Make new script interpreters, custom grabber repositories, or roll out your own interpreter APIs
+
+<a href="blackwidow">Read more + Documentation</a>
+    
 ## Contribution
 You are most welcome to contribute!
-- Support for more media providers such as *DailyMotion*, *Instagram*, *Facebook*, *Twitch* etc.
+- Authentication mechanisms for grabbers e.g. Instagram Login
+- Support for more media providers such as *DailyMotion*, *Facebook*, *Twitch* etc.
 - Accelerate downloads in the desktop app (like a download manager)
+
+## Disclaimer
+SharpGrabber library, BlackWidow and other projects and libraries provided in this repository are developed for educational purposes.
+Since it's illegal to extract copyrighted data, you should make sure your usage of the tools provided here complies with copyright laws.
+Contributors to these tools are not responsible for any copyright infringement that may occur per usage.
 
 ## License
 Copyright &copy; 2021 Javid Shoaei and other contributors<br />

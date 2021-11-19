@@ -5,7 +5,6 @@
     /// </summary>
     public class MediaFormat
     {
-        #region Properties
         /// <summary>
         /// Mime of the media e.g. video/mp4, image/jpeg
         /// </summary>
@@ -15,9 +14,6 @@
         /// Suggested extension for the file e.g. mp4, mp3 etc.
         /// </summary>
         public string Extension { get; set; }
-        #endregion
-
-        #region Methods
 
         public MediaFormat() { }
 
@@ -27,6 +23,5 @@
             Extension = extension;
         }
 
-        #endregion
     }
 }

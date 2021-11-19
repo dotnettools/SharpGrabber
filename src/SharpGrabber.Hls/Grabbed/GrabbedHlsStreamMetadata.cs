@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 namespace DotNetTools.SharpGrabber.Grabbed
 {
     /// <summary>
-    /// <see cref="IGrabbed"/> for information about HLS master playlist streams. This class represents
-    /// a stream, which refers to an M3U8 playlist containing the actual media files.
+    /// Implements <see cref="IGrabbed"/> to provide information about HLS master playlist streams. This class represents
+    /// a single stream, which refers to an M3U8 playlist containing the actual media files.
     /// </summary>
-    public class GrabbedStreamMetadata : IGrabbed
+    [GrabbedType("HlsStreamMetadata")]
+    public class GrabbedHlsStreamMetadata : IGrabbed
     {
-        public GrabbedStreamMetadata(Uri originalUri, Uri resourceUri, string name, RectSize resolution, int bandwidth,
-            MediaFormat format, MediaFormat outputFormat, Lazy<Task<GrabbedStream>> stream)
+        public GrabbedHlsStreamMetadata(Uri resourceUri, string name, RectSize resolution, int bandwidth,
+            MediaFormat format, MediaFormat outputFormat, Lazy<Task<GrabbedHlsStream>> stream)
         {
-            OriginalUri = originalUri;
             ResourceUri = resourceUri;
             Name = name;
             Resolution = resolution;
@@ -22,9 +22,17 @@ namespace DotNetTools.SharpGrabber.Grabbed
             Stream = stream;
         }
 
+        [Obsolete("Use another constructor.")]
+        public GrabbedHlsStreamMetadata(Uri originalUri, Uri resourceUri, string name, RectSize resolution, int bandwidth,
+            MediaFormat format, MediaFormat outputFormat, Lazy<Task<GrabbedHlsStream>> stream)
+            : this(resourceUri, name, resolution, bandwidth, format, outputFormat, stream)
+        {
+            OriginalUri = originalUri;
+        }
+
         public Uri OriginalUri { get; }
 
-        public Uri ResourceUri { get; }
+        public Uri ResourceUri { get; set; }
 
         /// <summary>
         /// Optional name for the stream
@@ -54,6 +62,6 @@ namespace DotNetTools.SharpGrabber.Grabbed
         /// <summary>
         /// Resolves the stream associated with current metadata.
         /// </summary>
-        public Lazy<Task<GrabbedStream>> Stream { get; }
+        public Lazy<Task<GrabbedHlsStream>> Stream { get; }
     }
 }

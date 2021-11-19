@@ -5,10 +5,12 @@
     /// </summary>
     public class GrabbedImageSize : RectSize
     {
+        public GrabbedImageSize()
+        {
+        }
 
         public GrabbedImageSize(int width, int height) : base(width, height)
         {
         }
-
     }
 }

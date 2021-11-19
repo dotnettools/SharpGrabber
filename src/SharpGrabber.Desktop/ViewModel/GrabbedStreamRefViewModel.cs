@@ -4,13 +4,13 @@ namespace SharpGrabber.Desktop.ViewModel
 {
     public class GrabbedStreamRefViewModel : BaseViewModel
     {
-        public GrabbedStreamRefViewModel(GrabbedStreamReference streamRef)
+        public GrabbedStreamRefViewModel(GrabbedHlsStreamReference streamRef)
         {
             Reference = streamRef;
             Name = streamRef.Resolution ?? "Master Playlist";
         }
 
-        public GrabbedStreamReference Reference { get; }
+        public GrabbedHlsStreamReference Reference { get; }
 
         public string Consideration { get; set; } = "M3U8 File";
     }

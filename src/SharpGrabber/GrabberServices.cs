@@ -1,13 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Reflection;
+using DotNetTools.SharpGrabber.Grabbed;
 using DotNetTools.SharpGrabber.Internal;
 
 namespace DotNetTools.SharpGrabber
 {
     public class GrabberServices : IGrabberServices
     {
-        private readonly Func<HttpClient> _httpClientProvider;
+        /// <summary>
+        /// The built-in instance of <see cref="GrabberServices"/>
+        /// </summary>
         public static readonly GrabberServices Default = new();
+
+        private readonly Func<HttpClient> _httpClientProvider;
 
         public GrabberServices(Func<HttpClient> httpClientProvider = null, IMimeService mime = null)
         {

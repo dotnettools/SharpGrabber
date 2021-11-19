@@ -66,6 +66,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\SharpGrabber.Adult\SharpGrabber.Adult.csproj" />
+        <ProjectReference Include="..\SharpGrabber.BlackWidow\SharpGrabber.BlackWidow.csproj" />
         <ProjectReference Include="..\SharpGrabber.Converter\SharpGrabber.Converter.csproj" />
         <ProjectReference Include="..\SharpGrabber.Hls\SharpGrabber.Hls.csproj" />
         <ProjectReference Include="..\SharpGrabber.Instagram\SharpGrabber.Instagram.csproj" />
