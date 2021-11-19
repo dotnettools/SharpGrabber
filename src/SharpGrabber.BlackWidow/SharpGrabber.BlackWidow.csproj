@@ -10,7 +10,7 @@
         <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
-        <PackageIcon>icon.png</PackageIcon>
+        <PackageIcon>blackwidow-logo.png</PackageIcon>
         <PackageIconUrl />
         <LangVersion>9</LangVersion>
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
@@ -20,16 +20,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AngleSharp" Version="0.16.1" />
-      <PackageReference Include="ConvertEx" Version="1.0.5" />
-      <PackageReference Include="Jint" Version="3.0.0-beta-2036" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-      <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
-      <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
+        <PackageReference Include="AngleSharp" Version="0.16.1" />
+        <PackageReference Include="ConvertEx" Version="1.0.5" />
+        <PackageReference Include="Jint" Version="3.0.0-beta-2036" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+        <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SharpGrabber.Hls\SharpGrabber.Hls.csproj" />
+        <None Include="..\..\assets\blackwidow-logo.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SharpGrabber.Hls\SharpGrabber.Hls.csproj" />
     </ItemGroup>
 
 </Project>
