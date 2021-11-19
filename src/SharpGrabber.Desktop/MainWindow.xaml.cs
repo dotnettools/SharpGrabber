@@ -398,7 +398,7 @@ namespace SharpGrabber.Desktop
                 sb.AppendLine(GrabberToString(g));
 
             sb.AppendLine()
-                .AppendLine("BlackWidow Grabbers:");
+                .AppendLine("BlackWidow Grabbers (locally available):");
             foreach (var g in _blackWidowGrabber.GetScriptGrabbers())
                 sb.AppendLine(GrabberToString(g));
 
