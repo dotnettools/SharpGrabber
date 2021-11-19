@@ -492,7 +492,8 @@ namespace SharpGrabber.Desktop
 
         private void TxtTitle_Click(object sender, PointerPressedEventArgs e)
         {
-            txtTitle.ContextMenu.Open();
+            DisplayAbout();
+            // txtTitle.ContextMenu.Open();
         }
 
         private async void MiLoadScript_Click(object sender, RoutedEventArgs e)
@@ -508,7 +509,7 @@ namespace SharpGrabber.Desktop
             var fileNames = await dlg.ShowAsync(this);
             if (fileNames == null || fileNames.Length == 0)
                 return;
-            ShowMessage("You Selected", fileNames.First());
+            // not implemented
         }
 
         private void MiAbout_Click(object sender, RoutedEventArgs e)
