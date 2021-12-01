@@ -19,9 +19,7 @@ BlackWidow keeps a collection of scripts locally - called the local repository.
 Each script gets interpreted as an object implementing `IGrabber`.
 To keep the scripts up-to-date, a remote repository is constantly monitored as the single source of truth.
 
-*TODO:* <a href="https://github.com/dotnettools/SharpGrabber">Read the Documentation</a>
+<a href="https://github.com/dotnettools/SharpGrabber/wiki/04-BlackWidow">**🗐 Installation / Documentation**</a>
 
-# Installation
-*WIP*
-
+<hr />
 <a href="https://github.com/dotnettools/SharpGrabber">&lt;- Back to Home Page</a>
