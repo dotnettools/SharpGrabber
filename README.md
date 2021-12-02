@@ -52,7 +52,7 @@ This package adds the capability to parse M3U8 playlist files - including master
 With the help of the `SharpGrabber.Converter` package, segments may be joined together.
 This package also supports `AES-128` decryption.
 
-    Install-Package SharpGrabber.Hls -Version 1.0
+    Install-Package SharpGrabber.Hls -Version 1.1
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.Adult/">Adult</a> - `PornHub`, `xnxx`, and `xvideos`
 
