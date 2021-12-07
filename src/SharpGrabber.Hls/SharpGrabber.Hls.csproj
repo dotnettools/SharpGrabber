@@ -16,7 +16,8 @@
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
         <PackageTags>hls,exm3u,m3u8,media,audio,video,download,grab,scrape</PackageTags>
         <NoWarn>1701;1702;1591</NoWarn>
-        <Version>1.1.0</Version>
+        <Version>1.2</Version>
+        <AssemblyVersion>1.2.0.0</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>

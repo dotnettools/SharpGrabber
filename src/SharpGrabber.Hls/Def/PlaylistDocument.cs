@@ -168,9 +168,12 @@ namespace DotNetTools.SharpGrabber.Hls
                 var programId = string.IsNullOrEmpty(sProgramId) ? 0 : int.Parse(sProgramId);
                 var bandwidth = string.IsNullOrEmpty(sBandwidth) ? 0 : int.Parse(sBandwidth);
                 RectSize resolution = null;
-                var match = _resolutionRegex.Match(sResolution);
-                if (match.Success)
-                    resolution = new RectSize(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                if (!string.IsNullOrEmpty(sResolution))
+                {
+                    var match = _resolutionRegex.Match(sResolution);
+                    if (match.Success)
+                        resolution = new RectSize(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                }
                 _streams.Add(new HlsStreamInfo(uri, programId, bandwidth, resolution, name));
             }
             else
