@@ -33,6 +33,13 @@ It uses `ffmpeg` shared libraries underneath.
 
     Install-Package SharpGrabber.Converter -Version 1.0
 
+### <a href="https://www.nuget.org/packages/SharpGrabber.Hls/">HLS - M3U8 playlists</a>
+This package adds the capability to parse M3U8 playlist files - including master playlists - and download video segments.
+With the help of the `SharpGrabber.Converter` package, segments may be joined together.
+This package also supports `AES-128` decryption.
+
+    Install-Package SharpGrabber.Hls -Version 1.2
+
 ### <a href="https://www.nuget.org/packages/SharpGrabber.YouTube/">YouTube</a>
 Adds support to download high-quality videos from YouTube, even if they are served as separate video and audio files only.
 The high-quality output is possible thanks to the `SharpGrabber.Converter` library.
@@ -46,13 +53,6 @@ The high-quality output is possible thanks to the `SharpGrabber.Converter` libra
 Warning: This grabber is not guaranteed to work. It works only for clients that Instagram allows anonymous access to public content.
 
     Install-Package SharpGrabber.Instagram -Version 0.1
-
-### <a href="https://www.nuget.org/packages/SharpGrabber.Hls/">HLS - M3U8 playlists</a>
-This package adds the capability to parse M3U8 playlist files - including master playlists - and download video segments.
-With the help of the `SharpGrabber.Converter` package, segments may be joined together.
-This package also supports `AES-128` decryption.
-
-    Install-Package SharpGrabber.Hls -Version 1.1
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.Adult/">Adult</a> - `PornHub`, `xnxx`, and `xvideos`
 
