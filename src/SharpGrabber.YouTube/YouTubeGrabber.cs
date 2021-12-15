@@ -356,7 +356,7 @@ namespace DotNetTools.SharpGrabber.YouTube
                 Author = StringHelper.DecodeUriString(videoDetails.SelectToken("author").Value<string>()),
                 Length = TimeSpan.FromSeconds(videoDetails.SelectToken("lengthSeconds").Value<int>()),
                 Title = StringHelper.DecodeUriString(videoDetails.SelectToken("title").Value<string>()),
-                AverageRating = videoDetails.SelectToken("averageRating").Value<double>(),
+                AverageRating = videoDetails.SelectToken("averageRating")?.Value<double?>(),
                 ChannelId = videoDetails.SelectToken("channelId").Value<string>(),
                 ShortDescription = StringHelper.DecodeUriString(videoDetails.SelectToken("shortDescription").Value<string>()),
                 ViewCount = videoDetails.SelectToken("viewCount").Value<long>(),

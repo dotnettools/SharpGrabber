@@ -31,7 +31,7 @@ namespace DotNetTools.SharpGrabber.YouTube
         /// <summary>
         /// Average rating of the video out of 5
         /// </summary>
-        public double AverageRating { get; set; }
+        public double? AverageRating { get; set; }
 
         /// <summary>
         /// Total number of views

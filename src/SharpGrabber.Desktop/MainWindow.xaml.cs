@@ -181,6 +181,7 @@ namespace SharpGrabber.Desktop
             }
             catch (Exception exception)
             {
+                Console.WriteLine(exception.ToString());
                 ShowMessage("Download error", exception.Message);
             }
         }
@@ -194,6 +195,7 @@ namespace SharpGrabber.Desktop
             }
             catch (Exception exception)
             {
+                Console.WriteLine(exception.ToString());
                 ShowMessage("Download error", exception.Message);
             }
         }
