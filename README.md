@@ -44,7 +44,7 @@ This package also supports `AES-128` decryption.
 Adds support to download high-quality videos from YouTube, even if they are served as separate video and audio files only.
 The high-quality output is possible thanks to the `SharpGrabber.Converter` library.
 
-    Install-Package SharpGrabber.YouTube -Version 1.1
+    Install-Package SharpGrabber.YouTube -Version 1.2
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.Vimeo/">Vimeo</a>
     Install-Package SharpGrabber.Vimeo -Version 1.0
