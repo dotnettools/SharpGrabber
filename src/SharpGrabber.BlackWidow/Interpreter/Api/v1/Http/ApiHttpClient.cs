@@ -54,7 +54,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http
         public ApiHttpResponse Post(ApiHttpRequest request)
             => PostAsync(request).GetAwaiter().GetResult();
 
-        private async Task<HttpRequestMessage> CreateRequestMessageAsync(ApiHttpRequest request)
+        private Task<HttpRequestMessage> CreateRequestMessageAsync(ApiHttpRequest request)
         {
             var message = new HttpRequestMessage(new HttpMethod(request.Method), request.Url);
 
@@ -66,7 +66,7 @@ namespace DotNetTools.SharpGrabber.BlackWidow.Interpreter.Api.v1.Http
                 message.Content = new StringContent(request.BodyText.ToString());
             }
 
-            return message;
+            return Task.FromResult(message);
         }
 
         private async Task<ApiHttpResponse> ProcessResponseAsync(HttpResponseMessage response,

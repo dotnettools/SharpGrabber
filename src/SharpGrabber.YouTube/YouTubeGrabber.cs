@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Grabbed;
 using DotNetTools.SharpGrabber.YouTube;
-using Jint.Parser;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
