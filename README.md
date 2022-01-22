@@ -120,7 +120,7 @@ Requirements of the cross-platform desktop application to run and operate correc
 BlackWidow executes scripts written specifically for grabbing, rather than relying on .NET assemblies.
 - **Always Up-to-date:** The scripts are always kept up-to-date at runtime; so the functionality of the host application won't break as the sources change - at least not for long!
 - **ECMAScript Support:** Supports JavaScript/ECMAScript out of the box.
-- **Easy Maintenance:** *JavaScript* is darn easy to write and understand! This helps contributors to quickly write new grabbers or fix the existing ones.
+- **Easy Maintenance:** *JavaScript* is darn easy to code and understand! This helps contributors to quickly write new grabbers or fix the existing ones.
 - **Secure**: The scripts are executed in a sandbox environment, and they only have access to what the BlackWidow API exposes to them.
 - **Highly Customizable:** Almost everything is open for extension or replacement. Make new script interpreters, custom grabber repositories, or roll out your own interpreter APIs
 
@@ -138,7 +138,7 @@ Since it's illegal to extract copyrighted data, you should make sure your usage 
 Contributors to these tools are not responsible for any copyright infringement that may occur per usage.
 
 ## License
-Copyright &copy; 2021 SharpGrabber contributors<br />
+Copyright &copy; 2022 SharpGrabber contributors<br />
 
 This project is licensed under the GNU Lesser General Public License (LGPL) version 3.
 

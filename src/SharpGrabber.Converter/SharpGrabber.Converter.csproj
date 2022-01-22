@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,7 +6,7 @@
         <RootNamespace>DotNetTools.SharpGrabber.Converter</RootNamespace>
         <Authors>Javid Shoaei</Authors>
         <Company>github.com/dotnettools</Company>
-        <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
+        <Copyright>Copyright (C) 2022 Javid Shoaei and other contributors</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
         <PackageTags>hls,exm3u,m3u8,media,audio,video,download,grab,scrape</PackageTags>

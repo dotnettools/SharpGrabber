@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
@@ -7,7 +7,7 @@
         <Authors>Javid Shoaei</Authors>
         <Company>github.com/dotnettools</Company>
         <Description>Adds support for grabbing information and media from top adult services.</Description>
-        <Copyright>Copyright (C) 2021 Javid Shoaei and other contributors</Copyright>
+        <Copyright>Copyright (C) 2022 Javid Shoaei and other contributors</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
         <PackageIcon>icon.png</PackageIcon>
