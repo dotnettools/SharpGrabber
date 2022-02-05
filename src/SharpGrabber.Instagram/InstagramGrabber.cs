@@ -6,8 +6,12 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetTools.SharpGrabber.Auth;
 using DotNetTools.SharpGrabber.Exceptions;
 using DotNetTools.SharpGrabber.Grabbed;
+using InstagramApiSharp.API;
+using InstagramApiSharp.API.Builder;
+using InstagramApiSharp.Classes;
 
 namespace DotNetTools.SharpGrabber.Instagram
 {
@@ -16,26 +20,36 @@ namespace DotNetTools.SharpGrabber.Instagram
     /// </summary>
     public class InstagramGrabber : GrabberBase
     {
-        #region Fields
-
         private readonly Regex _idPattern =
-            new Regex(@"^https?://(www\.)?instagram\.com/\w/([A-Za-z0-9_-]+)(/.*)?$",
+            new Regex(@"^https?://(www\.)?instagram\.com/(\w+)/([A-Za-z0-9_-]+)(/.*)?$",
                 RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-        private readonly Regex _graphqlScriptRegex = new Regex(@"<script[^<>]+>([^<>]+)graphql([^<>]+)</script>");
-        #endregion
+        private readonly Regex _graphqlScriptRegex = new(@"<script[^<>]+>([^<>]+)graphql([^<>]+)</script>");
+        private readonly Func<IInstaApi> _instagramApiFactory;
 
-        #region Constructors
-        public InstagramGrabber(IGrabberServices services) : base(services)
+        public InstagramGrabber(Func<IInstaApi> instagramApiFactory, IGrabberServices services) : base(services)
+        {
+            _instagramApiFactory = instagramApiFactory ?? (() => InstaApiBuilder.CreateBuilder()
+               // Omitted .UseHttpClient(services.GetClient())
+               .Build());
+            // Note: When building the Instagram API client, we cannot use our own HttpClient, because of a bug in InstagramApiSharp that
+            // makes it dependent on HttpClient base URI.
+        }
+
+        public InstagramGrabber(IGrabberServices services) : this(null, services)
         {
         }
-        #endregion
 
-        #region Properties
         public override string StringId { get; } = "instagram.com";
 
         /// <inheritdoc />
         public override string Name { get; } = "Instagram";
+
+        /// <summary>
+        /// Gets or sets whether to try fetching the Instagram post without authentication first.
+        /// Default is FALSE.
+        /// </summary>
+        public bool TryAsGuest { get; } = false;
 
         /// <summary>
         /// Represents the template of standard Instagram links. This value will be formatted using <see cref="string.Format(string, object[])"/>
@@ -43,9 +57,40 @@ namespace DotNetTools.SharpGrabber.Instagram
         /// </summary>
         public virtual string StandardUrlTemplate { get; set; } = "https://www.instagram.com/p/{0}/";
 
-        #endregion
 
-        #region Internal Methods
+        /// <inheritdoc />
+        public override bool Supports(Uri uri) => ParseUrl(uri).HasValue;
+
+        /// <inheritdoc />
+        protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken,
+            GrabOptions options, IProgress<double> progress)
+        {
+            // init
+            var id = GrabId(uri);
+            if (id == null)
+                return null;
+
+            // generate standard Instagram link
+            uri = MakeStandardInstagramUri(id);
+            var client = Services.GetClient();
+            var api = _instagramApiFactory();
+
+            if (!api.IsUserAuthenticated)
+            {
+                if (TryAsGuest)
+                {
+                    var result = await GrabAsGuestAsync(uri, client, cancellationToken).ConfigureAwait(false);
+                    if (result != null)
+                        return result;
+                }
+
+                var authState = new InstagramAuthenticationRequestState(api);
+                var authRequest = new GrabberAuthenticationRequest(this, authState, cancellationToken);
+                await Services.Authentication.RequestAsync(authRequest).ConfigureAwait(false);
+            }
+
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Makes a standard Instagram URL using the given post ID.
@@ -55,13 +100,22 @@ namespace DotNetTools.SharpGrabber.Instagram
         /// <summary>
         /// Extracts post ID from the specified URI.
         /// </summary>
-        protected virtual string GrabId(Uri uri)
+        protected virtual InstagramUrlDescriptor? ParseUrl(Uri uri)
         {
             var uriString = uri.ToString();
             var match = _idPattern.Match(uriString);
             if (!match.Success)
                 return null;
-            return match.Groups[2].Value;
+            return new InstagramUrlDescriptor(match.Groups[2].Value, match.Groups[3].Value);
+        }
+
+        /// <summary>
+        /// Extracts post ID from the specified URI.
+        /// </summary>
+        protected string GrabId(Uri uri)
+        {
+            var desc = ParseUrl(uri);
+            return desc?.ContentId;
         }
 
         /// <summary>
@@ -90,11 +144,11 @@ namespace DotNetTools.SharpGrabber.Instagram
             {
                 dictionary.Add(metaTagMatch.Groups["propertyName"].Value, metaTagMatch.Groups["propertyValue"].Value);
             }
-            // TODO: Instagram is changed and needs user to be authorized before accessing the content
 
             var match = _graphqlScriptRegex.Match(content);
             if (!match.Success)
-                throw new GrabParseException("Failed to obtain metadata from the Instagram page.");
+                // Failed to obtain metadata from the Instagram page
+                return null;
 
             return dictionary;
         }
@@ -139,40 +193,43 @@ namespace DotNetTools.SharpGrabber.Instagram
             return result;
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <inheritdoc />
-        public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GrabId(uri));
-
-        /// <inheritdoc />
-        protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken,
-            GrabOptions options, IProgress<double> progress)
+        private async Task<GrabResult> GrabAsGuestAsync(Uri uri, HttpClient client, CancellationToken cancellationToken)
         {
-            // init
-            var id = GrabId(uri);
-            if (id == null)
-                return null;
-
-            // generate standard Instagram link
-            uri = MakeStandardInstagramUri(id);
-
-            // download target page
-            var client = Services.GetClient();
-            var response = await client.GetAsync(uri, cancellationToken);
+            var response = await client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
             // check response
             CheckResponse(response);
 
-            using var responseStream = await response.Content.ReadAsStreamAsync();
+            using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             // parse page
             var meta = ParsePage(responseStream);
+            if (meta == null)
+                return null;
 
             // parse pairs
             return GrabUsingMetadata(meta);
         }
 
-        #endregion
+        /// <summary>
+        /// Describes segments of an Instagram URL.
+        /// </summary>
+        public readonly struct InstagramUrlDescriptor
+        {
+            /// <summary>
+            /// Instagram content type e.g. reel, tv etc.
+            /// </summary>
+            public readonly string Type;
+
+            /// <summary>
+            /// Instagram content ID
+            /// </summary>
+            public readonly string ContentId;
+
+            public InstagramUrlDescriptor(string type, string contentId)
+            {
+                Type = type;
+                ContentId = contentId;
+            }
+        }
     }
 }

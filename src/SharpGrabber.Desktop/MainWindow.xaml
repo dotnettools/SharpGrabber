@@ -264,7 +264,7 @@
                     HorizontalAlignment="Center" CornerRadius="8" Padding="8" Classes="overlayContent">
                 <Grid>
                     <!--Message Box-->
-                    <Grid MinWidth="300">
+                    <Grid MinWidth="300" x:Name="messageBox">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />

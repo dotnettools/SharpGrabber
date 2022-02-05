@@ -6,13 +6,16 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DotNetTools.SharpGrabber;
+using DotNetTools.SharpGrabber.Auth;
 using DotNetTools.SharpGrabber.BlackWidow;
 using DotNetTools.SharpGrabber.BlackWidow.Host;
 using DotNetTools.SharpGrabber.BlackWidow.Interpreter.JavaScript;
 using DotNetTools.SharpGrabber.BlackWidow.Repository;
 using DotNetTools.SharpGrabber.Grabbed;
 using FFmpeg.AutoGen;
+using SharpGrabber.Desktop.Auth;
 using SharpGrabber.Desktop.Components;
+using SharpGrabber.Desktop.Utils;
 using SharpGrabber.Desktop.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -79,7 +82,14 @@ namespace SharpGrabber.Desktop
             Initialized += MainWindow_Initialized;
 
             _grabber = GrabberBuilder.New()
-               .UseDefaultServices()
+               .UseServices(b =>
+               {
+                   var auth = GrabberAuthenticationServiceBuilder.New()
+                        .UseFileStore("auth.store")
+                        .Build()
+                        .RegisterInstagramHandler(new InstagramAuthenticationHandlerInterface(this));
+                   b.UseAuthenticationService(auth);
+               })
                .Add(_blackWidowGrabber = Program.BlackWidow.Grabber)
                .AddYouTube()
                .AddInstagram()
@@ -416,7 +426,8 @@ namespace SharpGrabber.Desktop
             }
             catch (Exception exception)
             {
-                ShowMessage("Grab error", exception.Message);
+                var innerMostException = exception.FindInnerMostException();
+                ShowMessage("Grab error", innerMostException.Message);
             }
             finally
             {

@@ -41,5 +41,15 @@ namespace DotNetTools.SharpGrabber
         {
             return builder.UseServices(GrabberServices.Default);
         }
+
+        /// <summary>
+        /// Configures the grabber to use the default services with additional configuration.
+        /// </summary>
+        public static IGrabberBuilder UseServices(this IGrabberBuilder builder, Action<IGrabberServicesBuilder> build)
+        {
+            var svcBuilder = GrabberServicesBuilder.New();
+            build?.Invoke(svcBuilder);
+            return builder.UseServices(svcBuilder.Build());
+        }
     }
 }

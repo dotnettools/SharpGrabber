@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetTools.SharpGrabber.Auth;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 
@@ -15,10 +16,15 @@ namespace DotNetTools.SharpGrabber
         IMimeService Mime { get; }
 
         /// <summary>
+        /// Gets the authentication service.
+        /// </summary>
+        IGrabberAuthenticationService Authentication { get; }
+
+        /// <summary>
         /// Gets an <see cref="HttpClient"/>.
         /// </summary>
         /// <remarks>
-        /// The result <see cref="HttpClient"/> MUST NOT be disposed; otherwise it will break the functionality.
+        /// The returned <see cref="HttpClient"/> must NOT be disposed; otherwise it would break the functionality.
         /// </remarks>
         HttpClient GetClient();
     }
