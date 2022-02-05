@@ -1,4 +1,5 @@
-﻿using DotNetTools.SharpGrabber.Auth;
+﻿using Avalonia.Threading;
+using DotNetTools.SharpGrabber.Auth;
 using DotNetTools.SharpGrabber.Instagram;
 using InstagramApiSharp.Classes;
 using System;
@@ -17,15 +18,25 @@ namespace SharpGrabber.Desktop.Auth
             _mainWindow = mainWindow;
         }
 
-        public Task<GrabberBasicCredentials> ProvideCredentialsAsync(GrabberAuthenticationRequest request)
+        public async Task<GrabberBasicCredentials> ProvideCredentialsAsync(GrabberAuthenticationRequest request)
         {
-            throw new NotImplementedException();
+            GrabberBasicCredentials credentials = null;
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                credentials = await _mainWindow.ShowBasicAuthDialog(string.Format("Authenticate {0}", request.Grabber.Name));
+            });
+            return credentials;
         }
 
-        public Task<string> GetTwoFactorVerificationCodeAsync(GrabberAuthenticationRequest request, IResult<InstaTwoFactorLoginInfo> twoFactorInfo,
+        public async Task<string> GetTwoFactorVerificationCodeAsync(GrabberAuthenticationRequest request, IResult<InstaTwoFactorLoginInfo> twoFactorInfo,
             IResult<TwoFactorLoginSMS> smsResult)
         {
-            throw new NotImplementedException();
+            string code = null;
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                code = await _mainWindow.ShowTwoFactorAuthDialog();
+            });
+            return code;
         }
     }
 }

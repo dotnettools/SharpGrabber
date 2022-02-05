@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -54,45 +55,46 @@ namespace DotNetTools.SharpGrabber.Hls
         /// Loads the playlist from a stream.
         /// </summary>
         /// <exception cref="PlaylistDocumentLoadException" />
-        public Task LoadAsync(StreamReader reader)
+        public Task LoadAsync(StreamReader reader, Uri originalUri)
         {
             using var tokenizer = new PlaylistTokenizer(reader);
-            return LoadAsync(tokenizer);
+            return LoadAsync(tokenizer, originalUri);
         }
 
         /// <summary>
         /// Loads the playlist from a stream.
         /// </summary>
         /// <exception cref="PlaylistDocumentLoadException" />
-        public Task LoadAsync(Stream stream)
+        public Task LoadAsync(Stream stream, Uri baseUri)
         {
             using var reader = new StreamReader(stream);
-            return LoadAsync(reader);
+            return LoadAsync(reader, baseUri);
         }
 
         /// <summary>
         /// Loads the playlist from a string.
         /// </summary>
         /// <exception cref="PlaylistDocumentLoadException" />
-        public async Task LoadAsync(string content)
+        public async Task LoadAsync(string content, Uri baseUri)
         {
             using var stream = new MemoryStream();
             using var streamWriter = new StreamWriter(stream);
             streamWriter.Write(content);
             streamWriter.Flush();
             stream.Position = 0;
-            await LoadAsync(stream).ConfigureAwait(false);
+            await LoadAsync(stream, baseUri).ConfigureAwait(false);
         }
 
         private class LoadContext
         {
+            public Uri BaseUri { get; set; }
             public PlaylistToken Token { get; set; }
             public PlaylistTagValue TagValue { get; set; }
             public PlaylistTagValue ExtInf { get; set; }
             public PlaylistTagValue StreamInf { get; set; }
         }
 
-        private async Task LoadAsync(PlaylistTokenizer tokenizer)
+        private async Task LoadAsync(PlaylistTokenizer tokenizer, Uri originalUri)
         {
             Clear();
 
@@ -101,7 +103,10 @@ namespace DotNetTools.SharpGrabber.Hls
             if (token == null || token.Type != PlaylistTokenType.Header)
                 throw new PlaylistDocumentLoadException();
 
-            var context = new LoadContext();
+            var context = new LoadContext
+            {
+                BaseUri = originalUri,
+            };
             while (!tokenizer.EndOfStream)
             {
                 token = await tokenizer.ReadAsync().ConfigureAwait(false);
@@ -222,6 +227,8 @@ namespace DotNetTools.SharpGrabber.Hls
             Uri uri = null;
             if (!string.IsNullOrEmpty(sUri) && !Uri.TryCreate(sUri, UriKind.RelativeOrAbsolute, out uri))
                 throw new PlaylistDocumentLoadException($"Invalid URI format: {sUri}");
+            if (!uri.IsAbsoluteUri)
+                uri = new Uri(context.BaseUri, uri);
 
             if (!string.IsNullOrEmpty(sIV) && sIV.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase))
                 sIV = sIV.Substring(2);

@@ -264,7 +264,7 @@
                     HorizontalAlignment="Center" CornerRadius="8" Padding="8" Classes="overlayContent">
                 <Grid>
                     <!--Message Box-->
-                    <Grid MinWidth="300" x:Name="messageBox">
+                    <Grid MinWidth="300" x:Name="messageBox" IsVisible="false">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -286,6 +286,51 @@
                         <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="8" HorizontalAlignment="Right">
                             <Button x:Name="btnMsgOk" Classes="overlaybutton">
                                 <TextBlock Text="OK" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid MinWidth="300" x:Name="basicAuthDlg" IsVisible="false" RowDefinitions="Auto,Auto,*,Auto">
+                        <!--Auth Dialog-->
+                        <Border Grid.Row="0" Margin="8">
+                            <TextBlock x:Name="txtBasicAuthTitle" Text="Authentication" FontSize="14" FontWeight="Bold" />
+                        </Border>
+
+                        <Border Grid.Row="1" Height="1" Background="#11000000" />
+
+                        <Grid Grid.Row="2" RowDefinitions="Auto,Auto" ColumnDefinitions="*,2*">
+                            <TextBlock Text="Username" TextWrapping="Wrap" Margin="16" Grid.Row="0" Grid.Column="0" />
+                            <TextBox x:Name="txtAuthUsername"  Grid.Row="0" Grid.Column="1" />
+                            <TextBlock Text="Password" TextWrapping="Wrap" Margin="16" Grid.Row="1" Grid.Column="0" />
+                            <TextBox x:Name="txtAuthPassword" PasswordChar="*"  Grid.Row="1" Grid.Column="1" />
+                        </Grid>
+
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="8" HorizontalAlignment="Right">
+                            <Button x:Name="btnCancel" Classes="overlaybutton">
+                                <TextBlock Text="Cancel" />
+                            </Button>
+                            <Button x:Name="btnAuthOk" Classes="overlaybutton">
+                                <TextBlock Text="Authenticate" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid MinWidth="300" x:Name="tfaDlg" IsVisible="false" RowDefinitions="Auto,Auto,*,Auto">
+                        <!--2FA Dialog-->
+                        <Border Grid.Row="0" Margin="8">
+                            <TextBlock x:Name="txt2faTitle" Text="Two Factor Authentication" FontSize="14" FontWeight="Bold" />
+                        </Border>
+
+                        <Border Grid.Row="1" Height="1" Background="#11000000" />
+
+                        <Grid Grid.Row="2" RowDefinitions="Auto" ColumnDefinitions="*,2*">
+                            <TextBlock Text="Two Factor Code" TextWrapping="Wrap" Margin="16" Grid.Row="0" Grid.Column="0" />
+                            <TextBox x:Name="txt2fa" Grid.Row="0" Grid.Column="1" />
+                        </Grid>
+
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="8" HorizontalAlignment="Right">
+                            <Button x:Name="btn2faOk" Classes="overlaybutton">
+                                <TextBlock Text="Proceed" />
                             </Button>
                         </StackPanel>
                     </Grid>

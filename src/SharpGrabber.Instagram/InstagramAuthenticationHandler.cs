@@ -48,6 +48,8 @@ namespace DotNetTools.SharpGrabber.Instagram
 
             // login with credentials
             var credentials = await _interface.ProvideCredentialsAsync(request).ConfigureAwait(false);
+            if (credentials == null)
+                return null;
             api.SetUser(credentials.Username, credentials.Password);
             var loginResult = (await api.LoginAsync().ConfigureAwait(false)).Value;
             return await HandleLoginResultAsync(loginResult, api, request).ConfigureAwait(false);
@@ -66,6 +68,8 @@ namespace DotNetTools.SharpGrabber.Instagram
                     var twoFactorInfo = await api.GetTwoFactorInfoAsync().ConfigureAwait(false);
                     var smsResult = await api.SendTwoFactorLoginSMSAsync().ConfigureAwait(false);
                     var verificationCode = await _interface.GetTwoFactorVerificationCodeAsync(request, twoFactorInfo, smsResult).ConfigureAwait(false);
+                    if (verificationCode == null)
+                        return null;
                     var twoFactorLoginResult = await api.TwoFactorLoginAsync(verificationCode).ConfigureAwait(false);
                     if (twoFactorLoginResult.Succeeded)
                         return await api.GetStateDataAsStringAsync().ConfigureAwait(false);

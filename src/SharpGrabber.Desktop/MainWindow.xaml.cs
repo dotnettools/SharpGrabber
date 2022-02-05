@@ -35,6 +35,8 @@ namespace SharpGrabber.Desktop
         #region Fields
         private readonly IMultiGrabber _grabber;
         private readonly IBlackWidowGrabber _blackWidowGrabber;
+        private TaskCompletionSource<GrabberBasicCredentials> _activeBasicAuth;
+        private TaskCompletionSource<string> _active2fa;
         private bool _uiEnabled = true;
         private TextBox tbUrl;
         private TextBlock tbPlaceholder, txtGrab, tbGrabbers;
@@ -42,15 +44,17 @@ namespace SharpGrabber.Desktop
         private LoadingSpinner spGrab;
         private Grid overlayRoot, noContent;
         private Border overlayContent;
-        private TextBlock txtMsgTitle, txtMsgContent, txtTitle;
+        private TextBlock txtMsgTitle, txtMsgContent, txtTitle, txtBasicAuthTitle, txt2faTitle;
         private MenuItem miAbout, miLoadScript;
-        private Button btnMsgOk;
+        private Button btnMsgOk, btnAuthOk, btn2faOk;
         private TextBlock txtMediaTitle;
         private TextBlock[] txtCol = new TextBlock[3];
+        private TextBox txtAuthUsername, txtAuthPassword, txt2fa;
         private Image img;
         private LoadingSpinner imgSpinner;
         private StackPanel resourceContainer;
         private Border basicInfo;
+        private Grid messageBox, basicAuthDlg, tfaDlg;
         #endregion
 
         #region Properties
@@ -128,12 +132,22 @@ namespace SharpGrabber.Desktop
                 txtCol[i] = this.FindControl<TextBlock>($"txtCol{i}");
             txtMediaTitle = this.FindControl<TextBlock>("txtMediaTitle");
             txtTitle = this.FindControl<TextBlock>("txtTitle");
+            txtBasicAuthTitle = this.FindControl<TextBlock>("txtBasicAuthTitle");
+            txt2faTitle = this.FindControl<TextBlock>("txt2faTitle");
             miAbout = this.FindControl<MenuItem>("miAbout");
             miLoadScript = this.FindControl<MenuItem>("miLoadScript");
             img = this.FindControl<Image>("img");
             imgSpinner = this.FindControl<LoadingSpinner>("imgSpinner");
             basicInfo = this.FindControl<Border>("basicInfo");
+            messageBox = overlayContent.FindControl<Grid>("messageBox");
+            basicAuthDlg = overlayContent.FindControl<Grid>("basicAuthDlg");
+            tfaDlg = overlayContent.FindControl<Grid>("tfaDlg");
             resourceContainer = this.FindControl<StackPanel>("resourceContainer");
+            txtAuthUsername = overlayRoot.FindControl<TextBox>("txtAuthUsername");
+            txtAuthPassword = overlayRoot.FindControl<TextBox>("txtAuthPassword");
+            txt2fa = overlayRoot.FindControl<TextBox>("txt2fa");
+            btnAuthOk = overlayRoot.FindControl<Button>("btnAuthOk");
+            btn2faOk = overlayRoot.FindControl<Button>("btn2faOk");
 
             this.Subscribe(KeyDownEvent, MainWindow_KeyDown);
             tbUrl.Subscribe(GotFocusEvent, TbUrl_GotFocus);
@@ -143,6 +157,8 @@ namespace SharpGrabber.Desktop
             btnPaste.Subscribe(Button.ClickEvent, BtnPaste_Click);
             btnSaveImages.Subscribe(Button.ClickEvent, BtnSaveImages_Click);
             btnMsgOk.Subscribe(Button.ClickEvent, BtnOk_Click);
+            btnAuthOk.Subscribe(Button.ClickEvent, BtnAuthOk_Click);
+            btn2faOk.Subscribe(Button.ClickEvent, Btn2faOk_Click);
             txtTitle.Subscribe(PointerPressedEvent, TxtTitle_Click);
             miAbout.Subscribe(MenuItem.ClickEvent, MiAbout_Click);
             miLoadScript.Subscribe(MenuItem.ClickEvent, MiLoadScript_Click);
@@ -381,20 +397,57 @@ namespace SharpGrabber.Desktop
 
         public void ShowMessage(string title, string text)
         {
-            // overlayContent.Opacity = 0;
-            overlayRoot.IsVisible = true;
-            overlayContent.Opacity = 1;
+            SetDialogVisibility(true);
             txtMsgTitle.Text = title;
             txtMsgContent.Text = text;
+            messageBox.IsVisible = true;
             btnMsgOk.Focus();
         }
 
-        public void CloseMessage()
+        public Task<GrabberBasicCredentials> ShowBasicAuthDialog(string title = "Basic Authentication")
         {
-            overlayContent.Opacity = 0;
-            overlayRoot.IsVisible = false;
+            SetDialogVisibility(true);
+            if (_activeBasicAuth != null)
+                throw new InvalidOperationException("Another basic auth dialog is currently active.");
+            txtBasicAuthTitle.Text = title;
+            basicAuthDlg.IsVisible = true;
+            txtAuthUsername.Text = null;
+            txtAuthPassword.Text = null;
+            txtAuthUsername.Focus();
+            _activeBasicAuth = new();
+            return _activeBasicAuth.Task;
         }
 
+        public Task<string> ShowTwoFactorAuthDialog(string title = "Two Factor Authentication")
+        {
+            SetDialogVisibility(true);
+            if (_active2fa != null)
+                throw new InvalidOperationException("Another two factor auth dialog is currently active.");
+            txt2faTitle.Text = title;
+            tfaDlg.IsVisible = true;
+            txt2fa.Text = null;
+            txt2fa.Focus();
+            _active2fa = new();
+            return _active2fa.Task;
+        }
+
+        public void CloseDialog()
+        {
+            SetDialogVisibility(false);
+            messageBox.IsVisible = false;
+            basicAuthDlg.IsVisible = false;
+            tfaDlg.IsVisible = false;
+            _activeBasicAuth?.SetResult(null);
+            _activeBasicAuth = null;
+            _active2fa?.SetResult(null);
+            _active2fa = null;
+        }
+
+        private void SetDialogVisibility(bool visible = true)
+        {
+            overlayRoot.IsVisible = visible;
+            overlayContent.Opacity = visible ? 1 : 0;
+        }
         #endregion
 
         private void TbGrabbers_Click(object sender, RoutedEventArgs e)
@@ -479,9 +532,23 @@ namespace SharpGrabber.Desktop
             await SaveImages(folder);
         }
 
-        private void BtnOk_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
-            CloseMessage();
+            CloseDialog();
+        }
+
+        private void BtnAuthOk_Click(object sender, RoutedEventArgs e)
+        {
+            _activeBasicAuth?.SetResult(new GrabberBasicCredentials(txtAuthUsername.Text, txtAuthPassword.Text));
+            _activeBasicAuth = null;
+            CloseDialog();
+        }
+
+        private void Btn2faOk_Click(object sender, RoutedEventArgs e)
+        {
+            _active2fa?.SetResult(txt2fa.Text);
+            _active2fa = null;
+            CloseDialog();
         }
 
         private void MainWindow_KeyDown(object sender, Avalonia.Input.KeyEventArgs e)
@@ -489,7 +556,7 @@ namespace SharpGrabber.Desktop
             if (e.Key == Key.F1)
                 DisplayAbout();
             if (e.Key == Key.Escape)
-                CloseMessage();
+                CloseDialog();
         }
 
         private void TbUrl_LostFocus(object sender, Avalonia.Interactivity.RoutedEventArgs e)

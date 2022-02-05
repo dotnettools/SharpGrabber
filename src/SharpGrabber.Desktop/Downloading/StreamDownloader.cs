@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SharpGrabber.Desktop
@@ -91,7 +92,7 @@ namespace SharpGrabber.Desktop
             }
 
             var avgSegmentSize = downloadedSegmentCount > 0
-                ? overallDownloaded / (double) downloadedSegmentCount
+                ? overallDownloaded / (double)downloadedSegmentCount
                 : contentLength.Value;
             var downloaded = 0L;
             var totalBytes = avgSegmentSize * totalSegmentCount;

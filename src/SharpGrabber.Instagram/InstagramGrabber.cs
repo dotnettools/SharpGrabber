@@ -12,6 +12,7 @@ using DotNetTools.SharpGrabber.Grabbed;
 using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
+using InstagramApiSharp.Helpers;
 
 namespace DotNetTools.SharpGrabber.Instagram
 {
@@ -47,9 +48,9 @@ namespace DotNetTools.SharpGrabber.Instagram
 
         /// <summary>
         /// Gets or sets whether to try fetching the Instagram post without authentication first.
-        /// Default is FALSE.
+        /// Default is TRUE.
         /// </summary>
-        public bool TryAsGuest { get; } = false;
+        public bool TryAsGuest { get; } = true;
 
         /// <summary>
         /// Represents the template of standard Instagram links. This value will be formatted using <see cref="string.Format(string, object[])"/>

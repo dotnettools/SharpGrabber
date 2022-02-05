@@ -65,9 +65,10 @@ namespace DotNetTools.SharpGrabber.Hls.Internal
                 _rijndael = new RijndaelManaged
                 {
                     Key = keyBytes,
-                    IV = iv,
                     Padding = PaddingMode.Zeros,
                 };
+                if (iv != null && iv.Length > 0)
+                    _rijndael.IV = iv;
                 _decryptor = _rijndael.CreateDecryptor();
                 _stream = new CryptoStream(_underlayingStream, _decryptor, CryptoStreamMode.Read);
             }

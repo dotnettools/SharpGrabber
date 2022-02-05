@@ -44,7 +44,7 @@ namespace DotNetTools.SharpGrabber.Hls
             var doc = new PlaylistDocument();
             try
             {
-                await doc.LoadAsync(responseStream).ConfigureAwait(false);
+                await doc.LoadAsync(responseStream, uri).ConfigureAwait(false);
             }
             catch (PlaylistDocumentLoadException loadException)
             {
@@ -96,7 +96,7 @@ namespace DotNetTools.SharpGrabber.Hls
             {
                 var uri = new Uri(originalUri, stream.Uri);
                 var resolvableStream = new ResolvableStream(uri, stream, Services);
-                var g = new GrabbedHlsStreamMetadata( uri, stream.Name,
+                var g = new GrabbedHlsStreamMetadata(uri, stream.Name,
                     stream.Resolution, stream.Bandwidth, PlaylistFormat, OutputFormat, new Lazy<Task<GrabbedHlsStream>>(resolvableStream.Resolve));
                 list.Add(g);
             }
