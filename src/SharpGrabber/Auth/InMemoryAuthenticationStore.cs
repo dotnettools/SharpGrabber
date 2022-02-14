@@ -10,19 +10,29 @@ namespace DotNetTools.SharpGrabber.Auth
     {
         private readonly Dictionary<string, string> _map = new();
 
-        public string Get(string key, string @default = null)
+        public string Get(string grabberId)
         {
-            return _map.TryGetValue(key, out var value) ? value : @default;
+            return _map.TryGetValue(grabberId, out var value) ? value : null;
         }
 
-        public void Set(string key, string value)
+        public string Get(GrabberAuthenticationRequest request)
         {
-            _map[key] = value;
+            return Get(request.Grabber.StringId);
         }
 
-        public void Delete(string key)
+        public void Set(string grabberId, string state)
         {
-            _map.Remove(key);
+            _map[grabberId] = state;
+        }
+
+        public void Set(GrabberAuthenticationRequest request, string state)
+        {
+            Set(request.Grabber.StringId, state);
+        }
+
+        public void Delete(string grabberId)
+        {
+            _map.Remove(grabberId);
         }
     }
 }

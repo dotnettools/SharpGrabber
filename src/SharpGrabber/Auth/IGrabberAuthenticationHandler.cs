@@ -25,5 +25,15 @@ namespace DotNetTools.SharpGrabber.Auth
         /// This method may throw any type of exception in case of failure, or just return NULL.
         /// </remarks>
         Task<object> AuthenticateAsync(GrabberAuthenticationRequest request);
+
+        /// <summary>
+        /// Serializes a state object.
+        /// </summary>
+        string SerializeState(object state);
+
+        /// <summary>
+        /// Deserializes a state object.
+        /// </summary>
+        object DeserializeState(string state);
     }
 }

@@ -34,7 +34,7 @@ namespace SharpGrabber.Desktop.Auth
             string code = null;
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                code = await _mainWindow.ShowTwoFactorAuthDialog();
+                code = await _mainWindow.ShowTwoFactorAuthDialog(text: "Two Factor Code (leave empty if approved from phone)");
             });
             return code;
         }

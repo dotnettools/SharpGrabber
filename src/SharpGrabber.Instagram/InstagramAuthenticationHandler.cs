@@ -39,11 +39,12 @@ namespace DotNetTools.SharpGrabber.Instagram
             request.CancellationToken.ThrowIfCancellationRequested();
 
             // try use login state from the store
-            var stateString = GetStoreState(request);
+            var stateString = _store.Get(request);
             if (!string.IsNullOrEmpty(stateString))
             {
                 await api.LoadStateDataFromStringAsync(stateString).ConfigureAwait(false);
-                return stateString;
+                if (api.IsUserAuthenticated)
+                    return stateString;
             }
 
             // login with credentials
@@ -70,6 +71,18 @@ namespace DotNetTools.SharpGrabber.Instagram
                     var verificationCode = await _interface.GetTwoFactorVerificationCodeAsync(request, twoFactorInfo, smsResult).ConfigureAwait(false);
                     if (verificationCode == null)
                         return null;
+                    if (verificationCode.Length == 0)
+                    {
+                        var success = false;
+                        var approvedLoginResult = await api.LoginAsync(false).ConfigureAwait(false);
+                        if (approvedLoginResult.Succeeded)
+                        {
+                            success = (await api.SendRequestsAfterLoginAsync().ConfigureAwait(false)).Value;
+                        }
+                        if (!success)
+                            return null;
+                        return await api.GetStateDataAsStringAsync().ConfigureAwait(false);
+                    }
                     var twoFactorLoginResult = await api.TwoFactorLoginAsync(verificationCode).ConfigureAwait(false);
                     if (twoFactorLoginResult.Succeeded)
                         return await api.GetStateDataAsStringAsync().ConfigureAwait(false);
@@ -81,11 +94,6 @@ namespace DotNetTools.SharpGrabber.Instagram
                 default:
                     throw new GrabAuthenticationException($"Instagram authentication error: {loginResult}");
             }
-
-            //var tfi = await api.GetTwoFactorInfoAsync().ConfigureAwait(false);
-            /////var sms = await _api.SendTwoFactorLoginSMSAsync().ConfigureAwait(false);
-            //var res = await api.TwoFactorLoginAsync("346575");
-            //api.GetStateDataAsStringAsync().ConfigureAwait(false);
         }
 
         private async Task<object> HandleTwoFactorResultAsync(InstaLoginTwoFactorResult twoFactorLoginResult, IInstaApi api,
@@ -104,7 +112,14 @@ namespace DotNetTools.SharpGrabber.Instagram
             throw new NotImplementedException("Handling of Instagram login challenge is not implemented.");
         }
 
-        private string GetStoreState(GrabberAuthenticationRequest request)
-            => _store.Get(request.Grabber.StringId);
+        public string SerializeState(object state)
+        {
+            return state as string ?? state?.ToString();
+        }
+
+        public object DeserializeState(string state)
+        {
+            return state;
+        }
     }
 }

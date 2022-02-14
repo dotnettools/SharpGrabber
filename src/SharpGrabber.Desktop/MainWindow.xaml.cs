@@ -44,7 +44,7 @@ namespace SharpGrabber.Desktop
         private LoadingSpinner spGrab;
         private Grid overlayRoot, noContent;
         private Border overlayContent;
-        private TextBlock txtMsgTitle, txtMsgContent, txtTitle, txtBasicAuthTitle, txt2faTitle;
+        private TextBlock txtMsgTitle, txtMsgContent, txtTitle, txtBasicAuthTitle, txt2faTitle, txt2faText;
         private MenuItem miAbout, miLoadScript;
         private Button btnMsgOk, btnAuthOk, btn2faOk;
         private TextBlock txtMediaTitle;
@@ -134,6 +134,7 @@ namespace SharpGrabber.Desktop
             txtTitle = this.FindControl<TextBlock>("txtTitle");
             txtBasicAuthTitle = this.FindControl<TextBlock>("txtBasicAuthTitle");
             txt2faTitle = this.FindControl<TextBlock>("txt2faTitle");
+            txt2faText = this.FindControl<TextBlock>("txt2faText");
             miAbout = this.FindControl<MenuItem>("miAbout");
             miLoadScript = this.FindControl<MenuItem>("miLoadScript");
             img = this.FindControl<Image>("img");
@@ -411,21 +412,22 @@ namespace SharpGrabber.Desktop
                 throw new InvalidOperationException("Another basic auth dialog is currently active.");
             txtBasicAuthTitle.Text = title;
             basicAuthDlg.IsVisible = true;
-            txtAuthUsername.Text = null;
-            txtAuthPassword.Text = null;
+            txtAuthUsername.Text = string.Empty;
+            txtAuthPassword.Text = string.Empty;
             txtAuthUsername.Focus();
             _activeBasicAuth = new();
             return _activeBasicAuth.Task;
         }
 
-        public Task<string> ShowTwoFactorAuthDialog(string title = "Two Factor Authentication")
+        public Task<string> ShowTwoFactorAuthDialog(string title = "Two Factor Authentication", string text = "Two Factor Code")
         {
             SetDialogVisibility(true);
             if (_active2fa != null)
                 throw new InvalidOperationException("Another two factor auth dialog is currently active.");
             txt2faTitle.Text = title;
+            txt2faText.Text = text;
             tfaDlg.IsVisible = true;
-            txt2fa.Text = null;
+            txt2fa.Text = string.Empty;
             txt2fa.Focus();
             _active2fa = new();
             return _active2fa.Task;

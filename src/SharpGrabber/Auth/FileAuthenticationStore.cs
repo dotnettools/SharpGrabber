@@ -17,22 +17,30 @@ namespace DotNetTools.SharpGrabber.Auth
             Load();
         }
 
-        public string Get(string key, string @default = null)
+        public string Get(string grabberId)
         {
-            return _map.TryGetValue(key, out var value) ? value : @default;
+            return _map.TryGetValue(grabberId, out var value) ? value : null;
         }
 
-        public void Set(string key, string value)
+        public string Get(GrabberAuthenticationRequest request)
         {
-            if (key.Contains('='))
-                throw new NotSupportedException("The key cannot contain equal sign (=).");
-            _map[key] = value;
+            return Get(request.Grabber.StringId);
+        }
+
+        public void Set(string grabberId, string state)
+        {
+            _map[grabberId] = state;
             Commit();
         }
 
-        public void Delete(string key)
+        public void Set(GrabberAuthenticationRequest request, string state)
         {
-            _map.Remove(key);
+            Set(request.Grabber.StringId, state);
+        }
+
+        public void Delete(string grabberId)
+        {
+            _map.Remove(grabberId);
             Commit();
         }
 
@@ -40,10 +48,15 @@ namespace DotNetTools.SharpGrabber.Auth
         {
             _map.Clear();
             if (!File.Exists(_path))
+            {
+                File.Create(_path).Dispose();
                 return;
+            }
             var lines = File.ReadAllLines(_path, Encoding.UTF8);
             foreach (var line in lines)
             {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
                 var pair = line.Split(new[] { '=' }, 2);
                 _map[pair[0]] = pair[1];
             }

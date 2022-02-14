@@ -10,18 +10,28 @@ namespace DotNetTools.SharpGrabber.Auth
     public interface IGrabberAuthenticationStore
     {
         /// <summary>
-        /// Gets a value by <paramref name="key"/>.
+        /// Gets the authentication state for a grabber.
         /// </summary>
-        string Get(string key, string @default = null);
+        string Get(string grabberId);
 
         /// <summary>
-        /// Sets the entry defined by <paramref name="key"/> to <paramref name="value"/>.
+        /// Gets the authentication state for an authentication request.
         /// </summary>
-        void Set(string key, string value);
+        string Get(GrabberAuthenticationRequest request);
 
         /// <summary>
-        /// Deletes an entry by <paramref name="key"/> if it exists.
+        /// Sets the state defined by <paramref name="grabberId"/>.
         /// </summary>
-        void Delete(string key);
+        void Set(string grabberId, string state);
+
+        /// <summary>
+        /// Sets the state defined by <paramref name="request"/>.
+        /// </summary>
+        void Set(GrabberAuthenticationRequest request, string state);
+
+        /// <summary>
+        /// Deletes the entry associated with <paramref name="grabberId"/> if exists.
+        /// </summary>
+        void Delete(string grabberId);
     }
 }

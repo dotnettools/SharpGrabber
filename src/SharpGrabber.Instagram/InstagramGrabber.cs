@@ -90,7 +90,15 @@ namespace DotNetTools.SharpGrabber.Instagram
                 await Services.Authentication.RequestAsync(authRequest).ConfigureAwait(false);
             }
 
-            throw new NotImplementedException();
+            if (!api.IsUserAuthenticated)
+                throw new GrabException("Instagram could not be authenticated.");
+            using var pageResponse = await api.HttpRequestProcessor.GetAsync(uri).ConfigureAwait(false);
+            CheckResponse(pageResponse);
+            var pageSrc = await pageResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var meta = ParsePage(pageSrc);
+            if (meta == null)
+                return null;
+            return GrabUsingMetadata(meta);
         }
 
         /// <summary>
@@ -129,18 +137,11 @@ namespace DotNetTools.SharpGrabber.Instagram
                     $"An HTTP error occurred while retrieving Instagram content. Server returned {response.StatusCode} {response.ReasonPhrase}.");
         }
 
-        /// <summary>
-        /// Parses content of the page and retrieves meta tags with useful information.
-        /// </summary>
-        protected virtual IDictionary<string, string> ParsePage(Stream responseStream)
+        protected virtual IDictionary<string, string> ParsePage(string content)
         {
             var dictionary = new Dictionary<string, string>();
 
-            string content;
-            using (var reader = new StreamReader(responseStream))
-                content = reader.ReadToEnd();
-
-            Regex metaTagPattern = new Regex(@"<meta\s*property\s*=\s*""(?<propertyName>[^""]+)""\s*content\s*=\s*""(?<propertyValue>[^""]+)""");
+            var metaTagPattern = new Regex(@"<meta\s*property\s*=\s*""(?<propertyName>[^""]+)""\s*content\s*=\s*""(?<propertyValue>[^""]+)""");
             foreach (Match metaTagMatch in metaTagPattern.Matches(content))
             {
                 dictionary.Add(metaTagMatch.Groups["propertyName"].Value, metaTagMatch.Groups["propertyValue"].Value);
@@ -152,6 +153,18 @@ namespace DotNetTools.SharpGrabber.Instagram
                 return null;
 
             return dictionary;
+        }
+
+        /// <summary>
+        /// Parses content of the page and retrieves meta tags with useful information.
+        /// </summary>
+        protected IDictionary<string, string> ParsePage(Stream responseStream)
+        {
+            string content;
+            using (var reader = new StreamReader(responseStream))
+                content = reader.ReadToEnd();
+
+            return ParsePage(content);
         }
 
         /// <summary>

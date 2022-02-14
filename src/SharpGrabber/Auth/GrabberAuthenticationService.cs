@@ -44,6 +44,8 @@ namespace DotNetTools.SharpGrabber.Auth
                     var state = await handler.AuthenticateAsync(request).ConfigureAwait(false);
                     if (state == null)
                         throw new GrabAuthenticationException();
+                    var serializedState = handler.SerializeState(state);
+                    Store.Set(request, serializedState);
                     return new(state);
                 }
                 catch (Exception ex)
