@@ -7,7 +7,6 @@
         <Authors>Javid Shoaei</Authors>
         <Company>github.com/dotnettools</Company>
         <Description>Adds support for grabbing information and high quality media from YouTube. Supports images, thumbnails, video, audio with different formats and qualities with the capability to decipher when necessary.</Description>
-        <Copyright>Copyright (C) 2022 Javid Shoaei and other contributors</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
         <PackageIcon>icon.png</PackageIcon>

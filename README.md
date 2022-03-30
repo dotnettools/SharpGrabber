@@ -99,9 +99,9 @@ I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
         
 ## SharpGrabber.Desktop
 ### Version 4.2
-- Grabs from every source supported by official grabbers.
+- Grabs from every source supported by the official grabbers - that is, grabbers implemented in this Git repository.
 - Displays information and downloads videos, audios, images etc.
-- Merges YouTube separated audio and video streams into complete media files. It can join HLS segments as well!
+- Merges YouTube separated audio and video streams into complete media files; as well as joining HLS segments as well!
 - BlackWidow integrated
 
 Requirements of the cross-platform desktop application to run and operate correctly: 
