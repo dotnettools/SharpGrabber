@@ -189,13 +189,13 @@ namespace DotNetTools.SharpGrabber.BlackWidow
                 .Where(s => idSet.Contains(s.Id))
                 .ToDictionary(s => s.Id);
             var remoteScripts = remoteFeed.GetScripts()
-                .Where(s => idSet.Contains(s.Id));
+                .Where(s => !idSet.Contains(s.Id));
 
             // compare scripts
             var updateTasks = new List<Task<bool>>();
             foreach (var remoteScript in remoteScripts)
             {
-                var localScript = localScripts[remoteScript.Id];
+                var localScript = localScripts.GetOrDefault(remoteScript.Id);
                 if (localScript != null && remoteScript.GetVersion() <= localScript.GetVersion())
                     continue;
                 var task = UpdateGrabberAsync(remoteScript.Id);

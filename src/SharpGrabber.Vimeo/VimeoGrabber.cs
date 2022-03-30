@@ -30,7 +30,6 @@ namespace DotNetTools.SharpGrabber.Vimeo
 
         public override string Name { get; } = "Vimeo";
 
-        #region Methods
         public override bool Supports(Uri uri) => !string.IsNullOrEmpty(GrabId(uri));
 
         protected override async Task<GrabResult> InternalGrabAsync(Uri uri, CancellationToken cancellationToken, GrabOptions options,
@@ -56,9 +55,7 @@ namespace DotNetTools.SharpGrabber.Vimeo
             // create the grab result
             return GrabUsingConfiguration(config, uri);
         }
-        #endregion
 
-        #region Internal Methods
         /// <summary>
         /// Extracts post ID from the specified URI.
         /// </summary>
@@ -131,6 +128,5 @@ namespace DotNetTools.SharpGrabber.Vimeo
             };
             return result;
         }
-        #endregion
     }
 }
