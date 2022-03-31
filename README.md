@@ -38,7 +38,7 @@ This package adds the capability to parse M3U8 playlist files - including master
 With the help of the `SharpGrabber.Converter` package, segments may be joined together.
 This package also supports `AES-128` decryption.
 
-    Install-Package SharpGrabber.Hls -Version 1.2
+    Install-Package SharpGrabber.Hls -Version 1.3
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.YouTube/">YouTube</a>
 Adds support to download high-quality videos from YouTube, even if they are served as separate video and audio files only.
@@ -98,7 +98,7 @@ I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 </details>
         
 ## SharpGrabber.Desktop
-### Version 4.2
+### Version 4.5
 - Grabs from every source supported by the official grabbers - that is, grabbers implemented in this Git repository.
 - Displays information and downloads videos, audios, images etc.
 - Merges YouTube separated audio and video streams into complete media files; as well as joining HLS segments as well!
