@@ -13,7 +13,7 @@
 		<PackageIconUrl />
 		<LangVersion>9</LangVersion>
 		<RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
-		<PackageTags>hls,exm3u,m3u8,media,audio,video,download,grab,scrape</PackageTags>
+		<PackageTags>hls,extm3u,m3u8,media,audio,video,download,grab,scrape</PackageTags>
 		<NoWarn>1701;1702;1591</NoWarn>
 		<Version>1.3</Version>
 		<AssemblyVersion>1.3.0.0</AssemblyVersion>
