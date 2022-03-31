@@ -1,37 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <RootNamespace>DotNetTools.SharpGrabber.Hls</RootNamespace>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Authors>Javid Shoaei</Authors>
-        <Company>github.com/dotnettools</Company>
-        <Description>Adds support for HLS and Extended M3U (M3U8) playlists.</Description>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
-        <PackageIcon>icon.png</PackageIcon>
-        <PackageIconUrl />
-        <LangVersion>9</LangVersion>
-        <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
-        <PackageTags>hls,exm3u,m3u8,media,audio,video,download,grab,scrape</PackageTags>
-        <NoWarn>1701;1702;1591</NoWarn>
-        <Version>1.2</Version>
-        <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<RootNamespace>DotNetTools.SharpGrabber.Hls</RootNamespace>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Authors>Javid Shoaei</Authors>
+		<Company>github.com/dotnettools</Company>
+		<Description>Adds support for HLS and Extended M3U (M3U8) playlists.</Description>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/dotnettools/SharpGrabber</PackageProjectUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageIconUrl />
+		<LangVersion>9</LangVersion>
+		<RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
+		<PackageTags>hls,exm3u,m3u8,media,audio,video,download,grab,scrape</PackageTags>
+		<NoWarn>1701;1702;1591</NoWarn>
+		<Version>1.3</Version>
+		<AssemblyVersion>1.3.0.0</AssemblyVersion>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SharpGrabber\SharpGrabber.csproj" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <None Include="..\..\assets\icon.png">
-            <Pack>True</Pack>
-            <PackagePath></PackagePath>
-        </None>
-        <None Include="..\..\LICENSE">
-            <Pack>True</Pack>
-            <PackagePath></PackagePath>
-        </None>
-    </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\assets\icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>
