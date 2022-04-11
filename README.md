@@ -4,6 +4,7 @@
 
 [![GitHub](https://img.shields.io/github/license/dotnettools/SharpGrabber)](https://github.com/dotnettools/SharpGrabber/blob/master/LICENSE)
 [![NuGet download count](https://img.shields.io/nuget/dt/SharpGrabber)](https://www.nuget.org/packages/SharpGrabber)
+[![Build](https://github.com/dotnettools/SharpGrabber/actions/workflows/build.yml/badge.svg)](https://github.com/dotnettools/SharpGrabber/actions/workflows/build.yml)
 
 This repository contains multiple related projects:
 - <a href="#how-to-use">`SharpGrabber`</a> is a *.NET Standard* library for scraping top media providers and grabbing high quality video, audio and information.
