@@ -36,7 +36,7 @@ namespace SharpGrabber.BlackWidow.Tests.Repository
         {
             var repo = new OfficialGrabberRepository
             {
-                BranchName = "blackwidow",
+                BranchName = "master",
                 RepoRootPath = "tests/assets/blackwidow/repo",
             };
             modifier?.Invoke(repo);
