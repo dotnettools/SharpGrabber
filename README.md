@@ -57,7 +57,7 @@ Warning: This grabber is not guaranteed to work. It works only for clients that 
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.Adult/">Adult</a> - `PornHub`, `xnxx`, and `xvideos`
 
-    Install-Package SharpGrabber.Adult -Version 1.0.1
+    Install-Package SharpGrabber.Adult -Version 1.0.2
 
 ## Quick Start
 ### 1. Start with building a Grabber
