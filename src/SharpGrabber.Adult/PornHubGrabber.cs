@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using DotNetTools.SharpGrabber.Hls;
 using DotNetTools.SharpGrabber.Grabbed;
 using DotNetTools.SharpGrabber.Internal;
+using HtmlAgilityPack;
+using Jint.Native.Object;
+using System.Dynamic;
 
 namespace DotNetTools.SharpGrabber.Adult
 {
@@ -19,9 +22,10 @@ namespace DotNetTools.SharpGrabber.Adult
     /// </summary>
     public class PornHubGrabber : GrabberBase
     {
-        private static readonly Regex UrlMatcher = new Regex(@"^(https?://)?(www\.)?pornhub\.com/([^/]+)viewkey=(\w+).*$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static readonly Regex FlashVarsFinder = new Regex(@"((var|let)\s+(flashvars[\w_]+)(.|[\r\n])+)", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static readonly Regex QualityItemsVarFinder = new Regex(@"((var|let)\s+(qualityItems[\w_]+)(.|[\r\n])+)", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex UrlMatcher = new(@"^(https?://)?(www\.)?pornhub\.com/([^/]+)viewkey=(\w+).*$",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex FlashVarsFinder = new(@"\s*(var|let)\s+(flashvars[\w_]+)\s+=",
+            RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public PornHubGrabber(IGrabberServices services) : base(services)
         {
@@ -51,35 +55,20 @@ namespace DotNetTools.SharpGrabber.Adult
             uri = MakeStandardUri(viewId);
 
             var client = Services.GetClient();
+
             // download content
             var response = await client.GetAsync(uri, cancellationToken);
             response.EnsureSuccessStatusCode();
             var htmlContent = await response.Content.ReadAsStringAsync();
+            var doc = new HtmlDocument();
+            doc.LoadHtml(htmlContent);
 
-            // cut the useful part of htmlContent to speed up regex look up
-            htmlContent = CutUsefulPart(htmlContent);
-
-            var objListIndex = htmlContent.IndexOf("playerObjList.");
-            if (objListIndex < 0)
-                throw new GrabParseException("Could not find the video.");
-            htmlContent = htmlContent.Insert(objListIndex, "var playerObjList = {};\r\n");
-
-            // grab javascript flashvars
-            var flashVarsMatch = FlashVarsFinder.Match(htmlContent);
-            if (!flashVarsMatch.Success)
+            var flashVars = ParseFlashVarsScript(doc);
+            if (flashVars == null)
                 throw new GrabParseException("Failed to locate flashvars.");
-            var qualityVarsMatch = QualityItemsVarFinder.Match(htmlContent);
-            if (!qualityVarsMatch.Success)
-                throw new GrabParseException("Failed to locate qualityItems.");
-            var flashVarsVariableName = flashVarsMatch.Groups[3].Value;
-            var qualityItemsVariableName = qualityVarsMatch.Groups[3].Value;
-            var (flashVars, qualityItems) = await ExtractFlashVars(flashVarsMatch.Groups[1].Value, flashVarsVariableName,
-                qualityItemsVariableName);
-
-            // generate result
-            var resources = new List<IGrabbed>();
-            var result = new GrabResult(uri, resources);
-            Grab(result, resources, flashVars, qualityItems, options);
+            var grabbedList = new List<IGrabbed>();
+            var result = new GrabResult(uri, grabbedList);
+            Grab(result, grabbedList, flashVars, options);
             return result;
         }
 
@@ -92,6 +81,27 @@ namespace DotNetTools.SharpGrabber.Adult
         private static string GetViewId(Uri uri) => GetViewId(uri.ToString());
 
         private Uri MakeStandardUri(string viewId) => new Uri(string.Format(StandardUriFormat, viewId));
+
+        private IDictionary<string, object> ParseFlashVarsScript(HtmlDocument doc)
+        {
+            string source = null, varName = null;
+            foreach (var scriptNode in doc.DocumentNode.SelectNodes("//script"))
+            {
+                var match = FlashVarsFinder.Match(scriptNode.InnerText);
+                if (match.Success)
+                {
+                    source = scriptNode.InnerText;
+                    varName = match.Groups[2].Value;
+                    break;
+                }
+            }
+            if (source == null)
+                throw new GrabParseException("Failed to parse flash vars.");
+            var engine = new Engine();
+            var result = engine.Evaluate($"let playerObjList = {{}};{source};return {varName};").As<ObjectInstance>();
+            var expando = result.ToObject() as ExpandoObject;
+            return expando.ToDictionary(x => x.Key, x => x.Value);
+        }
 
         private async Task<(JObject flashVars, JArray qualityItems)> ExtractFlashVars(string script,
             string flashVarsVariableName, string qualityItemsVariableName)
@@ -116,45 +126,34 @@ namespace DotNetTools.SharpGrabber.Adult
 
         private static readonly MediaFormat DefaultMediaFormat = new MediaFormat("video/mp4", "mp4");
 
-        protected virtual void Grab(GrabResult result, List<IGrabbed> resources, JObject flashVars, JArray qualityItemVars, GrabOptions options)
+        protected virtual void Grab(GrabResult result, List<IGrabbed> resources, IDictionary<string, object> flashVars, GrabOptions options)
         {
             var grabbed = new Dictionary<int, GrabbedMedia>();
 
             if (options.Flags.HasFlag(GrabOptionFlags.GrabImages))
             {
-                var image_url = new Uri(result.OriginalUri, flashVars.SelectToken("$.image_url").Value<string>());
+                var image_url = new Uri(result.OriginalUri, flashVars["image_url"] as string);
                 resources.Add(new GrabbedImage(GrabbedImageType.Primary, image_url));
             }
 
-            result.Title = flashVars.SelectToken("$.video_title").Value<string>();
+            result.Title = flashVars["video_title"] as string;
 
             resources.Add(new GrabbedInfo
             {
-                Length = TimeSpan.FromSeconds(flashVars.SelectToken("$.video_duration").Value<int>())
+                Length = TimeSpan.FromSeconds(Convert.ToInt32(flashVars["video_duration"]))
             });
 
-            if (qualityItemVars != null && qualityItemVars.Count > 0)
-            {
-                foreach (var quality in qualityItemVars)
-                {
-                    var url = quality.Value<string>("url");
-                    if (string.IsNullOrEmpty(url))
-                        continue;
-                    var vid = new GrabbedMedia(new Uri(result.OriginalUri, url), DefaultMediaFormat, MediaChannels.Both);
-                    vid.Resolution = quality.Value<string>("text");
-                    var qint = StringHelper.ForceParseInt(vid.Resolution);
-                    grabbed.Add(qint, vid);
-                }
-            }
-
-            var mediaDefinitions = flashVars.SelectToken("$.mediaDefinitions");
+            var mediaDefinitions = (flashVars["mediaDefinitions"] as IEnumerable<object>)
+                .OfType<ExpandoObject>()
+                .Select(d => d.ToDictionary(x => x.Key, x => x.Value))
+                .ToArray();
             foreach (var def in mediaDefinitions)
             {
-                var format = def.Value<string>("format");
-                var url = def.Value<string>("videoUrl");
-                var isQualityArr = def["quality"] is JArray;
-                var qualityArr = isQualityArr ? def["quality"].Values<int>().ToArray() : null;
-                var quality = isQualityArr ? 0 : StringHelper.ForceParseInt(def.Value<string>("quality"));
+                var format = def["format"] as string;
+                var url = def["videoUrl"] as string;
+                var isQualityArr = def["quality"] is IEnumerable<object>;
+                var qualityArr = isQualityArr ? (def["quality"] as IEnumerable<object>).Select(o => Convert.ToInt32(o)).ToArray() : null;
+                var quality = isQualityArr ? 0 : StringHelper.ForceParseInt(def["quality"] as string);
                 if (grabbed.ContainsKey(quality) || string.IsNullOrEmpty(url))
                     continue;
                 if (isQualityArr && qualityArr.Length == 0)
@@ -188,27 +187,6 @@ namespace DotNetTools.SharpGrabber.Adult
 
             foreach (var g in grabbed.OrderByDescending(m => m.Key))
                 resources.Add(g.Value);
-        }
-
-        /// <summary>
-        /// Accepts the whole source of target page and returns only the part that contains video player script.
-        /// </summary>
-        protected virtual string CutUsefulPart(string htmlContent)
-        {
-            void CheckIndex(int index)
-            {
-                if (index < 0)
-                    throw new GrabParseException("Failed to find the script containing flashvars.");
-            }
-
-            var from = htmlContent.IndexOf("flashvars_", StringComparison.OrdinalIgnoreCase);
-            CheckIndex(from);
-            from = htmlContent.LastIndexOf("<script", from, StringComparison.OrdinalIgnoreCase);
-            CheckIndex(from);
-            from = htmlContent.IndexOf(">", from) + 1;
-            var to = htmlContent.IndexOf("</script>", from, StringComparison.OrdinalIgnoreCase);
-            CheckIndex(to);
-            return htmlContent.Substring(from, to - from).Trim();
         }
     }
 }
