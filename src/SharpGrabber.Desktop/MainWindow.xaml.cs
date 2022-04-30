@@ -195,7 +195,7 @@ namespace SharpGrabber.Desktop
                 .Append("FFMpeg Version: ").Append(IOHelper.FFMpegLoaded ? ffmpeg.av_version_info() : "<Not Loaded>")
                 .AppendLine()
                 .AppendLine()
-                .AppendLine("Copyright © 2022 Javid Shoaei and other contributors");
+                .AppendLine("Copyright © 2022 SharpGrabber contributors");
             ShowMessage("About", sb.ToString());
         }
 
