@@ -20,7 +20,7 @@ namespace DotNetTools.SharpGrabber
         /// Creates a new builder.
         /// </summary>
         public static IGrabberBuilder New()
-            => new GrabberBuilder();
+            => new GrabberBuilder().UseDefaultServices();
 
         public IGrabberBuilder Add(IGrabber grabber)
         {
