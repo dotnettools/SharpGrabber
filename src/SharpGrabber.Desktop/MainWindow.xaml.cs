@@ -96,10 +96,10 @@ namespace SharpGrabber.Desktop
                })
                .Add(_blackWidowGrabber = Program.BlackWidow.Grabber)
                .AddYouTube()
-               .AddInstagram()
                .AddHls()
                .AddXnxx()
                .AddXVideos()
+               // .AddInstagram() <= Failing authentication
                .Build();
 
             Program.ScriptHost.OnAlert += ScriptHost_OnAlert;

@@ -163,7 +163,7 @@ namespace DotNetTools.SharpGrabber.YouTube
         private string[] GetUsedFunctions(string code)
         {
             var set = new HashSet<string>();
-            var jsonLocatorRegex = new Regex(@"\b([\w\.]+)\b\(", RegexOptions.Multiline);
+            var jsonLocatorRegex = new Regex(@"([\w\$\.]+)\b\(", RegexOptions.Multiline);
             var matches = jsonLocatorRegex.Matches(code);
             foreach (Match match in matches)
                 set.Add(match.Groups[1].Value);
