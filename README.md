@@ -107,7 +107,7 @@ I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 
 Requirements of the cross-platform desktop application to run and operate correctly: 
  - .NET Core 3.1
- - **Shared libraries** of *ffmpeg* copied into `ffmpeg` directory alongside app executable files for media manipulation support.
+ - **Shared libraries** of *ffmpeg* copied into the `ffmpeg` directory alongside the application executable files for media manipulation support.
    - On Windows, you may download the latest <a href="https://github.com/BtbN/FFmpeg-Builds/releases">BtbN ffmpeg build</a>.
    - On any OS check out the <a href="https://ffmpeg.org/download.html">official website</a>.
  
