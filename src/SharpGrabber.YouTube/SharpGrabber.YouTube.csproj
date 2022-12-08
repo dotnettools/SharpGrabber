@@ -14,7 +14,7 @@
         <LangVersion>9</LangVersion>
         <RepositoryUrl>https://github.com/dotnettools/SharpGrabber</RepositoryUrl>
         <PackageTags>youtube,media,audio,video,deciphering,highquality,download,grab,scrape</PackageTags>
-        <Version>1.4.0</Version>
+        <Version>1.5.0</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,7 +27,7 @@
 
     <ItemGroup>
         <PackageReference Include="Jint" Version="3.0.0-beta-2038" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     </ItemGroup>
 
     <ItemGroup>
