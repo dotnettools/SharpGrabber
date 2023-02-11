@@ -139,7 +139,7 @@ Since it's illegal to extract copyrighted data, you should make sure your usage 
 Contributors to these tools are not responsible for any copyright infringement that may occur per usage.
 
 ## License
-Copyright &copy; 2022 SharpGrabber contributors<br />
+Copyright &copy; 2023 SharpGrabber contributors<br />
 
 This project is licensed under the GNU Lesser General Public License (LGPL) version 3.
 
