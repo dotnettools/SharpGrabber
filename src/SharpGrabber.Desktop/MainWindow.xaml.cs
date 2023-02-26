@@ -17,6 +17,7 @@ using SharpGrabber.Desktop.Auth;
 using SharpGrabber.Desktop.Components;
 using SharpGrabber.Desktop.Utils;
 using SharpGrabber.Desktop.ViewModel;
+using SharpGrabber.Odysee;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -99,6 +100,7 @@ namespace SharpGrabber.Desktop
                .AddHls()
                .AddXnxx()
                .AddXVideos()
+               .AddOdysee()
                // .AddInstagram() <= Failing authentication
                .Build();
 

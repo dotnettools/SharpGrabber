@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace DotNetTools.SharpGrabber.Vimeo
 {
     /// <summary>
-    /// Default <see cref="IGrabber"/> for Vimeo
+    /// Implements <see cref="IGrabber"/> for Vimeo.
     /// </summary>
     public partial class VimeoGrabber : GrabberBase
     {
