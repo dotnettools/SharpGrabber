@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>DotNetTools.SharpGrabber.Vimeo</RootNamespace>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Authors>indecDavid</Authors>
+        <Authors>Javid Shoaei, indecDavid</Authors>
         <Company>github.com/dotnettools</Company>
         <Description>Adds support for grabbing information and media from Vimeo.</Description>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>

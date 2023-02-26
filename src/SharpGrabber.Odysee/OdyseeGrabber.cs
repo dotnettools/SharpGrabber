@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
-namespace SharpGrabber.Odysee
+namespace DotNetTools.SharpGrabber.Odysee
 {
     /// <summary>
     /// Implements <see cref="IGrabber"/> for the Odysee platform.

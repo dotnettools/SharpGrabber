@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpGrabber.Odysee
+namespace DotNetTools.SharpGrabber.Odysee
 {
     /// <summary>
     /// Defines extension methods on <see cref="IGrabberBuilder"/>.
