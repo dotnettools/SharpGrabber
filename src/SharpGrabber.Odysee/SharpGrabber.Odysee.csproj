@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -15,17 +15,18 @@
 		<PackageTags>odysee,media,audio,video,download,grab,scrape</PackageTags>
 		<PackageIconUrl />
 		<NoWarn>1701;1702;1591</NoWarn>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Include="..\..\assets\icon.png" Link="icon.png">
-	    <PackagePath></PackagePath>
-	    <Pack>True</Pack>
-	  </None>
-	  <None Include="..\..\LICENSE" Link="LICENSE">
-	    <PackagePath></PackagePath>
-	    <Pack>True</Pack>
-	  </None>
+		<None Include="..\..\assets\icon.png" Link="icon.png">
+			<PackagePath></PackagePath>
+			<Pack>True</Pack>
+		</None>
+		<None Include="..\..\LICENSE" Link="LICENSE">
+			<PackagePath></PackagePath>
+			<Pack>True</Pack>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
