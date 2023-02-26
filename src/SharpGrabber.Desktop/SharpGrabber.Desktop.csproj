@@ -6,7 +6,7 @@
         <RootNamespace>SharpGrabber.Desktop</RootNamespace>
         <LangVersion>9.0</LangVersion>
         <ApplicationIcon />
-        <Version>4.5</Version>
+        <Version>4.7</Version>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
         <PlatformTarget>AnyCPU</PlatformTarget>
