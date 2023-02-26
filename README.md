@@ -102,7 +102,7 @@ I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 </details>
         
 ## SharpGrabber.Desktop
-### Version 4.6
+### Version 4.7
 - Grabs from every source supported by the official grabbers i.e. grabbers implemented in this Git repository.
 - Displays information and downloads videos, audios, images etc.
 - Merges YouTube separated audio and video streams into complete media files; as well as joining HLS segments!
