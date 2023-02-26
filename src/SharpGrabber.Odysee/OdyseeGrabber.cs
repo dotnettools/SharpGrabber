@@ -129,13 +129,8 @@ namespace SharpGrabber.Odysee
             return TryParseUrl(uri) ?? throw new InvalidOperationException("The given URI is invalid for Odysee.");
         }
 
-        private readonly record struct OdyseeUrlInfo
+        private readonly struct OdyseeUrlInfo
         {
-            public OdyseeUrlInfo()
-            {
-                AuthorId = VideoId = string.Empty;
-            }
-
             public OdyseeUrlInfo(string authorId, string videoId)
             {
                 AuthorId = authorId;
