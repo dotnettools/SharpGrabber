@@ -1,12 +1,18 @@
 ﻿using DotNetTools.SharpGrabber;
+using DotNetTools.SharpGrabber.Grabbed;
 using HtmlAgilityPack;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
+using System.Xml;
 
 namespace SharpGrabber.Odysee
 {
@@ -44,14 +50,14 @@ namespace SharpGrabber.Odysee
             var doc = new HtmlDocument();
             doc.LoadHtml(htmlContent);
 
-            return GrabUsingHtml(doc, uri);
+            return GrabUsingHtml(doc, uri, options);
         }
 
-        private GrabResult GrabUsingHtml(HtmlDocument doc, Uri uri)
+        private GrabResult GrabUsingHtml(HtmlDocument doc, Uri uri, GrabOptions options)
         {
             var list = new List<IGrabbed>();
 
-            var metaTags = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            var metaTags = new Dictionary<string, string?>(StringComparer.InvariantCultureIgnoreCase);
             foreach (var tag in doc.DocumentNode.SelectNodes("//meta"))
             {
                 var name = tag.GetAttributeValue<string?>("name", null) ?? tag.GetAttributeValue<string?>("property", null);
@@ -61,16 +67,51 @@ namespace SharpGrabber.Odysee
                 metaTags[name] = content;
             }
 
-            doc.DocumentNode.SelectNodes("//script")
+            var metadata = doc.DocumentNode.SelectNodes("//script")
                 .Select(s => s.InnerHtml)
-                .Where(s => !string.IsNullOrEmpty(s));
+                .Where(s => !string.IsNullOrEmpty(s))
+                .Select(JsonConvert.DeserializeObject)
+                .OfType<JObject>()
+                .Single();
+
+            ExtractResources(list, metadata, options);
 
             return new GrabResult(uri, list)
             {
-                Title = metaTags.GetOrDefault("og:title"),
+                Title = HttpUtility.HtmlDecode(metaTags.GetOrDefault("og:title")),
                 Description = metaTags.GetOrDefault("og:description"),
                 CreationDate = DateTime.Parse(metaTags.GetOrDefault("og:video:release_date")),
             };
+        }
+
+        private void ExtractResources(IList<IGrabbed> list, JObject metadata, GrabOptions options)
+        {
+            list.Add(new GrabbedInfo
+            {
+                Author = metadata["author"]?.Value<string>("name"),
+                Length = XmlConvert.ToTimeSpan(metadata.Value<string>("duration")),
+                ViewCount = null,
+            });
+
+            var thumbnail = metadata["thumbnail"];
+            if (thumbnail != null)
+                list.Add(new GrabbedImage(GrabbedImageType.Thumbnail,
+                    new Uri(thumbnail.Value<string>("url"))));
+
+            var contentUrl = metadata.Value<string>("contentUrl");
+            if (contentUrl != null)
+            {
+                var ext = Path.GetExtension(contentUrl).TrimStart('.');
+                list.Add(new GrabbedMedia
+                {
+                    Channels = MediaChannels.Both,
+                    Container = ext,
+                    PixelWidth = metadata.Value<int>("width"),
+                    PixelHeight = metadata.Value<int>("height"),
+                    ResourceUri = new Uri(contentUrl),
+                    Format = new MediaFormat(Services.Mime.GetMimeByExtension(ext), ext)
+                });
+            }
         }
 
         private static OdyseeUrlInfo? TryParseUrl(Uri uri)

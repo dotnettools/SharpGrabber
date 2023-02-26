@@ -18,18 +18,6 @@ namespace DotNetTools.SharpGrabber.Grabbed
             ResourceUri = resourceUri;
         }
 
-        [Obsolete("Use the parameterless constructor instead.")]
-        public GrabbedImage(GrabbedImageType type, Uri originalUri, Uri resourceUri)
-        {
-            Type = type;
-            OriginalUri = originalUri;
-            ResourceUri = resourceUri;
-        }
-
-
-        /// <inheritdoc />
-        public Uri OriginalUri { get; set; }
-
         /// <inheritdoc />
         public Uri ResourceUri { get; set; }
 

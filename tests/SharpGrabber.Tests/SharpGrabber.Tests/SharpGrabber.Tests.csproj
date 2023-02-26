@@ -21,6 +21,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\src\SharpGrabber.Adult\SharpGrabber.Adult.csproj" />
 		<ProjectReference Include="..\..\..\src\SharpGrabber.Instagram\SharpGrabber.Instagram.csproj" />
+		<ProjectReference Include="..\..\..\src\SharpGrabber.Odysee\SharpGrabber.Odysee.csproj" />
 		<ProjectReference Include="..\..\..\src\SharpGrabber.Vimeo\SharpGrabber.Vimeo.csproj" />
 		<ProjectReference Include="..\..\..\src\SharpGrabber.YouTube\SharpGrabber.YouTube.csproj" />
 	</ItemGroup>

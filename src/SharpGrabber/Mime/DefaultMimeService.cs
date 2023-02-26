@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text.RegularExpressions;
 
 namespace DotNetTools.SharpGrabber
@@ -7,9 +9,9 @@ namespace DotNetTools.SharpGrabber
     /// <summary>
     /// Default implementation for <see cref="IMimeService"/>.
     /// </summary>
-    public class DefaultMimeService : IMimeService
+    public sealed class DefaultMimeService : IMimeService
     {
-        private static readonly Regex _mimeRegex = new Regex(@"^[A-Za-z0-9\-_]+/([A-Za-z0-9\-_]+)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex _mimeRegex = new(@"^[A-Za-z0-9\-_]+/([A-Za-z0-9\-_]+)", RegexOptions.Compiled | RegexOptions.Singleline);
         private static DefaultMimeService _instance;
 
         public static DefaultMimeService Instance
@@ -44,6 +46,18 @@ namespace DotNetTools.SharpGrabber
                 return null;
 
             return match.Groups[1].Value;
+        }
+
+        public bool TryGetMimeByExtension(string extension, out string mime)
+        {
+            var mimeInfo = MimeType.FindMimesByExtension(extension).FirstOrDefault();
+            if (mimeInfo == null)
+            {
+                mime = null;
+                return false;
+            }
+            mime = mimeInfo.Mime;
+            return true;
         }
     }
 }

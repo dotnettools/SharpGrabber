@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNetTools.SharpGrabber
 {
@@ -700,9 +702,8 @@ namespace DotNetTools.SharpGrabber
                      };
         #endregion
 
-        public static readonly Dictionary<string, List<MimeInfo>> Extensions = new Dictionary<string, List<MimeInfo>>();
-
-        private static readonly Dictionary<string, MimeInfo> _mimeMap = new Dictionary<string, MimeInfo>();
+        private static readonly Dictionary<string, List<MimeInfo>> _extensions = new(StringComparer.InvariantCultureIgnoreCase);
+        private static readonly Dictionary<string, MimeInfo> _mimeMap = new(StringComparer.InvariantCultureIgnoreCase);
 
         public const string Json = "application/json";
         public const string OctetStream = "application/octet-stream";
@@ -710,19 +711,17 @@ namespace DotNetTools.SharpGrabber
 
         static MimeType()
         {
-            lock (_mimeMap)
-                foreach (var mime in Mimes)
+            foreach (var mime in Mimes)
+            {
+                foreach (var type in mime.Types)
                 {
-                    foreach (var type in mime.Types)
-                    {
-                        if (!Extensions.ContainsKey(type))
-                            Extensions[type] = new List<MimeInfo>();
-                        var lmm = Extensions[type];
-                        lmm.Add(mime);
-                    }
-
-                    _mimeMap.Add(mime.Mime, mime);
+                    if (!_extensions.TryGetValue(type, out var lmm))
+                        _extensions[type] = lmm = new List<MimeInfo>();
+                    lmm.Add(mime);
                 }
+
+                _mimeMap.Add(mime.Mime, mime);
+            }
         }
 
         /// <summary>
@@ -730,8 +729,17 @@ namespace DotNetTools.SharpGrabber
         /// </summary>
         public static MimeInfo FindMime(string mime)
         {
-            lock (_mimeMap)
-                return _mimeMap.ContainsKey(mime) ? _mimeMap[mime] : null;
+            return _mimeMap.TryGetValue(mime, out var result) ? result : null;
+        }
+
+        /// <summary>
+        /// Tries to find mime types corresponding the specified extension.
+        /// </summary>
+        public static IEnumerable<MimeInfo> FindMimesByExtension(string extension)
+        {
+            if (_extensions.TryGetValue(extension, out var list))
+                return list;
+            return Enumerable.Empty<MimeInfo>();
         }
     }
 }
