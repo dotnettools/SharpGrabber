@@ -16,6 +16,7 @@
 		<PackageIconUrl />
 		<NoWarn>1701;1702;1591</NoWarn>
 		<Version>1.0.1</Version>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>

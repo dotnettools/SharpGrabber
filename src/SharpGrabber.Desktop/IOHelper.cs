@@ -26,8 +26,8 @@ namespace SharpGrabber.Desktop
             // add suggested ffmpeg paths
             var srcPath = Assembly.GetExecutingAssembly().Location;
             var srcDir = Path.GetDirectoryName(srcPath);
-            SuggestedFFMpegDirectories.Add(srcDir);
             SuggestedFFMpegDirectories.Add(Path.Combine(srcDir, "ffmpeg"));
+            SuggestedFFMpegDirectories.Add(srcDir);
             SuggestedFFMpegDirectories.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ffmpeg"));
             SuggestedFFMpegDirectories.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ffmpeg"));
             SuggestedFFMpegDirectories.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ffmpeg"));
@@ -58,9 +58,10 @@ namespace SharpGrabber.Desktop
                     ffmpeg.RootPath = path;
                     try
                     {
-                        ffmpeg.avutil_version();
+                        ffmpeg.av_version_info();
                     }
-                    catch (DllNotFoundException)
+                    catch (Exception exception)
+                        when (exception is DllNotFoundException or NotSupportedException)
                     {
                         continue;
                     }

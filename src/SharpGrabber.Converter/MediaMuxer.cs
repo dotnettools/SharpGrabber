@@ -33,7 +33,15 @@ namespace DotNetTools.SharpGrabber.Converter
             if (stream == null)
                 throw new Exception("Could not allocate stream.");
             if ((_formatContext->oformat->flags & ffmpeg.AVFMT_GLOBALHEADER) > 0)
-                stream->codec->flags |= ffmpeg.AV_CODEC_FLAG_GLOBAL_HEADER;
+            {
+                var codecContext = ffmpeg.avcodec_alloc_context3(null);
+                if (codecContext == null)
+                    throw new Exception("Could not allocate an AVCodecContext.");
+                ffmpeg.avcodec_parameters_to_context(codecContext, stream->codecpar).ThrowOnError();
+                codecContext->flags |= ffmpeg.AV_CODEC_FLAG_GLOBAL_HEADER;
+                ffmpeg.avcodec_parameters_from_context(stream->codecpar, codecContext).ThrowOnError();
+                ffmpeg.avcodec_free_context(&codecContext);
+            }
             return stream;
         }
 

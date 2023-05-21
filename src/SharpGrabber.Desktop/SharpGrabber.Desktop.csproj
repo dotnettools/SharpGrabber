@@ -6,10 +6,14 @@
         <RootNamespace>SharpGrabber.Desktop</RootNamespace>
         <LangVersion>9.0</LangVersion>
         <ApplicationIcon />
-        <Version>4.7</Version>
+        <Version>4.8</Version>
+        <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
         <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|x64'">
+      <PlatformTarget>AnyCPU</PlatformTarget>
     </PropertyGroup>
     <ItemGroup>
         <Compile Update="**\*.xaml.cs">

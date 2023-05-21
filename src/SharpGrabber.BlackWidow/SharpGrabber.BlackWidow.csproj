@@ -17,6 +17,7 @@
 		<NoWarn>1701;1702;1591</NoWarn>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<Version>1.1.0</Version>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>

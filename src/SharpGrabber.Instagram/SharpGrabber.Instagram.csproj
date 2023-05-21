@@ -16,6 +16,7 @@
         <PackageTags>instagram,video,download,grab,scrape</PackageTags>
         <NoWarn>1701;1702;1591</NoWarn>
         <Version>0.1</Version>
+        <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
     <ItemGroup>

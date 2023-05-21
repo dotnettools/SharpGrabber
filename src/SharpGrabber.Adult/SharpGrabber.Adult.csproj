@@ -16,6 +16,7 @@
 		<PackageTags>adult,porn,video,download,grab,scrape,pornhub,xvideos,xnxx</PackageTags>
 		<NoWarn>1701;1702;1591</NoWarn>
 		<Version>1.0.2</Version>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>

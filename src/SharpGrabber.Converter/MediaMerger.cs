@@ -136,7 +136,7 @@ namespace DotNetTools.SharpGrabber.Converter
                     if (decoder.CodecId == targetCodec)
                     {
                         // converting to the same codec
-                        ffmpeg.avcodec_parameters_from_context(param, decoder.GetStream()->codec).ThrowOnError();
+                        ffmpeg.avcodec_parameters_from_context(param, decoder.CodecContext).ThrowOnError();
                     }
                     else
                     {
@@ -194,7 +194,7 @@ namespace DotNetTools.SharpGrabber.Converter
                         var stream_index = stream_dic[decoderPair.Key];
                         var outputStream = streams[stream_index];
 
-                        if (decoder.CodecId == outputStream->codec->codec_id)
+                        if (decoder.CodecId == outputStream->codecpar->codec_id)
                         {
                             // simply copy to target stream
                             using var inputFrame = decoder.ReadPacket();

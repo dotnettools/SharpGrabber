@@ -183,7 +183,7 @@ namespace DotNetTools.SharpGrabber.Converter
                 streamIndex++;
                 //streams[streamIndex] = stream;
                 var param = stream->codecpar;
-                ffmpeg.avcodec_parameters_from_context(param, decoder.GetStream()->codec).ThrowOnError();
+                ffmpeg.avcodec_parameters_from_context(param, decoder.CodecContext).ThrowOnError();
                 stream->codecpar->codec_tag = 0;
             }
         }
