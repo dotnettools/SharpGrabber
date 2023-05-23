@@ -32,7 +32,7 @@ The `SharpGrabber` package defines abstractions only. The actual grabbers have t
 It's an optional package to work with media files. Using this package, you can easily concatenate video segments, or mux audio and video channels.
 It uses `ffmpeg` shared libraries underneath.
 
-    Install-Package SharpGrabber.Converter -Version 1.0
+    Install-Package SharpGrabber.Converter -Version 1.1
 
 ### <a href="https://www.nuget.org/packages/SharpGrabber.Hls/">HLS - M3U8 playlists</a>
 This package adds the capability to parse M3U8 playlist files - including master playlists - and download video segments.
@@ -102,7 +102,7 @@ I strongly recommend that you upgrade, v2 has a much cleaner structure and code.
 </details>
         
 ## SharpGrabber.Desktop
-### Version 4.7
+### Version 4.8
 - Grabs from every source supported by the official grabbers i.e. grabbers implemented in this Git repository.
 - Displays information and downloads videos, audios, images etc.
 - Merges YouTube separated audio and video streams into complete media files; as well as joining HLS segments!
